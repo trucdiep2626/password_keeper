@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20.571" height="18" viewBox="0 0 20.571 18">
+  <defs>
+    <filter id="Icon_awesome-camera">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#3c3c43" flood-opacity="0.096" result="color"/>
+      <feComposite operator="out" in="SourceGraphic" in2="blur"/>
+      <feComposite operator="in" in="color"/>
+      <feComposite operator="in" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g data-type="innerShadowGroup">
+    <path id="Icon_awesome-camera-2" data-name="Icon awesome-camera" d="M20.571,6.75V18.321a1.929,1.929,0,0,1-1.929,1.929H1.929A1.929,1.929,0,0,1,0,18.321V6.75A1.929,1.929,0,0,1,1.929,4.821H5.464L5.958,3.5a1.926,1.926,0,0,1,1.8-1.25H12.8a1.926,1.926,0,0,1,1.8,1.25l.5,1.322h3.536A1.929,1.929,0,0,1,20.571,6.75Zm-5.464,5.786a4.821,4.821,0,1,0-4.821,4.821A4.825,4.825,0,0,0,15.107,12.536Zm-1.286,0A3.536,3.536,0,1,1,10.286,9,3.541,3.541,0,0,1,13.821,12.536Z" transform="translate(0 -2.25)" fill="rgba(60,60,67,0.6)"/>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Icon_awesome-camera)">
+      <path id="Icon_awesome-camera-3" data-name="Icon awesome-camera" d="M20.571,6.75V18.321a1.929,1.929,0,0,1-1.929,1.929H1.929A1.929,1.929,0,0,1,0,18.321V6.75A1.929,1.929,0,0,1,1.929,4.821H5.464L5.958,3.5a1.926,1.926,0,0,1,1.8-1.25H12.8a1.926,1.926,0,0,1,1.8,1.25l.5,1.322h3.536A1.929,1.929,0,0,1,20.571,6.75Zm-5.464,5.786a4.821,4.821,0,1,0-4.821,4.821A4.825,4.825,0,0,0,15.107,12.536Zm-1.286,0A3.536,3.536,0,1,1,10.286,9,3.541,3.541,0,0,1,13.821,12.536Z" transform="translate(0 -2.25)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
