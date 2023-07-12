@@ -19,6 +19,19 @@ class AppColors {
 
   static const Color errorColor = Color(0xFF9c303d);
 
+  //green
+  static Color green50 = Colors.green.shade50;
+  static const Color green = Colors.green;
+
+  //orange
+  static Color orange50 = Colors.orange.shade50;
+  static const Color orange = Colors.orange;
+
+  //red
+  static const Color red = Colors.red;
+  static const Color redAccent = Colors.redAccent;
+  static const Color red50 = Color(0xffFFEBEE);
+  static const Color red100 = Color(0xffFFCDD2);
 
 
   //grey
@@ -64,11 +77,6 @@ class AppColors {
   // static const Color blue900 = Color(0xFF0E141B);
 
   static const Color borderColor = blue400;
-  //red
-  static const Color red = Colors.red;
-  static const Color redAccent = Colors.redAccent;
-  static const Color red50 = Color(0xffFFEBEE);
-  static const Color red100 = Color(0xffFFCDD2);
 
   //black
   static const Color black = Colors.black;

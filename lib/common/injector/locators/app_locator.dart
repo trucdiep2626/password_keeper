@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:password_keeper/data/local_repository.dart';
-import 'package:password_keeper/data/remote/weather_repository.dart';
-import 'package:password_keeper/domain/usecases/weather_usecase.dart';
+import 'package:password_keeper/data/remote/account_repository.dart';
+import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/app_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/journey/main/main_controller.dart';
@@ -17,9 +17,11 @@ void configLocator() {
   getIt.registerFactory<HomeController>(() => HomeController());
 
   /// UseCases
-  getIt.registerFactory<WeatherUseCase>(() => WeatherUseCase(weatherRepo: getIt<WeatherRepository>()));
+  getIt.registerFactory<AccountUseCase>(() => AccountUseCase(
+      accountRepo: getIt<AccountRepository>(),
+      localRepo: getIt<LocalRepository>()));
 
   /// Repositories
-  getIt.registerFactory<WeatherRepository>(() => WeatherRepository());
+  getIt.registerFactory<AccountRepository>(() => AccountRepository( ));
   getIt.registerFactory<LocalRepository>(() => LocalRepository());
 }

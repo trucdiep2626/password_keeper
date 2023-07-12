@@ -71,17 +71,17 @@ class AppImageWidget extends StatelessWidget {
     final getHeight = size ?? height;
     final getWidth = size ?? width;
 
-    Widget image = Assets.images..imgNoImage.image(
+    Widget image = Assets.images.png.imgNoImage.image(
       color: color,
       fit: fit,
     );
     // ignore: unused_local_variable
-    Widget fullImage = Assets.images.imgNoImage.image(
+    Widget fullImage = Assets.images.png.imgNoImage.image(
       color: color,
       fit: BoxFit.contain,
     );
     // ignore: prefer_final_locals
-    Widget noImage = Assets.images.imgNoImage.image();
+    Widget noImage = Assets.images.png.imgNoImage.image();
 
     if (url != null) {
       image = CachedNetworkImage(

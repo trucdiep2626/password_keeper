@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:password_keeper/common/common_export.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 
 import 'export.dart';
 
-class AppTextFieldWidget extends StatefulWidget {
+class AppTextField extends StatefulWidget {
   final bool readOnly;
   final String? hintText;
   final String? errorText;
@@ -18,7 +18,7 @@ class AppTextFieldWidget extends StatefulWidget {
   final Function(String)? onChanged;
   final Function()? onPressed;
 
-  const AppTextFieldWidget({
+  const AppTextField({
     Key? key,
     this.readOnly = false,
     this.hintText,
@@ -32,10 +32,10 @@ class AppTextFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _AppTextFieldWidgetState createState() => _AppTextFieldWidgetState();
+  _AppTextFieldState createState() => _AppTextFieldState();
 }
 
-class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
+class _AppTextFieldState extends State<AppTextField> {
   bool _isShowClose = false;
 
   @override
@@ -54,7 +54,7 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
                   readOnly: widget.readOnly,
                   controller: widget.controller,
                   focusNode: widget.focusNode,
-                  style: ThemeText.bodyText2,
+                  style: ThemeText.bodyRegular,
                   keyboardType: widget.keyboardType,
                   inputFormatters: widget.inputFormatters,
                   onChanged: (value) {
@@ -88,7 +88,7 @@ class _AppTextFieldWidgetState extends State<AppTextFieldWidget> {
                               });
                             },
                             child: AppImageWidget(
-                              path: ImageConstants.icCircleClose,
+                              asset: Assets.images.svg.icCircleClose,
                               color: AppColors.grey,
                               width: AppDimens.space_16,
                               height: AppDimens.space_16,
