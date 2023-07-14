@@ -2,146 +2,187 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
-import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 
-import 'export.dart';
-
 class AppTextField extends StatefulWidget {
-  final bool readOnly;
-  final String? hintText;
-  final String? errorText;
-  final TextEditingController? controller;
-  final FocusNode? focusNode;
-  final TextInputType? keyboardType;
-  final List<TextInputFormatter>? inputFormatters;
-  final Function(String)? onChanged;
-  final Function()? onPressed;
-
   const AppTextField({
     Key? key,
-    this.readOnly = false,
+    this.labelText,
     this.hintText,
-    this.errorText,
-    this.controller,
-    this.focusNode,
+    this.errorText = '',
+    this.helpText,
+    this.counterText = '',
+    this.textStyle,
+    this.borderColor,
+    this.backgroundColor,
+    this.prefixIcon,
+    this.minLines,
+    this.maxLines = 1,
+    this.maxLength,
+    this.obscureText,
+    this.enable = true,
+    this.autoFocus = false,
+    this.onTap,
     this.keyboardType = TextInputType.text,
     this.inputFormatters,
-    this.onChanged,
-    this.onPressed,
+    this.focusNode,
+    this.controller,
+    this.onChangedText,
+    this.onChangedFocus,
+    this.onSubmit,
+    this.readOnly = false,
+    this.textAlign = TextAlign.start,
+    this.onEditingComplete,
+    this.textCapitalization = TextCapitalization.none,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
+    this.textInputAction,
   }) : super(key: key);
 
+  final String? labelText;
+  final String? hintText;
+  final String errorText;
+  final String? helpText;
+  final String? counterText;
+  final TextStyle? textStyle;
+  final Color? borderColor;
+  final Color? backgroundColor;
+  final Widget? prefixIcon;
+  final int? minLines;
+  final int maxLines;
+  final int? maxLength;
+  final bool? obscureText;
+  final bool enable;
+  final bool autoFocus;
+  final Function()? onTap;
+  final TextInputType keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final FocusNode? focusNode;
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChangedText;
+  final Function(bool?)? onChangedFocus;
+  final ValueChanged<String>? onSubmit;
+  final bool readOnly;
+  final TextAlign textAlign;
+  final Function()? onEditingComplete;
+  final TextCapitalization textCapitalization;
+  final bool autocorrect;
+  final bool enableSuggestions;
+  final TextInputAction? textInputAction;
+
   @override
-  _AppTextFieldState createState() => _AppTextFieldState();
+  AppTextFieldState createState() => AppTextFieldState();
 }
 
-class _AppTextFieldState extends State<AppTextField> {
-  bool _isShowClose = false;
+class AppTextFieldState extends State<AppTextField> {
+  dynamic _focusNode;
+  bool _obscureText = false;
+
+  @override
+  void initState() {
+    if (widget.focusNode != null) {
+      _focusNode = widget.focusNode;
+    } else {
+      _focusNode = FocusNode();
+    }
+    _focusNode.addListener(() {
+      if (widget.onChangedFocus != null) {
+        widget.onChangedFocus!(_focusNode.hasFocus);
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    });
+
+    _obscureText = widget.obscureText ?? false;
+    super.initState();
+  }
+
+  onChanged(value) {
+    if (widget.keyboardType == TextInputType.phone) {
+      widget.controller!
+        ..text = formatPhoneNumber(value)
+        ..selection = TextSelection(
+            baseOffset: widget.controller!.text.length,
+            extentOffset: widget.controller!.text.length);
+    }
+    if (widget.onChangedText != null) widget.onChangedText!(value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppTouchable(
-          onPressed: widget.readOnly ? () {} : null,
-          child: Material(
-            color: AppColors.grey200,
-            borderRadius: BorderRadius.circular(AppDimens.radius_12),
-            child: Stack(
-              children: [
-                TextFormField(
-                  readOnly: widget.readOnly,
-                  controller: widget.controller,
-                  focusNode: widget.focusNode,
-                  style: ThemeText.bodyRegular,
-                  keyboardType: widget.keyboardType,
-                  inputFormatters: widget.inputFormatters,
-                  onChanged: (value) {
-                    if (!isNullEmpty(widget.onChanged)) {
-                      widget.onChanged!(value);
-                    }
-                    setState(() {
-                      if (!isNullEmpty(value)) {
-                        _isShowClose = true;
-                      } else {
-                        _isShowClose = false;
-                      }
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText: widget.hintText,
-                    hintStyle: Theme.of(context)
-                        .textTheme
-                        .bodyText2!
-                        .copyWith(color: AppColors.grey),
-                    suffixIcon: _isShowClose
-                        ? AppTouchable(
-                            padding: EdgeInsets.all(AppDimens.space_16),
-                            onPressed: () {
-                              if (!isNullEmpty(widget.onChanged)) {
-                                widget.onChanged!('');
-                              }
-                              setState(() {
-                                _isShowClose = false;
-                                widget.controller!.text = '';
-                              });
-                            },
-                            child: AppImageWidget(
-                              asset: Assets.images.svg.icCircleClose,
-                              color: AppColors.grey,
-                              width: AppDimens.space_16,
-                              height: AppDimens.space_16,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    isDense: false,
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: AppDimens.space_16,
-                      horizontal: AppDimens.space_16,
-                    ),
-                    enabledBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    focusedErrorBorder: InputBorder.none,
-                    border: InputBorder.none,
-                  ),
-                ),
-                widget.readOnly
-                    ? Positioned.fill(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            highlightColor: AppColors.transparent,
-                            splashColor: AppColors.transparent,
-                            customBorder: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppDimens.radius_12)),
-                            onTap: widget.onPressed,
-                          ),
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-              ],
+        Container(
+          //  height: 48.h,
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(5),
+            // border: Border.all(
+            //     color: widget.borderColor ??
+            //         (_focusNode.hasFocus
+            //             ? AppColors.primary
+            //             : AppColors.grey100),
+            //     width: 1.0),
+          ),
+          child: TextField(
+            textInputAction: widget.textInputAction,
+            focusNode: _focusNode,
+            style: widget.textStyle ?? ThemeText.bodyRegular,
+            enableSuggestions: widget.enableSuggestions,
+            autocorrect: widget.autocorrect,
+            textCapitalization: widget.textCapitalization,
+            onEditingComplete: widget.onEditingComplete,
+            textAlign: widget.textAlign,
+            keyboardType: widget.keyboardType,
+            readOnly: widget.readOnly,
+            inputFormatters: widget.inputFormatters,
+            autofocus: widget.autoFocus,
+            onTap: widget.onTap,
+            cursorColor: AppColors.black,
+            maxLength: widget.maxLength,
+            maxLines: _obscureText ? 1 : null,
+            controller: widget.controller,
+            enabled: widget.enable,
+            obscureText: _obscureText,
+            decoration: InputDecoration(
+              counterText: widget.counterText,
+              labelText: widget.labelText,
+              labelStyle: ThemeText.bodyRegular.copyWith(color: AppColors.grey),
+              hintText: widget.hintText,
+              hintStyle: ThemeText.bodyRegular.copyWith(
+                color: AppColors.grey,
+              ),
+              helperText: widget.helpText,
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: AppDimens.width_16, vertical: AppDimens.space_12),
+              prefixIcon: widget.prefixIcon,
+              prefixIconConstraints: const BoxConstraints(
+                minWidth: 20,
+                minHeight: 20,
+              ),
+              enabledBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
+              border: InputBorder.none,
             ),
+            onChanged: onChanged,
+            onSubmitted: widget.onSubmit,
           ),
         ),
-        Container(
-          height: AppDimens.height_24,
-          padding: EdgeInsets.symmetric(
-            // vertical: AppDimens.space_8,
-            horizontal: AppDimens.space_16,
-          ),
-          alignment: Alignment.centerLeft,
-          child: Text(
-            widget.errorText!,
-            style: Theme.of(context)
-                .textTheme
-                .caption!
-                .copyWith(color: AppColors.red),
-          ),
-        )
+
+        //errorText element
+        if (widget.errorText.isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(left: AppDimens.space_16, top: AppDimens.space_4),
+            child: Text(
+              widget.errorText,
+              style: ThemeText.errorText,
+            ),
+          )
       ],
     );
   }

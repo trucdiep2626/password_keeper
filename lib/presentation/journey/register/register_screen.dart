@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
+import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/theme/theme_text.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -34,19 +36,19 @@ class RegisterScreen extends GetView<RegisterController> {
             ),
             Obx(
               () => Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.sp),
+                padding: EdgeInsets.symmetric(horizontal:AppDimens.space_16),
                 child: AppTextField(
                   prefixIcon: Padding(
                     padding: EdgeInsets.only(
-                      left: 18.sp,
-                      right: 12.sp,
+                      left: AppDimens.space_18,
+                      right: AppDimens.space_12,
                     ),
                     child: SizedBox(
-                      width: 20.sp,
-                      height: 20.sp,
+                      width: AppDimens.space_20,
+                      height: AppDimens.space_20,
                       child: AppImageWidget(
                         fit: BoxFit.scaleDown,
-                        asset: Assets.images.icMessage,
+                        asset: Assets.images.svg.icMessage,
                         color: controller.emailHasFocus.value
                             ? AppColors.primary
                             : AppColors.grey,

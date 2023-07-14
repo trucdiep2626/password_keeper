@@ -46,22 +46,8 @@ class $AssetsFontsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  $AssetsImagesLottiesGen get lotties => const $AssetsImagesLottiesGen();
   $AssetsImagesPngGen get png => const $AssetsImagesPngGen();
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
-}
-
-class $AssetsImagesLottiesGen {
-  const $AssetsImagesLottiesGen();
-
-  /// File path: assets/images/lotties/empty.json
-  String get empty => 'assets/images/lotties/empty.json';
-
-  /// File path: assets/images/lotties/loading.json
-  String get loading => 'assets/images/lotties/loading.json';
-
-  /// List of all assets
-  List<String> get values => [empty, loading];
 }
 
 class $AssetsImagesPngGen {
@@ -78,6 +64,25 @@ class $AssetsImagesPngGen {
 class $AssetsImagesSvgGen {
   const $AssetsImagesSvgGen();
 
+  /// File path: assets/images/svg/ic_arrow_down.svg
+  SvgGenImage get icArrowDown =>
+      const SvgGenImage('assets/images/svg/ic_arrow_down.svg');
+
+  /// File path: assets/images/svg/ic_arrow_left.svg
+  SvgGenImage get icArrowLeft =>
+      const SvgGenImage('assets/images/svg/ic_arrow_left.svg');
+
+  /// File path: assets/images/svg/ic_arrow_right.svg
+  SvgGenImage get icArrowRight =>
+      const SvgGenImage('assets/images/svg/ic_arrow_right.svg');
+
+  /// File path: assets/images/svg/ic_arrow_up.svg
+  SvgGenImage get icArrowUp =>
+      const SvgGenImage('assets/images/svg/ic_arrow_up.svg');
+
+  /// File path: assets/images/svg/ic_asc.svg
+  SvgGenImage get icAsc => const SvgGenImage('assets/images/svg/ic_asc.svg');
+
   /// File path: assets/images/svg/ic_camera.svg
   SvgGenImage get icCamera =>
       const SvgGenImage('assets/images/svg/ic_camera.svg');
@@ -86,6 +91,9 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icCircleClose =>
       const SvgGenImage('assets/images/svg/ic_circle_close.svg');
 
+  /// File path: assets/images/svg/ic_desc.svg
+  SvgGenImage get icDesc => const SvgGenImage('assets/images/svg/ic_desc.svg');
+
   /// File path: assets/images/svg/ic_done.svg
   SvgGenImage get icDone => const SvgGenImage('assets/images/svg/ic_done.svg');
 
@@ -93,37 +101,57 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icError =>
       const SvgGenImage('assets/images/svg/ic_error.svg');
 
+  /// File path: assets/images/svg/ic_filter.svg
+  SvgGenImage get icFilter =>
+      const SvgGenImage('assets/images/svg/ic_filter.svg');
+
+  /// File path: assets/images/svg/ic_home.svg
+  SvgGenImage get icHome => const SvgGenImage('assets/images/svg/ic_home.svg');
+
+  /// File path: assets/images/svg/ic_location.svg
+  SvgGenImage get icLocation =>
+      const SvgGenImage('assets/images/svg/ic_location.svg');
+
   /// File path: assets/images/svg/ic_login_screen.svg
   SvgGenImage get icLoginScreen =>
       const SvgGenImage('assets/images/svg/ic_login_screen.svg');
 
-  /// File path: assets/images/svg/ic_money.svg
-  SvgGenImage get icMoney =>
-      const SvgGenImage('assets/images/svg/ic_money.svg');
+  /// File path: assets/images/svg/ic_logout.svg
+  SvgGenImage get icLogout =>
+      const SvgGenImage('assets/images/svg/ic_logout.svg');
+
+  /// File path: assets/images/svg/ic_menu.svg
+  SvgGenImage get icMenu => const SvgGenImage('assets/images/svg/ic_menu.svg');
+
+  /// File path: assets/images/svg/ic_message.svg
+  SvgGenImage get icMessage =>
+      const SvgGenImage('assets/images/svg/ic_message.svg');
 
   /// File path: assets/images/svg/ic_nav_account.svg
   SvgGenImage get icNavAccount =>
       const SvgGenImage('assets/images/svg/ic_nav_account.svg');
 
-  /// File path: assets/images/svg/ic_nav_finance.svg
-  SvgGenImage get icNavFinance =>
-      const SvgGenImage('assets/images/svg/ic_nav_finance.svg');
-
   /// File path: assets/images/svg/ic_nav_home.svg
   SvgGenImage get icNavHome =>
       const SvgGenImage('assets/images/svg/ic_nav_home.svg');
 
-  /// File path: assets/images/svg/ic_nav_love.svg
-  SvgGenImage get icNavLove =>
-      const SvgGenImage('assets/images/svg/ic_nav_love.svg');
+  /// File path: assets/images/svg/ic_password.svg
+  SvgGenImage get icPassword =>
+      const SvgGenImage('assets/images/svg/ic_password.svg');
 
-  /// File path: assets/images/svg/ic_nav_workflow.svg
-  SvgGenImage get icNavWorkflow =>
-      const SvgGenImage('assets/images/svg/ic_nav_workflow.svg');
+  /// File path: assets/images/svg/ic_search.svg
+  SvgGenImage get icSearch =>
+      const SvgGenImage('assets/images/svg/ic_search.svg');
 
-  /// File path: assets/images/svg/ic_verify_otp_screen.svg
-  SvgGenImage get icVerifyOtpScreen =>
-      const SvgGenImage('assets/images/svg/ic_verify_otp_screen.svg');
+  /// File path: assets/images/svg/ic_sort.svg
+  SvgGenImage get icSort => const SvgGenImage('assets/images/svg/ic_sort.svg');
+
+  /// File path: assets/images/svg/ic_trash.svg
+  SvgGenImage get icTrash =>
+      const SvgGenImage('assets/images/svg/ic_trash.svg');
+
+  /// File path: assets/images/svg/ic_user.svg
+  SvgGenImage get icUser => const SvgGenImage('assets/images/svg/ic_user.svg');
 
   /// File path: assets/images/svg/ic_wallet.svg
   SvgGenImage get icWallet =>
@@ -133,31 +161,38 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icWarning =>
       const SvgGenImage('assets/images/svg/ic_warning.svg');
 
-  /// File path: assets/images/svg/ic_workflow.svg
-  SvgGenImage get icWorkflow =>
-      const SvgGenImage('assets/images/svg/ic_workflow.svg');
-
   /// File path: assets/images/svg/loading.gif
   AssetGenImage get loading =>
       const AssetGenImage('assets/images/svg/loading.gif');
 
   /// List of all assets
   List<dynamic> get values => [
+        icArrowDown,
+        icArrowLeft,
+        icArrowRight,
+        icArrowUp,
+        icAsc,
         icCamera,
         icCircleClose,
+        icDesc,
         icDone,
         icError,
+        icFilter,
+        icHome,
+        icLocation,
         icLoginScreen,
-        icMoney,
+        icLogout,
+        icMenu,
+        icMessage,
         icNavAccount,
-        icNavFinance,
         icNavHome,
-        icNavLove,
-        icNavWorkflow,
-        icVerifyOtpScreen,
+        icPassword,
+        icSearch,
+        icSort,
+        icTrash,
+        icUser,
         icWallet,
         icWarning,
-        icWorkflow,
         loading
       ];
 }
