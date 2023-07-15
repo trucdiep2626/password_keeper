@@ -10,6 +10,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 
 class $AssetsFontsGen {
   const $AssetsFontsGen();
@@ -46,8 +47,28 @@ class $AssetsFontsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  $AssetsImagesLottiesGen get lotties => const $AssetsImagesLottiesGen();
   $AssetsImagesPngGen get png => const $AssetsImagesPngGen();
   $AssetsImagesSvgGen get svg => const $AssetsImagesSvgGen();
+}
+
+class $AssetsImagesLottiesGen {
+  const $AssetsImagesLottiesGen();
+
+  /// File path: assets/images/lotties/empty.json
+  LottieGenImage get empty =>
+      const LottieGenImage('assets/images/lotties/empty.json');
+
+  /// File path: assets/images/lotties/loading.json
+  LottieGenImage get loading =>
+      const LottieGenImage('assets/images/lotties/loading.json');
+
+  /// File path: assets/images/lotties/splash.json
+  LottieGenImage get splash =>
+      const LottieGenImage('assets/images/lotties/splash.json');
+
+  /// List of all assets
+  List<LottieGenImage> get values => [empty, loading, splash];
 }
 
 class $AssetsImagesPngGen {
@@ -63,6 +84,10 @@ class $AssetsImagesPngGen {
 
 class $AssetsImagesSvgGen {
   const $AssetsImagesSvgGen();
+
+  /// File path: assets/images/svg/authentication_background.svg
+  SvgGenImage get authenticationBackground =>
+      const SvgGenImage('assets/images/svg/authentication_background.svg');
 
   /// File path: assets/images/svg/ic_arrow_down.svg
   SvgGenImage get icArrowDown =>
@@ -101,9 +126,20 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icError =>
       const SvgGenImage('assets/images/svg/ic_error.svg');
 
+  /// File path: assets/images/svg/ic_eye.svg
+  SvgGenImage get icEye => const SvgGenImage('assets/images/svg/ic_eye.svg');
+
+  /// File path: assets/images/svg/ic_eye_slash.svg
+  SvgGenImage get icEyeSlash =>
+      const SvgGenImage('assets/images/svg/ic_eye_slash.svg');
+
   /// File path: assets/images/svg/ic_filter.svg
   SvgGenImage get icFilter =>
       const SvgGenImage('assets/images/svg/ic_filter.svg');
+
+  /// File path: assets/images/svg/ic_finger_scan.svg
+  SvgGenImage get icFingerScan =>
+      const SvgGenImage('assets/images/svg/ic_finger_scan.svg');
 
   /// File path: assets/images/svg/ic_home.svg
   SvgGenImage get icHome => const SvgGenImage('assets/images/svg/ic_home.svg');
@@ -139,6 +175,10 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icPassword =>
       const SvgGenImage('assets/images/svg/ic_password.svg');
 
+  /// File path: assets/images/svg/ic_password_check.svg
+  SvgGenImage get icPasswordCheck =>
+      const SvgGenImage('assets/images/svg/ic_password_check.svg');
+
   /// File path: assets/images/svg/ic_search.svg
   SvgGenImage get icSearch =>
       const SvgGenImage('assets/images/svg/ic_search.svg');
@@ -165,8 +205,17 @@ class $AssetsImagesSvgGen {
   AssetGenImage get loading =>
       const AssetGenImage('assets/images/svg/loading.gif');
 
+  /// File path: assets/images/svg/loading_button.gif
+  AssetGenImage get loadingButton =>
+      const AssetGenImage('assets/images/svg/loading_button.gif');
+
+  /// File path: assets/images/svg/register_image.svg
+  SvgGenImage get registerImage =>
+      const SvgGenImage('assets/images/svg/register_image.svg');
+
   /// List of all assets
   List<dynamic> get values => [
+        authenticationBackground,
         icArrowDown,
         icArrowLeft,
         icArrowRight,
@@ -177,7 +226,10 @@ class $AssetsImagesSvgGen {
         icDesc,
         icDone,
         icError,
+        icEye,
+        icEyeSlash,
         icFilter,
+        icFingerScan,
         icHome,
         icLocation,
         icLoginScreen,
@@ -187,13 +239,16 @@ class $AssetsImagesSvgGen {
         icNavAccount,
         icNavHome,
         icPassword,
+        icPasswordCheck,
         icSearch,
         icSort,
         icTrash,
         icUser,
         icWallet,
         icWarning,
-        loading
+        loading,
+        loadingButton,
+        registerImage
       ];
 }
 
@@ -322,6 +377,65 @@ class SvgGenImage {
       colorBlendMode: colorBlendMode,
       clipBehavior: clipBehavior,
       cacheColorFilter: cacheColorFilter,
+    );
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
+}
+
+class LottieGenImage {
+  const LottieGenImage(this._assetName);
+
+  final String _assetName;
+
+  LottieBuilder lottie({
+    Animation<double>? controller,
+    bool? animate,
+    FrameRate? frameRate,
+    bool? repeat,
+    bool? reverse,
+    LottieDelegates? delegates,
+    LottieOptions? options,
+    void Function(LottieComposition)? onLoaded,
+    LottieImageProviderFactory? imageProviderFactory,
+    Key? key,
+    AssetBundle? bundle,
+    Widget Function(BuildContext, Widget, LottieComposition?)? frameBuilder,
+    ImageErrorWidgetBuilder? errorBuilder,
+    double? width,
+    double? height,
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    String? package,
+    bool? addRepaintBoundary,
+    FilterQuality? filterQuality,
+    void Function(String)? onWarning,
+  }) {
+    return Lottie.asset(
+      _assetName,
+      controller: controller,
+      animate: animate,
+      frameRate: frameRate,
+      repeat: repeat,
+      reverse: reverse,
+      delegates: delegates,
+      options: options,
+      onLoaded: onLoaded,
+      imageProviderFactory: imageProviderFactory,
+      key: key,
+      bundle: bundle,
+      frameBuilder: frameBuilder,
+      errorBuilder: errorBuilder,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      package: package,
+      addRepaintBoundary: addRepaintBoundary,
+      filterQuality: filterQuality,
+      onWarning: onWarning,
     );
   }
 

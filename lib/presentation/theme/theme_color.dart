@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color white = Color(0xFF5790ab);
+  static const Color white = Color(0xFFFFFFFF);
   static const Color lavender = Color(0xFFE1E5F2);
   static const Color columbiaBlue = Color(0xFFBFDBF7);
   static const Color teal = Color(0xFF1F7A8C);
   static const Color gunmetal = Color(0xFF022B3A);
 
   static const Color primary = Color(0xFF012A4A);
+  static const Color greyF0FF = Color(0xFFEBF0FF);
   static const Color text = black;
   static Color? background = grey50;
   static const backgroundColor = Color(0xffFCFAF3);
@@ -59,10 +60,14 @@ class AppColors {
   // static const Color blue900 = Color(0xFF013A63);
 
   // //blue
-  static const Color blue100 = Color(0xFFE0EAF8);
-  static const Color blue200 = Color(0xFF9EB9D8);
-  static const Color blue300 = Color(0xFF6D9ACC);
-  static const Color blue400 = Color(0xFF2A4F79);
+  // static const Color blue100 = Color(0xFFE0EAF8);
+  // static const Color blue200 = Color(0xFF9EB9D8);
+  // static const Color blue300 = Color(0xFF6D9ACC);
+  // static const Color blue400 = Color(0xFF2A4F79);
+  static const Color blue100 = Color(0xFFfefefe);
+  static const Color blue200 = Color(0xFFc2d2ee);
+  static const Color blue300 = Color(0xFF88a2ce);
+  static const Color blue400 = Color(0xFF456caa);
   static const Color blue500 = Color(0xFF0B141E);
 
 

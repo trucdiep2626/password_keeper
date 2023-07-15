@@ -37,6 +37,7 @@ class AppTextField extends StatefulWidget {
     this.autocorrect = true,
     this.enableSuggestions = true,
     this.textInputAction,
+    this.suffixIcon,
   }) : super(key: key);
 
   final String? labelText;
@@ -48,6 +49,7 @@ class AppTextField extends StatefulWidget {
   final Color? borderColor;
   final Color? backgroundColor;
   final Widget? prefixIcon;
+  final Widget? suffixIcon;
   final int? minLines;
   final int maxLines;
   final int? maxLength;
@@ -94,7 +96,7 @@ class AppTextFieldState extends State<AppTextField> {
       }
     });
 
-    _obscureText = widget.obscureText ?? false;
+   // _obscureText = widget.obscureText ?? false;
     super.initState();
   }
 
@@ -118,13 +120,16 @@ class AppTextFieldState extends State<AppTextField> {
           //  height: 48.h,
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(5),
-            // border: Border.all(
-            //     color: widget.borderColor ??
-            //         (_focusNode.hasFocus
-            //             ? AppColors.primary
-            //             : AppColors.grey100),
-            //     width: 1.0),
+        borderRadius: BorderRadius.circular(5),
+            border:
+
+
+            Border.all(
+                color: widget.borderColor ??
+                    (_focusNode.hasFocus
+                        ? AppColors.blue400
+                        : AppColors.greyF0FF),
+                width: 1.0),
           ),
           child: TextField(
             textInputAction: widget.textInputAction,
@@ -142,10 +147,10 @@ class AppTextFieldState extends State<AppTextField> {
             onTap: widget.onTap,
             cursorColor: AppColors.black,
             maxLength: widget.maxLength,
-            maxLines: _obscureText ? 1 : null,
+            maxLines:(widget.obscureText ?? false) ? 1 : null,
             controller: widget.controller,
             enabled: widget.enable,
-            obscureText: _obscureText,
+            obscureText: widget.obscureText ?? false,
             decoration: InputDecoration(
               counterText: widget.counterText,
               labelText: widget.labelText,
@@ -157,8 +162,33 @@ class AppTextFieldState extends State<AppTextField> {
               helperText: widget.helpText,
               contentPadding: EdgeInsets.symmetric(
                   horizontal: AppDimens.width_16, vertical: AppDimens.space_12),
-              prefixIcon: widget.prefixIcon,
+              prefixIcon:Padding(
+                padding: EdgeInsets.only(
+                  left: AppDimens.space_18,
+                  right: AppDimens.space_12,
+                ),
+                child: SizedBox(
+                  width: AppDimens.space_20,
+                  height: AppDimens.space_20,
+                  child: widget.prefixIcon,
+                ),
+              ) ,
               prefixIconConstraints: const BoxConstraints(
+                minWidth: 20,
+                minHeight: 20,
+              ),
+              suffixIcon:Padding(
+                padding: EdgeInsets.only(
+                  left: AppDimens.space_18,
+                  right: AppDimens.space_12,
+                ),
+                child: SizedBox(
+                  width: AppDimens.space_20,
+                  height: AppDimens.space_20,
+                  child: widget.suffixIcon,
+                ),
+              ) ,
+              suffixIconConstraints: const BoxConstraints(
                 minWidth: 20,
                 minHeight: 20,
               ),

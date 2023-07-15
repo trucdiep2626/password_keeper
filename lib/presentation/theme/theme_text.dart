@@ -13,12 +13,9 @@ class ThemeText {
     color: AppColors.blue500,
   );
 
-
   static final TextStyle bodyMedium = bodyRegular.copyWith(
     fontWeight: FontWeight.w500,
   );
-
-
 
   static final TextStyle bodySemibold = bodyRegular.copyWith(
     fontWeight: FontWeight.w600,
@@ -83,135 +80,136 @@ class ThemeText {
     fontWeight: FontWeight.w500,
     fontSize: 10.sp,
     fontFamily: FontFamily.mr,
+    color: AppColors.errorColor,
   );
 }
 
 extension CommonFontWeight on TextStyle {
   /// FontWeight.w100
   TextStyle w100([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w100,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w100,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w200
   TextStyle w200([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w200,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w200,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w300
   TextStyle w300([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w300,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w300,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w400
   TextStyle w400([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w400,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w400,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w500
   TextStyle w500([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w500,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w500,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w600
   TextStyle w600([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w600,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w600,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w700
   TextStyle w700([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w700,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w700,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w800
   TextStyle w800([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w800,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w800,
+        fontSize: fontSize,
+      );
 
   /// FontWeight.w900
   TextStyle w900([double? fontSize]) => copyWith(
-    fontWeight: FontWeight.w900,
-    fontSize: fontSize,
-  );
+        fontWeight: FontWeight.w900,
+        fontSize: fontSize,
+      );
 }
 
 extension CommonFontSize on TextStyle {
   /// custom fontSize
   TextStyle fSize(double fontSize) => copyWith(
-    fontSize: fontSize,
-  );
+        fontSize: fontSize,
+      );
 
   /// fontSize: 10
   TextStyle get s10 => copyWith(
-    fontSize: 10.sp,
-  );
+        fontSize: 10.sp,
+      );
 
   /// fontSize: 12
   TextStyle get s12 => copyWith(
-    fontSize: 12.sp,
-  );
+        fontSize: 12.sp,
+      );
 
   /// fontSize: 14
   TextStyle get s14 => copyWith(
-    fontSize: 14.sp,
-  );
+        fontSize: 14.sp,
+      );
 
   /// fontSize: 15
   TextStyle get s15 => copyWith(
-    fontSize: 15.sp,
-  );
+        fontSize: 15.sp,
+      );
 
   /// fontSize: 16
   TextStyle get s16 => copyWith(
-    fontSize: 16.sp,
-  );
+        fontSize: 16.sp,
+      );
 
   /// fontSize: 17
   TextStyle get s17 => copyWith(
-    fontSize: 17.sp,
-  );
+        fontSize: 17.sp,
+      );
 
   /// fontSize: 18
   TextStyle get s18 => copyWith(
-    fontSize: 18.sp,
-  );
+        fontSize: 18.sp,
+      );
 
   /// fontSize: 20
   TextStyle get s20 => copyWith(
-    fontSize: 20.sp,
-  );
+        fontSize: 20.sp,
+      );
 
   /// fontSize: 24
   TextStyle get s24 => copyWith(
-    fontSize: 24.sp,
-  );
+        fontSize: 24.sp,
+      );
 
   /// fontSize: 32
   TextStyle get s32 => copyWith(
-    fontSize: 32.sp,
-  );
+        fontSize: 32.sp,
+      );
 
   /// fontSize: 36
   TextStyle get s36 => copyWith(
-    fontSize: 36.sp,
-  );
+        fontSize: 36.sp,
+      );
 
   /// fontSize: 40
   TextStyle get s40 => copyWith(
-    fontSize: 40.sp,
-  );
+        fontSize: 40.sp,
+      );
 
   /// fontSize: 48
   TextStyle get s48 => copyWith(
-    fontSize: 48.sp,
-  );
+        fontSize: 48.sp,
+      );
 }
 
 extension CommonFontColor on TextStyle {

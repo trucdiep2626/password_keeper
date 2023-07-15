@@ -13,34 +13,32 @@ class RegisterController extends GetxController with MixinController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
+  final fullNameController = TextEditingController();
 
   final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
   final confirmPasswordFocusNode = FocusNode();
-  final firstNameFocusNode = FocusNode();
-  final lastNameFocusNode = FocusNode();
+  final fullNameFocusNode = FocusNode();
 
-  //RxString errorText = ''.obs;
+  RxString errorText = ''.obs;
 
   RxString emailValidate = ''.obs;
   RxString passwordValidate = ''.obs;
   RxString confirmPasswordValidate = ''.obs;
-  RxString firstNameValidate = ''.obs;
-  RxString lastNameValidate = ''.obs;
+  RxString fullNameValidate = ''.obs;
 
   RxBool emailHasFocus = false.obs;
   RxBool pwdHasFocus = false.obs;
   RxBool confirmPwdHasFocus = false.obs;
-  RxBool firstNameHasFocus = false.obs;
-  RxBool lastNameHasFocus = false.obs;
+  RxBool fullNameHasFocus = false.obs;
 
   RxBool buttonEnable = false.obs;
 
   Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
   AccountUseCase accountUsecase;
 
+  RxBool showPassword = false.obs;
+  RxBool showConfirmPassword = false.obs;
   //final mainController = Get.find<MainController>();
 
   RegisterController({required this.accountUsecase});
@@ -49,12 +47,19 @@ class RegisterController extends GetxController with MixinController {
     if (emailController.text.trim().isNotEmpty &&
         passwordController.text.isNotEmpty &&
         confirmPasswordController.text.isNotEmpty &&
-        lastNameController.text.trim().isNotEmpty &&
-        firstNameController.text.trim().isNotEmpty) {
+        fullNameController.text.trim().isNotEmpty) {
       buttonEnable.value = true;
     } else {
       buttonEnable.value = false;
     }
+  }
+
+  void onChangedShowPassword() {
+    showPassword.value = !(showPassword.value);
+  }
+
+  void onChangedShowConfirmPwd() {
+    showConfirmPassword.value = !(showConfirmPassword.value);
   }
 
   void postRegister() async {
@@ -68,9 +73,9 @@ class RegisterController extends GetxController with MixinController {
     } else {
       confirmPasswordValidate.value = '';
     }
-    // firstNameValidate.value = AppValidator.validateName(
-    //   TransactionConstants.firstName.tr,
-    //   firstNameController,
+    // fullNameValidate.value = AppValidator.validateName(
+    //   TransactionConstants.fullName.tr,
+    //   fullNameController,
     // );
     // lastNameValidate.value = AppValidator.validateName(
     //   TransactionConstants.lastName.tr,
@@ -86,13 +91,13 @@ class RegisterController extends GetxController with MixinController {
 
     // if (emailValidate.value.isEmpty &&
     //     passwordValidate.value.isEmpty &&
-    //     firstNameValidate.value.isEmpty &&
+    //     fullNameValidate.value.isEmpty &&
     //     confirmPasswordValidate.value.isEmpty &&
     //     lastNameValidate.value.isEmpty) {
     //   final result = await accountUsecase.register(
     //     username: emailController.text.trim(),
     //     password: passwordController.text.trim(),
-    //     firstName: firstNameController.text.trim(),
+    //     fullName: fullNameController.text.trim(),
     //     lastName: lastNameController.text.trim(),
     //   );
     //
@@ -122,8 +127,7 @@ class RegisterController extends GetxController with MixinController {
 
   void onTapEmailTextField() {
     pwdHasFocus.value = false;
-    lastNameHasFocus.value = false;
-    firstNameHasFocus.value = false;
+    fullNameHasFocus.value = false;
     emailHasFocus.value = true;
     confirmPwdHasFocus.value = false;
   }
@@ -134,7 +138,7 @@ class RegisterController extends GetxController with MixinController {
     FocusScope.of(context).requestFocus(passwordFocusNode);
   }
 
-  void onChangedPwd() {
+  void onChangedConfirmPwd() {
     checkButtonEnable();
     confirmPasswordValidate.value = '';
   }
@@ -142,8 +146,7 @@ class RegisterController extends GetxController with MixinController {
   void onTapPwdTextField() {
     confirmPwdHasFocus.value = false;
     pwdHasFocus.value = true;
-    lastNameHasFocus.value = false;
-    firstNameHasFocus.value = false;
+    fullNameHasFocus.value = false;
     emailHasFocus.value = false;
   }
 
@@ -153,69 +156,47 @@ class RegisterController extends GetxController with MixinController {
     FocusScope.of(context).requestFocus(confirmPasswordFocusNode);
   }
 
-  void onChangedConfirmPwd() {
+  void onChangedPwd() {
     checkButtonEnable();
     passwordValidate.value = '';
   }
 
   void onTapConfirmPwdTextField() {
     pwdHasFocus.value = false;
-    lastNameHasFocus.value = false;
-    firstNameHasFocus.value = false;
+    fullNameHasFocus.value = false;
     emailHasFocus.value = false;
     confirmPwdHasFocus.value = true;
   }
 
   void onEditingCompleteConfirmPwd() {
     confirmPwdHasFocus.value = false;
-    firstNameHasFocus.value = true;
-    FocusScope.of(context).requestFocus(firstNameFocusNode);
-  }
-
-  void onChangedFirstName() {
-    checkButtonEnable();
-    firstNameValidate.value = '';
-  }
-
-  void onTapFirstNameTextField() {
-    pwdHasFocus.value = false;
-    lastNameHasFocus.value = false;
-    firstNameHasFocus.value = true;
-    emailHasFocus.value = false;
-    confirmPwdHasFocus.value = false;
-  }
-
-  void onEditingCompleteFirstName() {
-    firstNameHasFocus.value = false;
-    lastNameHasFocus.value = true;
-    FocusScope.of(context).requestFocus(lastNameFocusNode);
-  }
-
-  void onChangedLastName() {
-    checkButtonEnable();
-    lastNameValidate.value = '';
-  }
-
-  void onTapLastNameTextField() {
-    pwdHasFocus.value = false;
-    lastNameHasFocus.value = true;
-    firstNameHasFocus.value = false;
-    emailHasFocus.value = false;
-    confirmPwdHasFocus.value = false;
-  }
-
-  void onEditingCompleteLastName() {
-    lastNameHasFocus.value = false;
     FocusScope.of(context).unfocus();
     if (buttonEnable.value) {
       postRegister();
     }
   }
 
+  void onChangedFullName() {
+    checkButtonEnable();
+    fullNameValidate.value = '';
+  }
+
+  void onTapFullNameTextField() {
+    pwdHasFocus.value = false;
+    fullNameHasFocus.value = true;
+    emailHasFocus.value = false;
+    confirmPwdHasFocus.value = false;
+  }
+
+  void onEditingCompleteFullName() {
+    fullNameHasFocus.value = false;
+    emailHasFocus.value = true;
+    FocusScope.of(context).requestFocus(emailFocusNode);
+  }
+
   void onPressedRegister() {
     pwdHasFocus.value = false;
-    lastNameHasFocus.value = false;
-    firstNameHasFocus.value = false;
+    fullNameHasFocus.value = false;
     emailHasFocus.value = false;
     if (buttonEnable.value) {
       postRegister();
@@ -234,6 +215,12 @@ class RegisterController extends GetxController with MixinController {
     });
     passwordFocusNode.addListener(() {
       pwdHasFocus.value = passwordFocusNode.hasFocus;
+    });
+    fullNameFocusNode.addListener(() {
+      fullNameHasFocus.value = fullNameFocusNode.hasFocus;
+    });
+    confirmPasswordFocusNode.addListener(() {
+      confirmPwdHasFocus.value = confirmPasswordFocusNode.hasFocus;
     });
   }
 }

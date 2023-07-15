@@ -23,6 +23,10 @@ class AppDimens {
   static double space_24 = 24.sp;
   static double space_36 = 36.sp;
   static double space_48 = 48.sp;
+  static double space_60 = 60.sp;
+  static double space_72 = 72.sp;
+  static double space_84 = 84.sp;
+  static double space_160 = 160.sp;
 
   /// Height
   static double height_4 = 4.h;

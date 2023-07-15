@@ -40,11 +40,12 @@ class AppImageWidget extends StatelessWidget {
     this.size,
     // ignore: prefer_asserts_with_message
   }) : assert(
-  asset == null ||
-      asset is AssetGenImage ||
-      asset is SvgGenImage ||
-      asset is String,
-  );
+          asset == null ||
+              asset is AssetGenImage ||
+              asset is SvgGenImage ||
+              asset is String ||
+              asset is LottieGenImage,
+        );
 
   final VoidCallback? onTap;
 
@@ -155,6 +156,17 @@ class AppImageWidget extends StatelessWidget {
       fullImage = (asset as SvgGenImage).svg(
         color: color,
       );
+    } else if (asset is LottieGenImage) {
+      image = (asset as LottieGenImage).lottie(
+        repeat: true,
+        fit: fit,
+        errorBuilder: (_, __, ___) => noImage,
+      );
+      fullImage = (asset as LottieGenImage).lottie(
+        repeat: true,
+        fit: BoxFit.contain,
+        errorBuilder: (_, __, ___) => noImage,
+      );
     } else if (asset is String &&
         !(asset as String)
             .substring((asset as String).lastIndexOf('.'))
@@ -176,9 +188,9 @@ class AppImageWidget extends StatelessWidget {
     final child = isCircle
         ? ClipOval(child: image)
         : ClipRRect(
-      borderRadius: borderRadius,
-      child: image,
-    );
+            borderRadius: borderRadius,
+            child: image,
+          );
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -196,4 +208,3 @@ class AppImageWidget extends StatelessWidget {
     );
   }
 }
-

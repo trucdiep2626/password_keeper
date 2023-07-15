@@ -19,12 +19,13 @@ const viString = {
   'The account sign-in was incorrect. Please wait and try again later.',
 
   //  signup
-  "signup": "Sign Up",
+  "sign_up": "Sign Up",
   "create_account": "Create Account",
   "fullname":"Full Name",
   "email":"Email",
   "password":"Password",
-  "confirm_password":"Password",
+  "confirm_password":"Confirm Password",
   "dont_have_an_account":"Don't have an account?",
-  "already_have_an_account":"Already have an account?"
+  "already_have_an_account":"Already have an account?",
+  "setup_new_account":"Let’s get you setup with a new account!"
 };
