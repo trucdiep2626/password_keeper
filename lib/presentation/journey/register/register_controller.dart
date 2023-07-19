@@ -39,7 +39,6 @@ class RegisterController extends GetxController with MixinController {
 
   RxBool showPassword = false.obs;
   RxBool showConfirmPassword = false.obs;
-  //final mainController = Get.find<MainController>();
 
   RegisterController({required this.accountUsecase});
 
@@ -68,23 +67,20 @@ class RegisterController extends GetxController with MixinController {
     // errorText.value = '';
     emailValidate.value = AppValidator.validateEmail(emailController);
     passwordValidate.value = AppValidator.validatePassword(passwordController);
-    if (confirmPasswordController.text != passwordController.text) {
-      confirmPasswordValidate.value = 'Your confirm password is incorrect';
-    } else {
-      confirmPasswordValidate.value = '';
-    }
-    // fullNameValidate.value = AppValidator.validateName(
-    //   TransactionConstants.fullName.tr,
-    //   fullNameController,
-    // );
-    // lastNameValidate.value = AppValidator.validateName(
-    //   TransactionConstants.lastName.tr,
-    //   lastNameController,
-    // );
+
+    confirmPasswordValidate.value = AppValidator.validateConfirmPassword(
+        passwordController, confirmPasswordController);
+
+    fullNameValidate.value = AppValidator.validateName(
+      fullNameController,
+    );
 
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      showTopSnackBarError(context, TransactionConstants.noConnectionError.tr);
+      if (Get.context != null) {
+        showTopSnackBarError(
+            Get.context!, TransactionConstants.noConnectionError.tr);
+      }
       rxLoadedButton.value = LoadedType.finish;
       return;
     }

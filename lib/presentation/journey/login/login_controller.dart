@@ -29,9 +29,13 @@ class LoginController extends GetxController with MixinController {
 
   AccountUseCase accountUsecase;
 
-  // final mainController = Get.find<MainController>();
+  RxBool showPassword = false.obs;
 
   LoginController({required this.accountUsecase});
+
+  void onChangedShowPassword() {
+    showPassword.value = !showPassword.value;
+  }
 
   void checkButtonEnable() {
     if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
@@ -50,7 +54,10 @@ class LoginController extends GetxController with MixinController {
 
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      showTopSnackBarError(context, TransactionConstants.noConnectionError.tr);
+      if (Get.context != null) {
+        showTopSnackBarError(
+            Get.context!, TransactionConstants.noConnectionError.tr);
+      }
       rxLoadedButton.value = LoadedType.finish;
       return;
     }

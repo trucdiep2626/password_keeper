@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/injector/bindings/home_binding.dart';
+import 'package:password_keeper/common/injector/bindings/login_binding.dart';
 import 'package:password_keeper/common/injector/bindings/main_binding.dart';
 import 'package:password_keeper/common/injector/bindings/register_binding.dart';
 import 'package:password_keeper/common/injector/bindings/splash_binding.dart';
+import 'package:password_keeper/presentation/journey/login/login_screen.dart';
 import 'package:password_keeper/presentation/journey/main/main_screen.dart';
 import 'package:password_keeper/presentation/journey/register/register_screen.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_screen.dart';
@@ -22,5 +24,10 @@ List<GetPage> myPages = [
     name: AppRoutes.register,
     page: () => const RegisterScreen(),
     binding: RegisterBinding(),
+  ),
+  GetPage(
+    name: AppRoutes.login,
+    page: () => const LogInScreen(),
+    binding: LoginBinding(),
   ),
 ];

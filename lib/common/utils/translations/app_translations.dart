@@ -27,7 +27,6 @@ class TransactionConstants {
   static const String requestTimeOut = 'requestTimeOut';
   static const String didNotReceiveTheCode = 'didNotReceiveTheCode';
 
-  static const String login = 'login';
   static const String verifyPhone = 'verifyPhone';
   static const String phone = 'phone';
   static const String invalidPhone = 'invalidPhone';
@@ -56,8 +55,8 @@ class TransactionConstants {
 
   //login
   static const String signIn = "sign_in";
-  static const String forgetPassword = "forget_assword";
-  static const String loginError = "login_rror";
+  static const String forgetPassword = "forget_password";
+  static const String loginError = "login_error";
 
   //  signup
   static const String signUp = "sign_up";
@@ -69,4 +68,7 @@ class TransactionConstants {
   static const String dontHaveAnAccount = "dont_have_an_account";
   static const String alreadyHaveAnAccount = "already_have_an_account";
   static const String setupNewAccount = "setup_new_account";
+  static const String requiredFields ="required_fields";
+  static const String confirmPasswordError = "confirm_password_error";
+
 }

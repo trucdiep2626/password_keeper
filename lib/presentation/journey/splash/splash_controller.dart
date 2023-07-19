@@ -19,7 +19,7 @@ class SplashController extends GetxController with MixinController {
     rxLoadedType.value = LoadedType.start;
     Future.delayed(const Duration(seconds: 3)).then((_) async {
       rxLoadedType.value = LoadedType.finish;
-      Get.offAndToNamed(AppRoutes.register);
+      Get.offAndToNamed(AppRoutes.login);
     });
   }
 }

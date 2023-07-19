@@ -27,5 +27,8 @@ const viString = {
   "confirm_password":"Confirm Password",
   "dont_have_an_account":"Don't have an account?",
   "already_have_an_account":"Already have an account?",
-  "setup_new_account":"Let’s get you setup with a new account!"
+  "setup_new_account":"Let’s get you setup with a new account!",
+  "required_fields":"This field is required",
+  "confirm_password_error":"Password and password confirmation don't match"
+
 };

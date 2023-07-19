@@ -12,8 +12,7 @@ const enString = {
 
   //login
   "sign_in": "Sign in",
-  "forgetPassword": "Forget password?",
-  "login_rror":
+  "login_error":
       'The account sign-in was incorrect. Please wait and try again later.',
 
   //  signup
@@ -21,9 +20,19 @@ const enString = {
   "create_account": "Create Account",
   "fullname": "Full Name",
   "email": "Email",
-  "password": "Password",
-  "confirm_password": "Password",
+  "master_password": "Master password",
+  "confirm_password": "Confirm master password",
   "dont_have_an_account": "Don't have an account?",
   "already_have_an_account": "Already have an account?",
-"setup_new_account":"Let’s get you setup with a new account!"
+  "setup_new_account": "Let’s get you setup with a new account!",
+  "required_fields": "This field is required",
+  "confirm_password_error": "Password and password confirmation don't match",
+  "master_password_note":"Your master password cannot be recovered if you forget it.",
+  "master_password_hint":"Master password hint (optional)",
+  "master_password_hint_note":"A master password hint can help you remember your password if you forget it.",
+  "master_password_error":"Master password must be at least 12 characters long.",
+  "error":"An error has occurred",
+  "invalid_email":"Invalid email address",
+  "get_master_password_hint":"Get master password hint",
+  "not_you":"Not you?"
 };

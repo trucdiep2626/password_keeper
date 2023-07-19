@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:password_keeper/common/utils/translations/app_translations.dart';
 
 enum AppValidation {
   name,
@@ -71,6 +73,13 @@ class AppValidator {
       AppValidation.password,
       'Mật khẩu phải từ 6-20 ký tự',
     );
+  }
+
+  static String validateConfirmPassword(TextEditingController passwordCtrl, TextEditingController confirmPasswordCtrl) {
+   if(passwordCtrl.text.compareTo(confirmPasswordCtrl.text) == 0) {
+     return  TransactionConstants.setupNewAccount.tr;
+   }
+   return '';
   }
 
   static String validateName(TextEditingController nameCtrl) {
