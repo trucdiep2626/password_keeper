@@ -96,7 +96,7 @@ class AppTextFieldState extends State<AppTextField> {
       }
     });
 
-   // _obscureText = widget.obscureText ?? false;
+    // _obscureText = widget.obscureText ?? false;
     super.initState();
   }
 
@@ -120,11 +120,8 @@ class AppTextFieldState extends State<AppTextField> {
           //  height: 48.h,
           decoration: BoxDecoration(
             color: AppColors.white,
-        borderRadius: BorderRadius.circular(5),
-            border:
-
-
-            Border.all(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(
                 color: widget.borderColor ??
                     (_focusNode.hasFocus
                         ? AppColors.blue400
@@ -147,7 +144,7 @@ class AppTextFieldState extends State<AppTextField> {
             onTap: widget.onTap,
             cursorColor: AppColors.black,
             maxLength: widget.maxLength,
-            maxLines:(widget.obscureText ?? false) ? 1 : null,
+            maxLines: (widget.obscureText ?? false) ? 1 : null,
             controller: widget.controller,
             enabled: widget.enable,
             obscureText: widget.obscureText ?? false,
@@ -162,36 +159,44 @@ class AppTextFieldState extends State<AppTextField> {
               helperText: widget.helpText,
               contentPadding: EdgeInsets.symmetric(
                   horizontal: AppDimens.width_16, vertical: AppDimens.space_12),
-              prefixIcon:Padding(
-                padding: EdgeInsets.only(
-                  left: AppDimens.space_18,
-                  right: AppDimens.space_12,
-                ),
-                child: SizedBox(
-                  width: AppDimens.space_20,
-                  height: AppDimens.space_20,
-                  child: widget.prefixIcon,
-                ),
-              ) ,
-              prefixIconConstraints: const BoxConstraints(
-                minWidth: 20,
-                minHeight: 20,
-              ),
-              suffixIcon:Padding(
-                padding: EdgeInsets.only(
-                  left: AppDimens.space_18,
-                  right: AppDimens.space_12,
-                ),
-                child: SizedBox(
-                  width: AppDimens.space_20,
-                  height: AppDimens.space_20,
-                  child: widget.suffixIcon,
-                ),
-              ) ,
-              suffixIconConstraints: const BoxConstraints(
-                minWidth: 20,
-                minHeight: 20,
-              ),
+              prefixIcon: widget.prefixIcon != null
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: AppDimens.space_18,
+                        right: AppDimens.space_12,
+                      ),
+                      child: SizedBox(
+                        width: AppDimens.space_20,
+                        height: AppDimens.space_20,
+                        child: widget.prefixIcon,
+                      ),
+                    )
+                  : null,
+              prefixIconConstraints: widget.prefixIcon != null
+                  ? const BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    )
+                  : null,
+              suffixIcon: widget.suffixIcon != null
+                  ? Padding(
+                      padding: EdgeInsets.only(
+                        left: AppDimens.space_18,
+                        right: AppDimens.space_12,
+                      ),
+                      child: SizedBox(
+                        width: AppDimens.space_20,
+                        height: AppDimens.space_20,
+                        child: widget.suffixIcon,
+                      ),
+                    )
+                  : null,
+              suffixIconConstraints: widget.suffixIcon != null
+                  ? const BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    )
+                  : null,
               enabledBorder: InputBorder.none,
               disabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
@@ -207,7 +212,8 @@ class AppTextFieldState extends State<AppTextField> {
         //errorText element
         if (widget.errorText.isNotEmpty)
           Padding(
-            padding: EdgeInsets.only(left: AppDimens.space_16, top: AppDimens.space_4),
+            padding: EdgeInsets.only(
+                left: AppDimens.space_16, top: AppDimens.space_4),
             child: Text(
               widget.errorText,
               style: ThemeText.errorText,

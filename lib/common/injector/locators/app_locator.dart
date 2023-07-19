@@ -4,9 +4,11 @@ import 'package:password_keeper/data/local_repository.dart';
 import 'package:password_keeper/data/remote/account_repository.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/app_controller.dart';
+import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/journey/login/login_controller.dart';
 import 'package:password_keeper/presentation/journey/main/main_controller.dart';
+import 'package:password_keeper/presentation/journey/master_password/master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_controller.dart';
 
@@ -22,6 +24,10 @@ void configLocator() {
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<LoginController>(
           () => LoginController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<CreateMasterPasswordController>(
+          () => CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<MasterPasswordController>(
+          () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
 
   /// UseCases
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(
