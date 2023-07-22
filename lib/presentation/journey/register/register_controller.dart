@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
@@ -102,6 +103,7 @@ class RegisterController extends GetxController with MixinController {
     //     showTopSnackBar(context,
     //         message: TransactionConstants.successfully.tr,
     //         type: SnackBarType.done);
+    Get.toNamed(AppRoutes.createMasterPassword);
     //     Get.back();
     //   }
     //   // else {

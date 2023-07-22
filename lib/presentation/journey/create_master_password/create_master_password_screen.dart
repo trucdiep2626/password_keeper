@@ -163,6 +163,7 @@ class CreateMasterPasswordScreen
               ),
               Obx(
                 () => AppButton(
+                  enable: controller.buttonEnable.value,
                   title: TransactionConstants.save.tr,
                   onPressed: () => controller.onPressedRegister(),
                   loaded: controller.rxLoadedButton.value,

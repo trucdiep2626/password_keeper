@@ -16,9 +16,11 @@ class AppButton extends StatelessWidget {
   final Color? titleColor;
   final double? width;
   final Function()? onPressed;
+  final bool enable;
 
   const AppButton({
     Key? key,
+    this.enable = false,
     required this.title,
     this.loaded = LoadedType.finish,
     this.backgroundColor = AppColors.blue400,
@@ -36,12 +38,14 @@ class AppButton extends StatelessWidget {
           width: width ?? double.infinity,
           height: AppDimens.height_52,
           child: TextButton(
-            onPressed: () {
-              hideKeyboard();
-              if (!isNullEmpty(onPressed)) {
-                onPressed!();
-              }
-            },
+            onPressed: enable
+                ? () {
+                    hideKeyboard();
+                    if (!isNullEmpty(onPressed)) {
+                      onPressed!();
+                    }
+                  }
+                : null,
             style: ButtonStyle(
               textStyle: MaterialStateProperty.resolveWith(
                 (states) => ThemeText.bodySemibold,
@@ -63,7 +67,7 @@ class AppButton extends StatelessWidget {
               ),
               backgroundColor: MaterialStateColor.resolveWith(
                 (states) {
-                  if (isNullEmpty(onPressed)) {
+                  if (isNullEmpty(onPressed) || !enable) {
                     return AppColors.grey;
                   } else {
                     if (loaded == LoadedType.start) {

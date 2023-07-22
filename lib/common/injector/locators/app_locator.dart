@@ -11,6 +11,7 @@ import 'package:password_keeper/presentation/journey/main/main_controller.dart';
 import 'package:password_keeper/presentation/journey/master_password/master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_controller.dart';
+import 'package:password_keeper/presentation/journey/verify_master_password/verify_master_password_controller.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -23,11 +24,13 @@ void configLocator() {
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<LoginController>(
-          () => LoginController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<CreateMasterPasswordController>(
-          () => CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+      () => LoginController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<CreateMasterPasswordController>(() =>
+      CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<MasterPasswordController>(
-          () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+      () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<VerifyMasterPasswordController>(() =>
+      VerifyMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
 
   /// UseCases
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(

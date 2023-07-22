@@ -132,6 +132,7 @@ class LogInScreen extends GetView<LoginController> {
                 ),
                 Obx(
                   () => AppButton(
+                    enable: controller.buttonEnable.value,
                     title: TransactionConstants.signIn.tr,
                     onPressed: () => controller.onPressedLogIn(),
                     loaded: controller.rxLoadedButton.value,

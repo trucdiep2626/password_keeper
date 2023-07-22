@@ -187,6 +187,7 @@ class RegisterScreen extends GetView<RegisterController> {
               ),
               Obx(
                 () => AppButton(
+                  enable: controller.buttonEnable.value,
                   title: TransactionConstants.signUp.tr,
                   onPressed: () => controller.onPressedRegister(),
                   loaded: controller.rxLoadedButton.value,

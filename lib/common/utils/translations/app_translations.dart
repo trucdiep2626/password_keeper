@@ -40,6 +40,8 @@ class TransactionConstants {
   static const String ok = "ok";
   static const String cancel = "cancel";
   static const String delete = "delete";
+  static const String welcomBack ="welcome_back";
+  static const String unlock ="unlock";
 
   //main
   static const String home = 'home';
@@ -81,6 +83,9 @@ class TransactionConstants {
   static const String masterPasswordError = "master_password_error";
   static const String getMasterPasswordHint = "get_master_password_hint";
   static const String notYou = "not_you";
+  static const String enterMasterPassword ="enter_master_password";
+  static const String unlockBiometric ="unlock_biometric";
+
 
   //error message
   static const String error = "error";

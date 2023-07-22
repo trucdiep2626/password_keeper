@@ -8,6 +8,8 @@ const viString = {
   "ok": "Ok",
   "cancel": "Cancel",
   "delete": "Delete",
+  "welcome_back":"Welcome back!",
+  "unlock":"Unlock",
 
   //main
   'home': 'Home',
@@ -54,6 +56,8 @@ const viString = {
       "Master Password must be at least 12 characters long.",
   "get_master_password_hint": "Get master password hint",
   "not_you": "Not you?",
+  "enter_master_password":"Enter your Master Password to Log in",
+  "unlock_biometric":"Unlock with Face ID/Touch ID",
 
   //error
   'unknown_error': 'Unknown error',

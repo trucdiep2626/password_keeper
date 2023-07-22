@@ -81,6 +81,7 @@ class LoginController extends GetxController with MixinController {
     //         //  mainController.rxCustomer.value = customerInfo;
     //         // mainController.updateLogin();
     //         //go to main screen
+    Get.toNamed(AppRoutes.verifyMasterPassword);
     //         Get.offNamed(AppRoutes.main);
     //       } else {
     //         showTopSnackBarError(context, TransactionConstants.unknownError.tr);
@@ -94,6 +95,7 @@ class LoginController extends GetxController with MixinController {
     //     showTopSnackBarError(context, TransactionConstants.unknownError.tr);
     //   }
     // }
+
 
     rxLoadedButton.value = LoadedType.finish;
   }
