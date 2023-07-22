@@ -11,6 +11,8 @@ const viString = {
   "welcome_back":"Welcome back!",
   "unlock":"Unlock",
 
+
+
   //main
   'home': 'Home',
   'account': 'Account',
@@ -39,6 +41,7 @@ const viString = {
   "already_have_an_account": "Already have an account?",
   "setup_new_account": "Let’s get you setup with a new account!",
   "confirm_password_error": "Password and password confirmation don't match",
+  "email_already_in_use":"The account already exists for that email.",
 
   //master password
   "create_master_password": "Create Master Password",
@@ -65,4 +68,7 @@ const viString = {
   "required_fields": "This field is required",
   "error": "An error has occurred",
   "invalid_email": "Invalid email address",
+  "no_data": "No data.",
+  "offline": "You are offline.",
+  "internet_restore": "Internet connection restored.",
 };

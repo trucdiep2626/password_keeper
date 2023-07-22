@@ -43,6 +43,7 @@ class TransactionConstants {
   static const String welcomBack ="welcome_back";
   static const String unlock ="unlock";
 
+
   //main
   static const String home = 'home';
   static const String account = 'account';
@@ -69,6 +70,7 @@ class TransactionConstants {
   static const String confirmPassword = "confirm_password";
   static const String alreadyHaveAnAccount = "already_have_an_account";
   static const String setupNewAccount = "setup_new_account";
+  static const String emailAlreadyInUse ="email_already_in_use";
 
   static const String confirmPasswordError = "confirm_password_error";
 
@@ -93,4 +95,7 @@ class TransactionConstants {
   static const String unknownError = 'unknown_error';
   static const String noConnectionError = 'no_connection_error';
   static const String requiredFields = "required_fields";
+  static const String noData ="no_data";
+  static const String offline ="offline";
+  static const String internetRestore ="internet_restore";
 }

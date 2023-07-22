@@ -11,6 +11,8 @@ const enString = {
   "welcome_back":"Welcome back!",
   "unlock":"Unlock",
 
+
+
   //main
   'home': 'Home',
   'account': 'Account',
@@ -24,7 +26,7 @@ const enString = {
   //login
   "sign_in": "Sign in",
   "login_error":
-      'The account sign-in was incorrect. Please wait and try again later.',
+  'The account sign-in was incorrect. Please wait and try again later.',
   "dont_have_an_account": "Don't have an account?",
   "forget_password": "Forget password?",
   "or_signin_with":"Or sign in with",
@@ -39,6 +41,7 @@ const enString = {
   "already_have_an_account": "Already have an account?",
   "setup_new_account": "Let’s get you setup with a new account!",
   "confirm_password_error": "Password and password confirmation don't match",
+  "email_already_in_use":"The account already exists for that email.",
 
   //master password
   "create_master_password": "Create Master Password",
@@ -48,12 +51,12 @@ const enString = {
   "master_password": "Master Password",
   "confirm_master_password": "Confirm Master Password",
   "master_password_note":
-      "Your Master Password cannot be recovered if you forget it.",
+  "Your Master Password cannot be recovered if you forget it.",
   "master_password_hint": "Hint (optional)",
   "master_password_hint_note":
-      "A master password hint can help you remember your password if you forget it.",
+  "A master password hint can help you remember your password if you forget it.",
   "master_password_error":
-      "Master Password must be at least 12 characters long.",
+  "Master Password must be at least 12 characters long.",
   "get_master_password_hint": "Get master password hint",
   "not_you": "Not you?",
   "enter_master_password":"Enter your Master Password to Log in",
@@ -65,4 +68,7 @@ const enString = {
   "required_fields": "This field is required",
   "error": "An error has occurred",
   "invalid_email": "Invalid email address",
+  "no_data": "No data.",
+  "offline": "You are offline.",
+  "internet_restore": "Internet connection restored.",
 };
