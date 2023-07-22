@@ -82,7 +82,11 @@ class AppButton extends StatelessWidget {
             ),
             child: loaded == LoadedType.start
                 ? const SizedBox.shrink()
-                : Text(title),
+                : Text(
+                    title,
+                    style:
+                        ThemeText.bodySemibold.s16.copyWith(color: titleColor),
+                  ),
           ),
         ),
         loaded == LoadedType.start

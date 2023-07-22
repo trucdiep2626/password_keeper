@@ -141,6 +141,10 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icFingerScan =>
       const SvgGenImage('assets/images/svg/ic_finger_scan.svg');
 
+  /// File path: assets/images/svg/ic_google.svg
+  SvgGenImage get icGoogle =>
+      const SvgGenImage('assets/images/svg/ic_google.svg');
+
   /// File path: assets/images/svg/ic_home.svg
   SvgGenImage get icHome => const SvgGenImage('assets/images/svg/ic_home.svg');
 
@@ -230,6 +234,7 @@ class $AssetsImagesSvgGen {
         icEyeSlash,
         icFilter,
         icFingerScan,
+        icGoogle,
         icHome,
         icLocation,
         icLoginScreen,

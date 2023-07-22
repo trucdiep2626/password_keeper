@@ -56,6 +56,7 @@ class TransactionConstants {
   static const String forgetPassword = "forget_password";
   static const String loginError = "login_error";
   static const String dontHaveAnAccount = "dont_have_an_account";
+  static const String orSignInWith ="or_signin_with";
 
   //  signup
   static const String signUp = "sign_up";

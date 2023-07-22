@@ -5,6 +5,7 @@ import 'package:password_keeper/common/utils/translations/app_translations.dart'
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/login/login_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
+import 'package:password_keeper/presentation/widgets/app_login_social_widget.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 class LogInScreen extends GetView<LoginController> {
@@ -136,6 +137,18 @@ class LogInScreen extends GetView<LoginController> {
                     loaded: controller.rxLoadedButton.value,
                   ),
                 ),
+                SizedBox(
+                  height: AppDimens.space_20,
+                ),
+                Text(
+                  TransactionConstants.orSignInWith.tr,
+                  style: ThemeText.bodyMedium.s16,
+                ),
+                SizedBox(
+                  height: AppDimens.space_12,
+                ),
+                AppLoginSocialWidget(
+                    icon: Assets.images.svg.icGoogle, onTap: () {}),
                 const Spacer(),
                 AppTouchable(
                     onPressed: () => controller.onPressForgotPassword(),

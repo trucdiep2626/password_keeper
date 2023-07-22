@@ -25,6 +25,7 @@ const enString = {
       'The account sign-in was incorrect. Please wait and try again later.',
   "dont_have_an_account": "Don't have an account?",
   "forget_password": "Forget password?",
+  "or_signin_with":"Or sign in with",
 
   //signup
   "sign_up": "Sign Up",
