@@ -20,15 +20,16 @@ enum AppValidation {
 
 final _pattern = <AppValidation, Pattern>{
   AppValidation.name:
-  r'^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêếìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹý ]{3,255}$',
+      r'^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêếìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹý ]{3,255}$',
   AppValidation.phoneNo:
-  r'(086|096|097|098|032|033|034|035|036|037|038|039|091|094|088|083|084|085|081|082|089|090|093|070|079|077|076|078|092|056|058|099|059)+([0-9]{7,12})\b',
+      r'(086|096|097|098|032|033|034|035|036|037|038|039|091|094|088|083|084|085|081|082|089|090|093|070|079|077|076|078|092|056|058|099|059)+([0-9]{7,12})\b',
   AppValidation.address: r'^((\\d,)?\\d,\\d,\\d,){3,255}$',
-  AppValidation.email: r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+  AppValidation.email:
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
   AppValidation.username: r'^([a-zA-Z0-9\.\-]{6,50})$',
   AppValidation.password: r'^[a-zA-Z0-9!@#\\$%\\^\\&*\\)\\(+=._-]{6,20}$',
   AppValidation.dateTime:
-  r'^(([0-9]{4}\-[0-9]{2}\-[0-9]{2}T[0-9]{2}\:[0-9]{2}\:[0-9]{2}Z))|(([0-9]{4}\-[0-9]{2}\-[0-9]{2}T[0-9]{2}\:[0-9]{2}\:[0-9]{2}\+[0-9]{2}\:[0-9]{2}))$',
+      r'^(([0-9]{4}\-[0-9]{2}\-[0-9]{2}T[0-9]{2}\:[0-9]{2}\:[0-9]{2}Z))|(([0-9]{4}\-[0-9]{2}\-[0-9]{2}T[0-9]{2}\:[0-9]{2}\:[0-9]{2}\+[0-9]{2}\:[0-9]{2}))$',
   AppValidation.amount: r'^(?:\\d{1,3}(?:,\\d{3})*|\\d+)(?:.\\d+)?$',
   AppValidation.imageUpload: r'',
   AppValidation.fileUpload: r'',
@@ -54,7 +55,7 @@ class AppValidator {
     return error(
       emailCtrl.text,
       AppValidation.email,
-      'Email không đúng định dạng',
+      TransactionConstants.invalidEmail.tr,
     );
   }
   //
@@ -71,15 +72,16 @@ class AppValidator {
     return error(
       passwordCtrl.text.trim(),
       AppValidation.password,
-      'Mật khẩu phải từ 6-20 ký tự',
+      TransactionConstants.passwordFormatError.tr,
     );
   }
 
-  static String validateConfirmPassword(TextEditingController passwordCtrl, TextEditingController confirmPasswordCtrl) {
-   if(passwordCtrl.text.compareTo(confirmPasswordCtrl.text) == 0) {
-     return  TransactionConstants.setupNewAccount.tr;
-   }
-   return '';
+  static String validateConfirmPassword(TextEditingController passwordCtrl,
+      TextEditingController confirmPasswordCtrl) {
+    if (passwordCtrl.text.compareTo(confirmPasswordCtrl.text) != 0) {
+      return TransactionConstants.confirmPasswordError.tr;
+    }
+    return '';
   }
 
   static String validateName(TextEditingController nameCtrl) {

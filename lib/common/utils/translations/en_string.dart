@@ -8,10 +8,9 @@ const enString = {
   "ok": "Ok",
   "cancel": "Cancel",
   "delete": "Delete",
-  "welcome_back":"Welcome back!",
-  "unlock":"Unlock",
-
-
+  "welcome_back": "Welcome back!",
+  "unlock": "Unlock",
+  "continue": "Continue",
 
   //main
   'home': 'Home',
@@ -26,10 +25,10 @@ const enString = {
   //login
   "sign_in": "Sign in",
   "login_error":
-  'The account sign-in was incorrect. Please wait and try again later.',
+      'The account sign-in was incorrect. Please wait and try again later.',
   "dont_have_an_account": "Don't have an account?",
   "forget_password": "Forget password?",
-  "or_signin_with":"Or sign in with",
+  "or_signin_with": "Or sign in with",
 
   //signup
   "sign_up": "Sign Up",
@@ -41,7 +40,8 @@ const enString = {
   "already_have_an_account": "Already have an account?",
   "setup_new_account": "Let’s get you setup with a new account!",
   "confirm_password_error": "Password and password confirmation don't match",
-  "email_already_in_use":"The account already exists for that email.",
+  "email_already_in_use": "The account already exists for that email.",
+  "verification_sent": "Email verification sent!",
 
   //master password
   "create_master_password": "Create Master Password",
@@ -51,16 +51,24 @@ const enString = {
   "master_password": "Master Password",
   "confirm_master_password": "Confirm Master Password",
   "master_password_note":
-  "Your Master Password cannot be recovered if you forget it.",
+      "Your Master Password cannot be recovered if you forget it.",
   "master_password_hint": "Hint (optional)",
   "master_password_hint_note":
-  "A master password hint can help you remember your password if you forget it.",
+      "A master password hint can help you remember your password if you forget it.",
   "master_password_error":
-  "Master Password must be at least 12 characters long.",
+      "Master Password must be at least 12 characters long.",
   "get_master_password_hint": "Get master password hint",
   "not_you": "Not you?",
-  "enter_master_password":"Enter your Master Password to Log in",
-  "unlock_biometric":"Unlock with Face ID/Touch ID",
+  "enter_master_password": "Enter your Master Password to Log in",
+  "unlock_biometric": "Unlock with Face ID/Touch ID",
+
+  //verify email
+  "verify_email": "Verify your email address",
+  "verify_email_description":
+      "We have just sent email verification link on your email. "
+          "Please check email and click on that link to verify your email address."
+          "\n If not auto redirected after verification, click on the Continue button.",
+  "resend_email_link": "Resend email link",
 
   //error
   'unknown_error': 'Unknown error',
@@ -71,4 +79,8 @@ const enString = {
   "no_data": "No data.",
   "offline": "You are offline.",
   "internet_restore": "Internet connection restored.",
+  "password_format_error":
+      "Your password must be at least 8 characters long and include a combination of uppercase and lowercase letters, numbers, and special characters.",
+  "weak_password_error": "Please choose a stronger password.",
+  "existing_email": "An account with this email address already exists."
 };

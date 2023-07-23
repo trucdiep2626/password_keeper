@@ -40,9 +40,9 @@ class TransactionConstants {
   static const String ok = "ok";
   static const String cancel = "cancel";
   static const String delete = "delete";
-  static const String welcomBack ="welcome_back";
-  static const String unlock ="unlock";
-
+  static const String welcomBack = "welcome_back";
+  static const String unlock = "unlock";
+  static const String continueButton = "continue";
 
   //main
   static const String home = 'home';
@@ -59,7 +59,7 @@ class TransactionConstants {
   static const String forgetPassword = "forget_password";
   static const String loginError = "login_error";
   static const String dontHaveAnAccount = "dont_have_an_account";
-  static const String orSignInWith ="or_signin_with";
+  static const String orSignInWith = "or_signin_with";
 
   //  signup
   static const String signUp = "sign_up";
@@ -70,8 +70,8 @@ class TransactionConstants {
   static const String confirmPassword = "confirm_password";
   static const String alreadyHaveAnAccount = "already_have_an_account";
   static const String setupNewAccount = "setup_new_account";
-  static const String emailAlreadyInUse ="email_already_in_use";
-
+  static const String emailAlreadyInUse = "email_already_in_use";
+  static const String verificationSent = "verification_sent";
   static const String confirmPasswordError = "confirm_password_error";
 
   //master password
@@ -85,9 +85,13 @@ class TransactionConstants {
   static const String masterPasswordError = "master_password_error";
   static const String getMasterPasswordHint = "get_master_password_hint";
   static const String notYou = "not_you";
-  static const String enterMasterPassword ="enter_master_password";
-  static const String unlockBiometric ="unlock_biometric";
+  static const String enterMasterPassword = "enter_master_password";
+  static const String unlockBiometric = "unlock_biometric";
 
+  //verify email
+  static const String verifyEmail = "verify_email";
+  static const String verifyEmailDescription = "verify_email_description";
+  static const String resendEmailLink = "resend_email_link";
 
   //error message
   static const String error = "error";
@@ -95,7 +99,10 @@ class TransactionConstants {
   static const String unknownError = 'unknown_error';
   static const String noConnectionError = 'no_connection_error';
   static const String requiredFields = "required_fields";
-  static const String noData ="no_data";
-  static const String offline ="offline";
-  static const String internetRestore ="internet_restore";
+  static const String noData = "no_data";
+  static const String offline = "offline";
+  static const String internetRestore = "internet_restore";
+  static const String passwordFormatError = "password_format_error";
+  static const String weakPasswordError = "weak_password_error";
+  static const String existingEmail = "existing_email";
 }

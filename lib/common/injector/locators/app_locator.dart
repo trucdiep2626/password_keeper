@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:password_keeper/common/constants/shared_preferences_constants.dart';
 import 'package:password_keeper/data/local_repository.dart';
@@ -11,13 +12,15 @@ import 'package:password_keeper/presentation/journey/main/main_controller.dart';
 import 'package:password_keeper/presentation/journey/master_password/master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_controller.dart';
+import 'package:password_keeper/presentation/journey/verify_email/verify_email_controller.dart';
 import 'package:password_keeper/presentation/journey/verify_master_password/verify_master_password_controller.dart';
 
 GetIt getIt = GetIt.instance;
 
 void configLocator() {
   /// Controllers
-  getIt.registerLazySingleton<AppController>(() => AppController());
+  getIt.registerLazySingleton<AppController>(
+      () => AppController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<SplashController>(() => SplashController());
   getIt.registerFactory<MainController>(() => MainController());
   getIt.registerFactory<HomeController>(() => HomeController());
@@ -31,6 +34,8 @@ void configLocator() {
       () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<VerifyMasterPasswordController>(() =>
       VerifyMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<VerifyEmailController>(
+      () => VerifyEmailController(accountUseCase: getIt<AccountUseCase>()));
 
   /// UseCases
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(
@@ -38,7 +43,8 @@ void configLocator() {
       localRepo: getIt<LocalRepository>()));
 
   /// Repositories
-  getIt.registerFactory<AccountRepository>(() => AccountRepository());
+  getIt.registerFactory<AccountRepository>(
+      () => AccountRepository(auth: FirebaseAuth.instance));
   getIt.registerFactory<LocalRepository>(() => LocalRepository());
 
   getIt.registerFactory<SharePreferencesConstants>(

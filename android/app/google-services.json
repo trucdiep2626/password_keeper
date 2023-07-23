@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "9297929888",
+    "project_id": "passwordkeeper-e402c",
+    "storage_bucket": "passwordkeeper-e402c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:9297929888:android:045ba15487f94839bacbc5",
+        "android_client_info": {
+          "package_name": "kma.dieptt.password_keeper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "9297929888-jq8n6hoqv12u2uqekma9ati5gmejp7ok.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kma.dieptt.password_keeper",
+            "certificate_hash": "6ae553b4cf87beb329c113e6305d9aee392f67d8"
+          }
+        },
+        {
+          "client_id": "9297929888-ua9ilsic6591ihr1kg0h176oe62vc7g3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9KEyOnZcQE4WwdYo_NOMES8nS7kpqrw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "9297929888-ua9ilsic6591ihr1kg0h176oe62vc7g3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

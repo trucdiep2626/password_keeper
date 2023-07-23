@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -45,9 +46,10 @@ class RegisterController extends GetxController with MixinController {
 
   void checkButtonEnable() {
     if (emailController.text.trim().isNotEmpty &&
-        passwordController.text.isNotEmpty &&
-        confirmPasswordController.text.isNotEmpty &&
-        fullNameController.text.trim().isNotEmpty) {
+            passwordController.text.isNotEmpty &&
+            confirmPasswordController.text.isNotEmpty
+        // && fullNameController.text.trim().isNotEmpty
+        ) {
       buttonEnable.value = true;
     } else {
       buttonEnable.value = false;
@@ -65,16 +67,16 @@ class RegisterController extends GetxController with MixinController {
   void postRegister() async {
     rxLoadedButton.value = LoadedType.start;
     hideKeyboard();
-    // errorText.value = '';
+    errorText.value = '';
     emailValidate.value = AppValidator.validateEmail(emailController);
     passwordValidate.value = AppValidator.validatePassword(passwordController);
 
     confirmPasswordValidate.value = AppValidator.validateConfirmPassword(
         passwordController, confirmPasswordController);
 
-    fullNameValidate.value = AppValidator.validateName(
-      fullNameController,
-    );
+    // fullNameValidate.value = AppValidator.validateName(
+    //   fullNameController,
+    // );
 
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -86,36 +88,57 @@ class RegisterController extends GetxController with MixinController {
       return;
     }
 
-    // if (emailValidate.value.isEmpty &&
-    //     passwordValidate.value.isEmpty &&
-    //     fullNameValidate.value.isEmpty &&
-    //     confirmPasswordValidate.value.isEmpty &&
-    //     lastNameValidate.value.isEmpty) {
-    //   final result = await accountUsecase.register(
-    //     username: emailController.text.trim(),
-    //     password: passwordController.text.trim(),
-    //     fullName: fullNameController.text.trim(),
-    //     lastName: lastNameController.text.trim(),
-    //   );
-    //
-    //   if (result) {
-    //     debugPrint('đăng ký thành công');
-    //     showTopSnackBar(context,
-    //         message: TransactionConstants.successfully.tr,
-    //         type: SnackBarType.done);
-    Get.toNamed(AppRoutes.createMasterPassword);
-    //     Get.back();
-    //   }
-    //   // else {
-    //   //   showTopSnackBarError(context, TransactionConstants.unknownError.tr);
-    //   //   //
-    //   //   // } else {
-    //   //   //   debugPrint('đăng nhập thất bại');
-    //   //   //   errorText.value = TransactionConstants.loginError.tr;
-    //   // }
-    // }
+    if (emailValidate.value.isEmpty &&
+        passwordValidate.value.isEmpty &&
+        //    fullNameValidate.value.isEmpty &&
+        confirmPasswordValidate.value.isEmpty) {
+      try {
+        final result = await accountUsecase.signUpWithEmail(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
+        );
+
+        if (result != null) {
+          debugPrint('đăng ký thành công');
+
+          Get.toNamed(AppRoutes.verifyEmail);
+        }
+        // else {
+        //   showTopSnackBarError(context, TransactionConstants.unknownError.tr);
+        //   //
+        //   // } else {
+        //   //   debugPrint('đăng nhập thất bại');
+        //   //   errorText.value = TransactionConstants.loginError.tr;
+        // }
+
+      } on FirebaseAuthException catch (e) {
+        handleAuthException(e.code);
+      }
+    }
 
     rxLoadedButton.value = LoadedType.finish;
+  }
+
+  void handleAuthException(String code) {
+    String message = '';
+    switch (code) {
+      case 'email-already-in-use':
+        message = TransactionConstants.existingEmail.tr;
+        break;
+      case 'invalid-email':
+        message = TransactionConstants.invalidEmail.tr;
+        break;
+      case 'operation-not-allowed':
+        message = TransactionConstants.unknownError.tr;
+        break;
+      case 'weak-password':
+        message = TransactionConstants.weakPasswordError.tr;
+        break;
+      default:
+        message = TransactionConstants.unknownError.tr;
+    }
+
+    showTopSnackBarError(context, message);
   }
 
   void onChangedEmail() {
@@ -125,7 +148,7 @@ class RegisterController extends GetxController with MixinController {
 
   void onTapEmailTextField() {
     pwdHasFocus.value = false;
-    fullNameHasFocus.value = false;
+    //  fullNameHasFocus.value = false;
     emailHasFocus.value = true;
     confirmPwdHasFocus.value = false;
   }
@@ -144,7 +167,7 @@ class RegisterController extends GetxController with MixinController {
   void onTapPwdTextField() {
     confirmPwdHasFocus.value = false;
     pwdHasFocus.value = true;
-    fullNameHasFocus.value = false;
+    //  fullNameHasFocus.value = false;
     emailHasFocus.value = false;
   }
 
@@ -214,9 +237,9 @@ class RegisterController extends GetxController with MixinController {
     passwordFocusNode.addListener(() {
       pwdHasFocus.value = passwordFocusNode.hasFocus;
     });
-    fullNameFocusNode.addListener(() {
-      fullNameHasFocus.value = fullNameFocusNode.hasFocus;
-    });
+    // fullNameFocusNode.addListener(() {
+    //   fullNameHasFocus.value = fullNameFocusNode.hasFocus;
+    // });
     confirmPasswordFocusNode.addListener(() {
       confirmPwdHasFocus.value = confirmPasswordFocusNode.hasFocus;
     });
