@@ -33,8 +33,8 @@ class AccountUseCase {
     await accountRepo.sendEmailVerification();
   }
 
-  Future<void> signInWithGoogle() async {
-    await accountRepo.signInWithGoogle();
+  Future<UserCredential?> signInWithGoogle() async {
+    return await accountRepo.signInWithGoogle();
   }
 
   Future<void> signOut() async {

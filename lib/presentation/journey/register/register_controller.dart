@@ -37,6 +37,7 @@ class RegisterController extends GetxController with MixinController {
   RxBool buttonEnable = false.obs;
 
   Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
+  Rx<LoadedType> rxLoadedGoogleButton = LoadedType.finish.obs;
   AccountUseCase accountUsecase;
 
   RxBool showPassword = false.obs;
@@ -64,8 +65,44 @@ class RegisterController extends GetxController with MixinController {
     showConfirmPassword.value = !(showConfirmPassword.value);
   }
 
+  Future<void> onTapGoogleSignIn() async {
+    hideKeyboard();
+    errorText.value = '';
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      if (Get.context != null) {
+        showTopSnackBarError(
+            Get.context!, TransactionConstants.noConnectionError.tr);
+      }
+      rxLoadedButton.value = LoadedType.finish;
+      return;
+    }
+
+    try {
+      rxLoadedGoogleButton.value = LoadedType.start;
+      final result = await accountUsecase.signInWithGoogle();
+
+      if (result != null) {
+        debugPrint('đăng ký thành công');
+
+        Get.toNamed(AppRoutes.createMasterPassword);
+      } else {
+        if (Get.context != null) {
+          showTopSnackBarError(
+              Get.context!, TransactionConstants.unknownError.tr);
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      handleFirebaseException(
+        code: e.code,
+      );
+    } finally {
+      rxLoadedGoogleButton.value = LoadedType.finish;
+    }
+  }
+
   void postRegister() async {
-    rxLoadedButton.value = LoadedType.start;
     hideKeyboard();
     errorText.value = '';
     emailValidate.value = AppValidator.validateEmail(emailController);
@@ -92,6 +129,7 @@ class RegisterController extends GetxController with MixinController {
         passwordValidate.value.isEmpty &&
         //    fullNameValidate.value.isEmpty &&
         confirmPasswordValidate.value.isEmpty) {
+      rxLoadedButton.value = LoadedType.start;
       try {
         final result = await accountUsecase.signUpWithEmail(
           email: emailController.text.trim(),
@@ -112,33 +150,13 @@ class RegisterController extends GetxController with MixinController {
         // }
 
       } on FirebaseAuthException catch (e) {
-        handleAuthException(e.code);
+        handleFirebaseException(
+          code: e.code,
+        );
+      } finally {
+        rxLoadedGoogleButton.value = LoadedType.finish;
       }
     }
-
-    rxLoadedButton.value = LoadedType.finish;
-  }
-
-  void handleAuthException(String code) {
-    String message = '';
-    switch (code) {
-      case 'email-already-in-use':
-        message = TransactionConstants.existingEmail.tr;
-        break;
-      case 'invalid-email':
-        message = TransactionConstants.invalidEmail.tr;
-        break;
-      case 'operation-not-allowed':
-        message = TransactionConstants.unknownError.tr;
-        break;
-      case 'weak-password':
-        message = TransactionConstants.weakPasswordError.tr;
-        break;
-      default:
-        message = TransactionConstants.unknownError.tr;
-    }
-
-    showTopSnackBarError(context, message);
   }
 
   void onChangedEmail() {

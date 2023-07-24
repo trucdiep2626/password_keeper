@@ -1,4 +1,5 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -26,6 +27,7 @@ class LoginController extends GetxController with MixinController {
   RxBool buttonEnable = false.obs;
   RxBool emailHasFocus = false.obs;
   RxBool pwdHasFocus = false.obs;
+  Rx<LoadedType> rxLoadedGoogleButton = LoadedType.finish.obs;
 
   AccountUseCase accountUsecase;
 
@@ -46,11 +48,8 @@ class LoginController extends GetxController with MixinController {
   }
 
   void postLogin() async {
-    rxLoadedButton.value = LoadedType.start;
     hideKeyboard();
     errorText.value = '';
-    // emailValidate.value = AppValidator.validateEmail(emailController);
-    // passwordValidate.value = AppValidator.validatePassword(passwordController);
 
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -62,42 +61,64 @@ class LoginController extends GetxController with MixinController {
       return;
     }
 
-    // if (emailValidate.value.isEmpty && passwordValidate.value.isEmpty) {
-    //   final result = await accountUsecase.login(
-    //       username: emailController.text.trim(),
-    //       password: passwordController.text.trim());
-    //
-    //   try {
-    //     if (result != null) {
-    //       debugPrint('đăng nhập thành công');
-    //       await accountUsecase.saveToken(result);
-    //       //   mainController.token.value = result;
-    //       await accountUsecase.saveEmail(emailController.text.trim());
-    //       await accountUsecase.savePass(passwordController.text.trim());
-    //       final customerInfo = await accountUsecase.getCustomerInformation();
-    //
-    //       if (customerInfo != null) {
-    //         await accountUsecase.saveCustomerInformation(customerInfo);
-    //         //  mainController.rxCustomer.value = customerInfo;
-    //         // mainController.updateLogin();
-    //         //go to main screen
-    Get.toNamed(AppRoutes.verifyMasterPassword);
-    //         Get.offNamed(AppRoutes.main);
-    //       } else {
-    //         showTopSnackBarError(context, TransactionConstants.unknownError.tr);
-    //       }
-    //     } else {
-    //       debugPrint('đăng nhập thất bại');
-    //    //   errorText.value = TransactionConstants.loginError.tr;
-    //     }
-    //   } catch (e) {
-    //     debugPrint(e.toString());
-    //     showTopSnackBarError(context, TransactionConstants.unknownError.tr);
-    //   }
-    // }
+    if (emailValidate.value.isEmpty && passwordValidate.value.isEmpty) {
+      rxLoadedButton.value = LoadedType.start;
 
+      try {
+        final result = await accountUsecase.loginWithEmail(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim());
+
+        debugPrint('đăng nhập thành công');
+
+        Get.toNamed(AppRoutes.verifyMasterPassword);
+      } on FirebaseAuthException catch (e) {
+        handleFirebaseException(
+          code: e.code,
+          isSignIn: true,
+        );
+      }
+    }
 
     rxLoadedButton.value = LoadedType.finish;
+  }
+
+  Future<void> onTapGoogleSignIn() async {
+    hideKeyboard();
+    errorText.value = '';
+
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      if (Get.context != null) {
+        showTopSnackBarError(
+            Get.context!, TransactionConstants.noConnectionError.tr);
+      }
+      rxLoadedButton.value = LoadedType.finish;
+      return;
+    }
+
+    try {
+      rxLoadedGoogleButton.value = LoadedType.start;
+      final result = await accountUsecase.signInWithGoogle();
+
+      if (result != null) {
+        debugPrint('đăng ký thành công');
+
+        Get.toNamed(AppRoutes.createMasterPassword);
+      } else {
+        if (Get.context != null) {
+          showTopSnackBarError(
+              Get.context!, TransactionConstants.unknownError.tr);
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      handleFirebaseException(
+        code: e.code,
+        isSignIn: true,
+      );
+    } finally {
+      rxLoadedGoogleButton.value = LoadedType.finish;
+    }
   }
 
   void onChangedEmail() {

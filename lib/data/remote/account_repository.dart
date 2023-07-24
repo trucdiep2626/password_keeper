@@ -38,14 +38,14 @@ class AccountRepository {
     await auth.currentUser!.sendEmailVerification();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<UserCredential?> signInWithGoogle() async {
     if (kIsWeb) {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
 
       googleProvider
           .addScope('https://www.googleapis.com/auth/contacts.readonly');
 
-      await auth.signInWithPopup(googleProvider);
+      return await auth.signInWithPopup(googleProvider);
     } else {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -69,11 +69,15 @@ class AccountRepository {
         // if (userCredential.user != null) {
         //   if (userCredential.additionalUserInfo!.isNewUser) {}
         // }
+
+        return userCredential;
       }
+      return null;
     }
   }
 
   Future<void> signOut() async {
+    await GoogleSignIn().signOut();
     await auth.signOut();
   }
 

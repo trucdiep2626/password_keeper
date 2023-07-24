@@ -5,7 +5,8 @@ import 'package:password_keeper/presentation/theme/theme_color.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 class AppLoginSocialWidget extends StatelessWidget {
-  const AppLoginSocialWidget({Key? key,
+  const AppLoginSocialWidget({
+    Key? key,
     required this.icon,
     required this.onTap,
   }) : super(key: key);
@@ -19,9 +20,9 @@ class AppLoginSocialWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(
-         AppDimens.space_12 ,
+          AppDimens.space_12,
         ),
-        decoration:   BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.white,
           shape: BoxShape.circle,
           boxShadow: [
@@ -31,13 +32,13 @@ class AppLoginSocialWidget extends StatelessWidget {
                 0,
                 AppDimens.space_4,
               ),
-              blurRadius:  AppDimens.space_8,
+              blurRadius: AppDimens.space_8,
             ),
           ],
         ),
         child: AppImageWidget(
           asset: icon,
-          height:  AppDimens.space_24 ,
+          height: AppDimens.space_24,
         ),
       ),
     );

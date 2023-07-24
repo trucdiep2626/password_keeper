@@ -98,6 +98,7 @@ class AppButton extends StatelessWidget {
                 height: AppDimens.height_60,
                 child: AppImageWidget(
                   asset: Assets.images.svg.loadingButton,
+                  size: AppDimens.space_36,
                 ),
               )
             : const SizedBox.shrink()

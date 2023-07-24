@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:password_keeper/common/config/app_config.dart';
+import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/presentation/widgets/export.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void logger(String message) {
@@ -23,7 +26,8 @@ String formatCurrency(dynamic number) {
   } else {
     numberConvert = number;
   }
-  return NumberFormat("#,###", AppConfig.defaultLocate).format(numberConvert ?? 0);
+  return NumberFormat("#,###", AppConfig.defaultLocate)
+      .format(numberConvert ?? 0);
 }
 
 String formatPhoneNumber(String phoneNumber) {
@@ -32,7 +36,11 @@ String formatPhoneNumber(String phoneNumber) {
   filterText = filterText.replaceAll(' ', '');
   if (filterText.length < 2) return filterText;
   final firstChars = filterText.substring(0, 2);
-  if (firstChars == '09' || firstChars == '08' || firstChars == '07' || firstChars == '03' || firstChars == '05') {
+  if (firstChars == '09' ||
+      firstChars == '08' ||
+      firstChars == '07' ||
+      firstChars == '03' ||
+      firstChars == '05') {
     if (filterText.length > 3) {
       filterText = '${filterText.substring(0, 3)} ${filterText.substring(3)}';
     }
@@ -47,7 +55,8 @@ bool isNullEmpty(Object? o) => o == null || "" == o || o == "null";
 
 bool isNullEmptyOrFalse(Object? o) => o == null || false == o || "" == o;
 
-bool isNullEmptyFalseOrZero(Object? o) => o == null || false == o || 0 == o || "" == o || "0" == o;
+bool isNullEmptyFalseOrZero(Object? o) =>
+    o == null || false == o || 0 == o || "" == o || "0" == o;
 
 bool isNullEmptyList<T>(List<T>? t) => t == null || [] == t || t.isEmpty;
 
@@ -64,4 +73,35 @@ bool isNumeric(dynamic s) {
 Future<bool> checkPermission(Permission permission) async {
   final status = await permission.request();
   return status.isGranted;
+}
+
+void handleFirebaseException({
+  required String code,
+  bool isSignIn = false,
+}) {
+  String message = '';
+  switch (code) {
+    case 'email-already-in-use':
+      message = TransactionConstants.existingEmail.tr;
+      break;
+    case 'invalid-email':
+      message = TransactionConstants.invalidEmail.tr;
+      break;
+    case 'operation-not-allowed':
+      message = TransactionConstants.unknownError.tr;
+      break;
+    case 'weak-password':
+      message = TransactionConstants.weakPasswordError.tr;
+      break;
+    default:
+      if (isSignIn) {
+        message = TransactionConstants.loginError.tr;
+      } else {
+        message = TransactionConstants.unknownError.tr;
+      }
+  }
+
+  if (Get.context != null) {
+    showTopSnackBarError(Get.context!, message);
+  }
 }

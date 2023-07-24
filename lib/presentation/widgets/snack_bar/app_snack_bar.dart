@@ -30,7 +30,11 @@ void showTopSnackBar(BuildContext context,
 }
 
 showTopSnackBarError(BuildContext context, String message) {
-  showTopSnackBar(context, message: message);
+  showTopSnackBar(
+    context,
+    message: message,
+    type: SnackBarType.error,
+  );
 }
 
 class AppSnackBarWidget extends StatelessWidget {
@@ -82,7 +86,7 @@ class AppSnackBarWidget extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
       decoration: BoxDecoration(
           borderRadius:
-          const BorderRadius.all(Radius.circular(AppDimens.radius_12)),
+              const BorderRadius.all(Radius.circular(AppDimens.radius_12)),
           color: backgroundColor,
           boxShadow: [
             BoxShadow(
