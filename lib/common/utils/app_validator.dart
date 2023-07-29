@@ -91,12 +91,4 @@ class AppValidator {
       'Nhập Họ và tên từ 3-255 ký tự',
     );
   }
-
-  static String validateAccNumber(TextEditingController accNumberCtrl) {
-    return error(
-      accNumberCtrl.text.trim(),
-      AppValidation.bankAccNo,
-      'Số tài khoản không đúng định dạng',
-    );
-  }
 }

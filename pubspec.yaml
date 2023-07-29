@@ -88,6 +88,9 @@ dependencies:
   cloud_firestore: 4.4.4
   google_sign_in: 6.0.2
 
+  #password strength checker
+  zxcvbn: 1.0.0
+
 
 dev_dependencies:
   #  flutter_test:

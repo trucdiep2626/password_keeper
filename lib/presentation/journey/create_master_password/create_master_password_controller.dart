@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
+import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
@@ -36,6 +37,11 @@ class CreateMasterPasswordController extends GetxController
 
   RxBool showMasterPwd = false.obs;
   RxBool showConfirmMasterPwd = false.obs;
+
+  RxBool showPasswordStrengthChecker = false.obs;
+
+  Rx<PasswordStrengthLevel> passwordStrength =
+      PasswordStrengthLevel.veryWeak.obs;
 
   CreateMasterPasswordController({required this.accountUsecase});
 
@@ -120,6 +126,13 @@ class CreateMasterPasswordController extends GetxController
   }
 
   void onChangedPwd() {
+    if (masterPwdController.text.isNotEmpty) {
+      passwordStrength.value =
+          PasswordHelper.checkPasswordStrength(masterPwdController.text);
+      showPasswordStrengthChecker.value = true;
+    } else {
+      showPasswordStrengthChecker.value = false;
+    }
     checkButtonEnable();
     masterPwdValidate.value = '';
   }
@@ -151,8 +164,6 @@ class CreateMasterPasswordController extends GetxController
     masterPwdHintHasFocus.value = true;
     confirmMasterPwdHasFocus.value = false;
   }
-
-
 
   void onPressedRegister() {
     masterPwdHasFocus.value = false;

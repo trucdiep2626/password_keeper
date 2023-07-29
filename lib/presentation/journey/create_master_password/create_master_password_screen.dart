@@ -6,6 +6,7 @@ import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
+import 'package:password_keeper/presentation/widgets/password_strength_checker_widget.dart';
 
 class CreateMasterPasswordScreen
     extends GetView<CreateMasterPasswordController> {
@@ -81,6 +82,13 @@ class CreateMasterPasswordScreen
                   focusNode: controller.masterPwdFocusNode,
                 ),
               ),
+              Obx(
+                () => controller.showPasswordStrengthChecker.value
+                    ? PasswordStrengthChecker(
+                        passwordStrength: controller.passwordStrength.value)
+                    : const SizedBox.shrink(),
+              ),
+
               SizedBox(
                 height: AppDimens.space_8,
               ),
