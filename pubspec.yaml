@@ -91,7 +91,12 @@ dependencies:
   #password strength checker
   zxcvbn: 1.0.0
 
-
+  #encryption and decryption
+  pointycastle: 3.7.3
+#  argon2:
+#  dargon2_flutter_mobile: ^3.3.0
+  dargon2:
+  dargon2_flutter:
 dev_dependencies:
   #  flutter_test:
   #    sdk: flutter

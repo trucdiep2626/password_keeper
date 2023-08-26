@@ -13,8 +13,8 @@ class AppConfig {
   static String firebaseUid = '';
 
   static const String database = 'pimi_db';
-  static const String financeCollection = 'finance';
-  static const String workflowCollection = 'workflow';
-  static const String walletsCollection = 'wallets';
-  static const String transactionCollection = 'transactions';
+
+  //firebase
+  static const String userCollection = 'users';
+  static const String profileCollection = 'profile';
 }

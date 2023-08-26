@@ -27,8 +27,11 @@ class VerifyEmailController extends GetxController with MixinController {
     try {
       await accountUseCase.sendEmailVerification();
       if (Get.context != null) {
-        showTopSnackBar(Get.context!,
-            message: TransactionConstants.verificationSent.tr);
+        showTopSnackBar(
+          Get.context!,
+          type: SnackBarType.done,
+          message: TransactionConstants.verificationSent.tr,
+        );
       }
     } catch (e) {
       showTopSnackBarError(context, e.toString());

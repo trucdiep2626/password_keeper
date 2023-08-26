@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:password_keeper/data/local_repository.dart';
 import 'package:password_keeper/data/remote/account_repository.dart';
+import 'package:password_keeper/domain/models/account.dart';
 
 class AccountUseCase {
   final AccountRepository accountRepo;
@@ -43,5 +44,9 @@ class AccountUseCase {
 
   Future<void> deleteAccount() async {
     await accountRepo.deleteAccount();
+  }
+
+  Future createUser(AccountProfile profile) async {
+    return await accountRepo.createUser(profile);
   }
 }

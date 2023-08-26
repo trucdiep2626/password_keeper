@@ -70,6 +70,9 @@ bool isNumeric(dynamic s) {
   return (double.tryParse(sConvert) != null || int.tryParse(sConvert) != null);
 }
 
+bool isNullOrWhiteSpace(String? o) =>
+    o == null || "" == o.trim() || o.trim() == "null";
+
 Future<bool> checkPermission(Permission permission) async {
   final status = await permission.request();
   return status.isGranted;

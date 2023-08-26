@@ -174,7 +174,7 @@ class CreateMasterPasswordScreen
                   enable: controller.buttonEnable.value,
                   title: TransactionConstants.save.tr,
                   onPressed: () => controller.onPressedRegister(),
-                  loaded: controller.rxLoadedButton.value,
+                  //loaded: controller.rxLoadedButton.value,
                 ),
               ),
               SizedBox(

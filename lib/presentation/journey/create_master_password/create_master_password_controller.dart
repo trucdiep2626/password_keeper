@@ -1,12 +1,15 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/domain/models/account.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -20,6 +23,8 @@ class CreateMasterPasswordController extends GetxController
   final confirmMasterPwdFocusNode = FocusNode();
   final masterPwdHintFocusNode = FocusNode();
 
+  Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
+
   RxString errorText = ''.obs;
 
   RxString masterPwdValidate = ''.obs;
@@ -32,9 +37,6 @@ class CreateMasterPasswordController extends GetxController
 
   RxBool buttonEnable = false.obs;
 
-  Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
-  AccountUseCase accountUsecase;
-
   RxBool showMasterPwd = false.obs;
   RxBool showConfirmMasterPwd = false.obs;
 
@@ -43,12 +45,13 @@ class CreateMasterPasswordController extends GetxController
   Rx<PasswordStrengthLevel> passwordStrength =
       PasswordStrengthLevel.veryWeak.obs;
 
+  AccountUseCase accountUsecase;
+  final _cryptoController = Get.find<CryptoController>();
   CreateMasterPasswordController({required this.accountUsecase});
 
   void checkButtonEnable() {
     if (masterPwdController.text.isNotEmpty &&
-        confirmMasterPwdController.text.isNotEmpty &&
-        masterPwdHintController.text.trim().isNotEmpty) {
+        confirmMasterPwdController.text.isNotEmpty) {
       buttonEnable.value = true;
     } else {
       buttonEnable.value = false;
@@ -64,7 +67,7 @@ class CreateMasterPasswordController extends GetxController
   }
 
   void postRegister() async {
-    rxLoadedButton.value = LoadedType.start;
+    rxLoadedButton.value = LoadedType.finish;
     hideKeyboard();
     masterPwdValidate.value =
         AppValidator.validatePassword(masterPwdController);
@@ -82,35 +85,51 @@ class CreateMasterPasswordController extends GetxController
       return;
     }
 
-    // if (emailValidate.value.isEmpty &&
-    //     masterPwdValidate.value.isEmpty &&
-    //     masterPwdHintValidate.value.isEmpty &&
-    //     confirmMasterPwdValidate.value.isEmpty &&
-    //     lastNameValidate.value.isEmpty) {
-    //   final result = await accountUsecase.register(
-    //     username: emailController.text.trim(),
-    //     masterPwd: masterPwdController.text.trim(),
-    //     masterPwdHint: masterPwdHintController.text.trim(),
-    //     lastName: lastNameController.text.trim(),
-    //   );
-    //
-    //   if (result) {
-    //     debugPrint('đăng ký thành công');
-    //     showTopSnackBar(context,
-    //         message: TransactionConstants.successfully.tr,
-    //         type: SnackBarType.done);
-    //     Get.back();
-    //   }
-    //   // else {
-    //   //   showTopSnackBarError(context, TransactionConstants.unknownError.tr);
-    //   //   //
-    //   //   // } else {
-    //   //   //   debugPrint('đăng nhập thất bại');
-    //   //   //   errorText.value = TransactionConstants.loginError.tr;
-    //   // }
-    // }
+    if (passwordStrength.value == PasswordStrengthLevel.veryWeak) {
+      masterPwdValidate.value = TransactionConstants.weakPasswordError.tr;
+      return;
+    }
 
-    rxLoadedButton.value = LoadedType.finish;
+    if (masterPwdValidate.value.isEmpty &&
+        confirmMasterPwdValidate.value.isEmpty) {
+      rxLoadedButton.value = LoadedType.start;
+      final masterPassword = masterPwdController.text;
+      final email = (accountUsecase.user.email ?? '').trim().toLowerCase();
+
+      // Email = Email.Trim().ToLower();
+      // var kdfConfig =   KdfConfig(
+      //     KdfType.PBKDF2_SHA256, Constants.Pbkdf2Iterations, null, null);
+      var key = await _cryptoController.makeKey(
+        password: masterPassword,
+        salt: email,
+      );
+      var encKey = await _cryptoController.makeEncKey(key);
+      var hashedPassword = await _cryptoController.hashPassword(
+          password: masterPassword, key: key);
+      //  var keys = await _cryptoController.makeKeyPair(encKey.Item1);
+
+      final profile = AccountProfile(
+        email: accountUsecase.user.email,
+        userId: accountUsecase.user.uid,
+        hashedMasterPassword: hashedPassword,
+        masterPasswordHint: masterPwdHintController.text.trim(),
+        kdfIterations: Constants.argon2Iterations,
+        kdfMemory: Constants.argon2MemoryInMB,
+        kdfParallelism: Constants.argon2Parallelism,
+        key: encKey?.encKey?.encryptedString,
+      );
+
+      try {
+        await accountUsecase.createUser(profile);
+
+        debugPrint('đăng ký thành công');
+      } catch (e) {
+        debugPrint(e.toString());
+        showTopSnackBarError(context, TransactionConstants.unknownError.tr);
+      } finally {
+        rxLoadedButton.value = LoadedType.finish;
+      }
+    }
   }
 
   void onTapPwdTextField() {

@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:password_keeper/common/config/app_config.dart';
+import 'package:password_keeper/domain/models/account.dart';
 
 class AccountRepository {
   final FirebaseAuth auth;
-  AccountRepository({required this.auth});
+  final FirebaseFirestore db;
+  AccountRepository({required this.auth, required this.db});
 
   User get user => auth.currentUser!;
 
@@ -83,5 +87,15 @@ class AccountRepository {
 
   Future<void> deleteAccount() async {
     await auth.currentUser!.delete();
+  }
+
+  Future createUser(AccountProfile profile) async {
+    await db
+            .collection(AppConfig.userCollection)
+            .doc(profile.userId)
+            .collection(AppConfig.profileCollection)
+            .add(profile.toJson())
+        //    .then((value) => value.snapshots().first.)
+        ;
   }
 }

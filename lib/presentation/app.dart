@@ -21,7 +21,7 @@ class App extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           initialBinding: AppBinding(),
-          initialRoute: AppRoutes.createMasterPassword,
+          initialRoute: AppRoutes.splash,
           getPages: myPages,
           translations: AppTranslations(),
           localizationsDelegates: const [

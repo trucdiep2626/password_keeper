@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
-import 'package:password_keeper/common/utils/password_helper.dart';
+import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 
 class PasswordStrengthChecker extends StatelessWidget {
