@@ -13,6 +13,7 @@ import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/journey/login/login_controller.dart';
 import 'package:password_keeper/presentation/journey/main/main_controller.dart';
 import 'package:password_keeper/presentation/journey/master_password/master_password_controller.dart';
+import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_controller.dart';
 import 'package:password_keeper/presentation/journey/verify_email/verify_email_controller.dart';
@@ -26,7 +27,10 @@ void configLocator() {
       () => AppController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<SplashController>(() => SplashController());
   getIt.registerFactory<MainController>(() => MainController());
-  getIt.registerFactory<HomeController>(() => HomeController());
+  getIt.registerFactory<HomeController>(
+      () => HomeController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<PasswordGeneratorController>(
+      () => PasswordGeneratorController());
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<LoginController>(

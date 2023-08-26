@@ -88,6 +88,8 @@ dependencies:
   cloud_firestore: 4.4.4
   google_sign_in: 6.0.2
 
+  percent_indicator: 4.2.3
+
   #password strength checker
   zxcvbn: 1.0.0
 

@@ -4,6 +4,7 @@ import 'package:password_keeper/common/injector/bindings/create_master_password_
 import 'package:password_keeper/common/injector/bindings/home_binding.dart';
 import 'package:password_keeper/common/injector/bindings/login_binding.dart';
 import 'package:password_keeper/common/injector/bindings/main_binding.dart';
+import 'package:password_keeper/common/injector/bindings/password_generator_binding.dart';
 import 'package:password_keeper/common/injector/bindings/register_binding.dart';
 import 'package:password_keeper/common/injector/bindings/splash_binding.dart';
 import 'package:password_keeper/common/injector/bindings/verify_email.dart';
@@ -25,6 +26,7 @@ List<GetPage> myPages = [
   GetPage(name: AppRoutes.main, page: () => MainScreen(), bindings: [
     MainBinding(),
     HomeBinding(),
+    PasswordGeneratorBinding(),
   ]),
   GetPage(
     name: AppRoutes.register,
