@@ -48,14 +48,14 @@ class LogInScreen extends GetView<LoginController> {
                 height: AppDimens.space_8,
               ),
               Text(
-                TransactionConstants.signIn.tr,
+                TranslationConstants.signIn.tr,
                 style: ThemeText.bodySemibold.s18.blue400,
               ),
               SizedBox(
                 height: AppDimens.space_4,
               ),
               Text(
-                TransactionConstants.setupNewAccount.tr,
+                TranslationConstants.setupNewAccount.tr,
                 style: ThemeText.bodyMedium.s14.grey600Color,
               ),
               SizedBox(
@@ -70,7 +70,7 @@ class LogInScreen extends GetView<LoginController> {
                         ? AppColors.blue400
                         : AppColors.grey,
                   ),
-                  hintText: TransactionConstants.email.tr,
+                  hintText: TranslationConstants.email.tr,
                   controller: controller.emailController,
                   keyboardType: TextInputType.emailAddress,
                   errorText: controller.emailValidate.value,
@@ -105,7 +105,7 @@ class LogInScreen extends GetView<LoginController> {
                           : AppColors.grey,
                     ),
                   ),
-                  hintText: TransactionConstants.password.tr,
+                  hintText: TranslationConstants.password.tr,
                   controller: controller.passwordController,
                   errorText: controller.passwordValidate.value,
                   obscureText: !(controller.showPassword.value),
@@ -140,7 +140,7 @@ class LogInScreen extends GetView<LoginController> {
               Obx(
                 () => AppButton(
                   enable: controller.buttonEnable.value,
-                  title: TransactionConstants.signIn.tr,
+                  title: TranslationConstants.signIn.tr,
                   onPressed: () => controller.onPressedLogIn(),
                   loaded: controller.rxLoadedButton.value,
                 ),
@@ -149,7 +149,7 @@ class LogInScreen extends GetView<LoginController> {
                 height: AppDimens.space_20,
               ),
               Text(
-                TransactionConstants.orSignInWith.tr,
+                TranslationConstants.orSignInWith.tr,
                 style: ThemeText.bodyMedium.s16,
               ),
               SizedBox(
@@ -161,7 +161,7 @@ class LogInScreen extends GetView<LoginController> {
               AppTouchable(
                   onPressed: () => controller.onPressForgotPassword(),
                   child: Text(
-                    TransactionConstants.forgetPassword.tr,
+                    TranslationConstants.forgetPassword.tr,
                     style: ThemeText.bodySemibold.blue400,
                   )),
               SizedBox(
@@ -169,7 +169,7 @@ class LogInScreen extends GetView<LoginController> {
               ),
               RichText(
                 text: TextSpan(
-                  text: TransactionConstants.dontHaveAnAccount.tr,
+                  text: TranslationConstants.dontHaveAnAccount.tr,
                   style: ThemeText.bodyMedium,
                   children: [
                     WidgetSpan(
@@ -180,7 +180,7 @@ class LogInScreen extends GetView<LoginController> {
                         },
                         padding: EdgeInsets.only(left: AppDimens.space_4),
                         child: Text(
-                          TransactionConstants.signUp.tr,
+                          TranslationConstants.signUp.tr,
                           style: ThemeText.bodySemibold.blue400,
                         ),
                       ),

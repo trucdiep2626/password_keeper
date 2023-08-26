@@ -12,10 +12,6 @@ const enString = {
   "unlock": "Unlock",
   "continue": "Continue",
 
-  //main
-  'home': 'Home',
-  'account': 'Account',
-
   //account
   "contact_information": "Contact Information",
   "logout": "Log out",
@@ -82,5 +78,29 @@ const enString = {
   "password_format_error":
       "Your password must be at least 8 characters long and include a combination of uppercase and lowercase letters, numbers, and special characters.",
   "weak_password_error": "Please choose a stronger password.",
-  "existing_email": "An account with this email address already exists."
+  "existing_email": "An account with this email address already exists.",
+
+  //home
+  "hello": "Hello",
+  "welcome": "Welcome to your password manager.",
+  "password_health": "Password Health",
+
+  //bottom navigation bar
+  "home": "Home",
+  "menu": "Menu",
+  "generator": "Generator",
+  "passwords": "Passwords",
+
+  //password generator
+  "password_generator": "Password Generator",
+  "password_length": "Password length",
+  "options": "Options",
+  "uppercase_letters": "Uppercase letters (A-Z)",
+  "lowercase_letters": "Lowercase letters (a-z)",
+  "numbers": "Numbers (0-9)",
+  "special_characters": "Special characters (!@#\$%^&*)",
+  "minimum_numbers": "Minimum numbers",
+  "minimum_special": "Minimum special",
+  "avoid_ambiguous_characters": "Avoid ambiguous characters",
+  "copied_successfully": "Copied successfully!"
 };

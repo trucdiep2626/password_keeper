@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:password_keeper/common/config/network/network_config.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/models/base_response.dart';
-
-
 
 class ApiClient {
   static const contentType = 'Content-Type';
@@ -83,7 +82,7 @@ class ApiClient {
       return BaseResponse(
         result: false,
         data: null,
-        message: TransactionConstants.noConnectionError,
+        message: TranslationConstants.noConnectionError,
         code: 2106,
       );
     }
@@ -107,7 +106,9 @@ class ApiClient {
     try {
       var strMethod = _getMethod(method);
       response = await _dio.request(path ?? '',
-          data: formData != null ? FormData.fromMap(formData) : data ?? jsonEncode({}),
+          data: formData != null
+              ? FormData.fromMap(formData)
+              : data ?? jsonEncode({}),
           options: Options(
               method: strMethod,
               sendTimeout: Duration(milliseconds: 10000),

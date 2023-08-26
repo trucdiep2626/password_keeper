@@ -3,35 +3,40 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
-import 'package:password_keeper/presentation/journey/login/login_screen.dart';
+import 'package:password_keeper/presentation/journey/home/home_screen.dart';
+import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
+
 import 'main_controller.dart';
 
 class MainScreen extends GetView<MainController> {
   MainScreen({Key? key}) : super(key: key);
 
   final List<String> titles = [
-    TransactionConstants.home.tr,
-    TransactionConstants.account.tr,
+    TranslationConstants.home.tr,
+    TranslationConstants.passwords.tr,
+    TranslationConstants.home.tr,
+    TranslationConstants.generator.tr,
+    TranslationConstants.menu.tr,
   ];
 
   final List<SvgGenImage> icons = [
-    // Assets.images.icHome,
-    // Assets.images.icCategory,
-    // Assets.images.icShoppingCart,
-    // Assets.images.icChat,
-    // Assets.images.icUser,
+    Assets.images.svg.icHome,
+    Assets.images.svg.icPassword,
+    Assets.images.svg.icAdd,
+    Assets.images.svg.icGenerator,
+    Assets.images.svg.icMenu,
   ];
 
   Widget _buildBottomNavigationItemWidget(
-      BuildContext context, {
-        Function()? onPressed,
-        SvgGenImage? asset,
-        String? title,
-        bool isSelected = false,
-        bool isCart = false,
-      }) {
+    BuildContext context, {
+    Function()? onPressed,
+    SvgGenImage? asset,
+    String? title,
+    bool isSelected = false,
+    bool isCart = false,
+  }) {
     return AppTouchable(
         onPressed: onPressed,
         outlinedBorder: RoundedRectangleBorder(
@@ -48,20 +53,20 @@ class MainScreen extends GetView<MainController> {
           children: [
             AppImageWidget(
               asset: asset!,
-              height: AppDimens.space_20,
+              height: AppDimens.space_18,
               color: isCart
                   ? AppColors.white
-                  : (isSelected ? AppColors.black : AppColors.grey),
+                  : (isSelected ? AppColors.blue400 : AppColors.grey),
             ),
             SizedBox(
               height: AppDimens.height_8,
             ),
             Text(
               title!,
-              style: ThemeText.bodyMedium.copyWith(
+              style: ThemeText.bodySemibold.s10.copyWith(
                 color: isCart
                     ? AppColors.white
-                    : (isSelected ? AppColors.black : AppColors.grey),
+                    : (isSelected ? AppColors.blue400 : AppColors.grey),
               ),
             )
           ],
@@ -70,7 +75,7 @@ class MainScreen extends GetView<MainController> {
 
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Obx(
-          () {
+      () {
         return Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -106,12 +111,11 @@ class MainScreen extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> pages = [
-      LogInScreen()
-      // HomePage(),
-      // CategoryScreen(),
-      // const CartScreen(),
-      // MessageScreen(),
-      // const AccountScreen()
+      HomeScreen(),
+      HomeScreen(),
+      HomeScreen(),
+      PasswordGeneratorScreen(),
+      HomeScreen(),
     ];
 
     return Scaffold(
@@ -128,7 +132,7 @@ class MainScreen extends GetView<MainController> {
         child: Container(
           width: Get.width / 5,
           decoration: BoxDecoration(
-              color: AppColors.blue300,
+              color: AppColors.blue400,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
@@ -137,26 +141,22 @@ class MainScreen extends GetView<MainController> {
                     blurRadius: 3,
                     spreadRadius: 1)
               ]),
-          child: Stack(
-            children: [
-              Container(
-                decoration: const BoxDecoration(),
-                child: AppTouchable(
-                  onPressed: () => controller.onChangedNav(2),
-                  child: AppImageWidget(
-                    asset: icons[2],
-                    // height: AppDimens.space_20,
-                    color: AppColors.white,
-                    size: Get.width / 5 - AppDimens.space_36,
-                    margin: EdgeInsets.only(
-                        top: AppDimens.space_16,
-                        bottom: MediaQuery.of(context).padding.bottom + AppDimens.space_16,
-                        left: AppDimens.space_18),
-                  ),
-                ),
+          child: AppTouchable(
+            width: Get.width / 5,
+            borderRadius:
+                BorderRadius.circular(Get.width / 5 - AppDimens.space_36),
+            onPressed: () => controller.onChangedNav(2),
+            child: AppImageWidget(
+              asset: icons[2],
+              // height: AppDimens.space_20,
+              color: AppColors.white,
+              size: Get.width / 5 - AppDimens.space_36,
+              margin: EdgeInsets.only(
+                top: AppDimens.space_16,
+                bottom:
+                    MediaQuery.of(context).padding.bottom + AppDimens.space_16,
               ),
-
-            ],
+            ),
           ),
         ),
       ),

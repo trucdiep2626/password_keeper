@@ -32,7 +32,7 @@ class VerifyMasterPasswordController extends GetxController
   VerifyMasterPasswordController({required this.accountUsecase});
 
   void checkButtonEnable() {
-    if (masterPwdController.text.isNotEmpty  ) {
+    if (masterPwdController.text.isNotEmpty) {
       buttonEnable.value = true;
     } else {
       buttonEnable.value = false;
@@ -53,12 +53,11 @@ class VerifyMasterPasswordController extends GetxController
     masterPwdValidate.value =
         AppValidator.validatePassword(masterPwdController);
 
-
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       if (Get.context != null) {
         showTopSnackBarError(
-            Get.context!, TransactionConstants.noConnectionError.tr);
+            Get.context!, TranslationConstants.noConnectionError.tr);
       }
       rxLoadedButton.value = LoadedType.finish;
       return;
@@ -79,16 +78,16 @@ class VerifyMasterPasswordController extends GetxController
     //   if (result) {
     //     debugPrint('đăng ký thành công');
     //     showTopSnackBar(context,
-    //         message: TransactionConstants.successfully.tr,
+    //         message: TranslationConstants.successfully.tr,
     //         type: SnackBarType.done);
     //     Get.back();
     //   }
     //   // else {
-    //   //   showTopSnackBarError(context, TransactionConstants.unknownError.tr);
+    //   //   showTopSnackBarError(context, TranslationConstants.unknownError.tr);
     //   //   //
     //   //   // } else {
     //   //   //   debugPrint('đăng nhập thất bại');
-    //   //   //   errorText.value = TransactionConstants.loginError.tr;
+    //   //   //   errorText.value = TranslationConstants.loginError.tr;
     //   // }
     // }
 
@@ -99,15 +98,10 @@ class VerifyMasterPasswordController extends GetxController
     masterPwdHasFocus.value = true;
   }
 
-
-
   void onChangedPwd() {
     checkButtonEnable();
     masterPwdValidate.value = '';
   }
-
-
-
 
   void onPressedRegister() {
     masterPwdHasFocus.value = false;
@@ -127,6 +121,5 @@ class VerifyMasterPasswordController extends GetxController
     masterPwdFocusNode.addListener(() {
       masterPwdHasFocus.value = masterPwdFocusNode.hasFocus;
     });
-
   }
 }

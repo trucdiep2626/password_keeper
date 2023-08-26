@@ -85,22 +85,22 @@ void handleFirebaseException({
   String message = '';
   switch (code) {
     case 'email-already-in-use':
-      message = TransactionConstants.existingEmail.tr;
+      message = TranslationConstants.existingEmail.tr;
       break;
     case 'invalid-email':
-      message = TransactionConstants.invalidEmail.tr;
+      message = TranslationConstants.invalidEmail.tr;
       break;
     case 'operation-not-allowed':
-      message = TransactionConstants.unknownError.tr;
+      message = TranslationConstants.unknownError.tr;
       break;
     case 'weak-password':
-      message = TransactionConstants.weakPasswordError.tr;
+      message = TranslationConstants.weakPasswordError.tr;
       break;
     default:
       if (isSignIn) {
-        message = TransactionConstants.loginError.tr;
+        message = TranslationConstants.loginError.tr;
       } else {
-        message = TransactionConstants.unknownError.tr;
+        message = TranslationConstants.unknownError.tr;
       }
   }
 

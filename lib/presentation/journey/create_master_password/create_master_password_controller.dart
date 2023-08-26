@@ -79,14 +79,14 @@ class CreateMasterPasswordController extends GetxController
     if (connectivityResult == ConnectivityResult.none) {
       if (Get.context != null) {
         showTopSnackBarError(
-            Get.context!, TransactionConstants.noConnectionError.tr);
+            Get.context!, TranslationConstants.noConnectionError.tr);
       }
       rxLoadedButton.value = LoadedType.finish;
       return;
     }
 
     if (passwordStrength.value == PasswordStrengthLevel.veryWeak) {
-      masterPwdValidate.value = TransactionConstants.weakPasswordError.tr;
+      masterPwdValidate.value = TranslationConstants.weakPasswordError.tr;
       return;
     }
 
@@ -126,7 +126,7 @@ class CreateMasterPasswordController extends GetxController
         debugPrint('đăng ký thành công');
       } catch (e) {
         debugPrint(e.toString());
-        showTopSnackBarError(context, TransactionConstants.unknownError.tr);
+        showTopSnackBarError(context, TranslationConstants.unknownError.tr);
       } finally {
         rxLoadedButton.value = LoadedType.finish;
       }

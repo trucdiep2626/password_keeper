@@ -35,14 +35,14 @@ class CreateMasterPasswordScreen
                 height: AppDimens.space_8,
               ),
               Text(
-                TransactionConstants.createMasterPassword.tr,
+                TranslationConstants.createMasterPassword.tr,
                 style: ThemeText.bodySemibold.s18.blue400,
               ),
               SizedBox(
                 height: AppDimens.space_4,
               ),
               Text(
-                TransactionConstants.masterPasswordDescription.tr,
+                TranslationConstants.masterPasswordDescription.tr,
                 style: ThemeText.bodyMedium.s12.grey500Color,
                 textAlign: TextAlign.center,
               ),
@@ -71,7 +71,7 @@ class CreateMasterPasswordScreen
                           : AppColors.grey,
                     ),
                   ),
-                  hintText: TransactionConstants.masterPassword.tr,
+                  hintText: TranslationConstants.masterPassword.tr,
                   controller: controller.masterPwdController,
                   errorText: controller.masterPwdValidate.value,
                   obscureText: !(controller.showMasterPwd.value),
@@ -113,7 +113,7 @@ class CreateMasterPasswordScreen
                           : AppColors.grey,
                     ),
                   ),
-                  hintText: TransactionConstants.confirmPassword.tr,
+                  hintText: TranslationConstants.confirmPassword.tr,
                   controller: controller.confirmMasterPwdController,
                   errorText: controller.confirmMasterPwdValidate.value,
                   obscureText: !(controller.showConfirmMasterPwd.value),
@@ -130,7 +130,7 @@ class CreateMasterPasswordScreen
               ),
               //Obx(() =>
               AppTextField(
-                hintText: TransactionConstants.masterPasswordHint.tr,
+                hintText: TranslationConstants.masterPasswordHint.tr,
                 controller: controller.masterPwdHintController,
                 onTap: () => controller.onTapMasterPwdHintTextField(),
                 textInputAction: TextInputAction.done,
@@ -144,7 +144,7 @@ class CreateMasterPasswordScreen
                 height: AppDimens.space_4,
               ),
               Text(
-                TransactionConstants.masterPasswordHintNote.tr,
+                TranslationConstants.masterPasswordHintNote.tr,
                 style: ThemeText.bodyRegular.s10.grey600Color,
               ),
               SizedBox(
@@ -172,7 +172,7 @@ class CreateMasterPasswordScreen
               Obx(
                 () => AppButton(
                   enable: controller.buttonEnable.value,
-                  title: TransactionConstants.save.tr,
+                  title: TranslationConstants.save.tr,
                   onPressed: () => controller.onPressedRegister(),
                   loaded: controller.rxLoadedButton.value,
                 ),
@@ -183,7 +183,7 @@ class CreateMasterPasswordScreen
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppDimens.space_4),
                 child: Text(
-                  TransactionConstants.masterPasswordNote.tr,
+                  TranslationConstants.masterPasswordNote.tr,
                   style: ThemeText.bodyRegular.s12.grey600Color,
                   textAlign: TextAlign.center,
                 ),

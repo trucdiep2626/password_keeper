@@ -20,7 +20,7 @@ class AppTranslations extends Translations {
       };
 }
 
-class TransactionConstants {
+class TranslationConstants {
   //messages
   // static const String verifyPhoneContent = 'verifyPhoneContent';
   // static const String verificationFailed = 'verificationFailed';
@@ -43,10 +43,6 @@ class TransactionConstants {
   static const String welcomBack = "welcome_back";
   static const String unlock = "unlock";
   static const String continueButton = "continue";
-
-  //main
-  static const String home = 'home';
-  static const String account = 'account';
 
   //account
   static const String contactInformation = "contact_information";
@@ -105,4 +101,28 @@ class TransactionConstants {
   static const String passwordFormatError = "password_format_error";
   static const String weakPasswordError = "weak_password_error";
   static const String existingEmail = "existing_email";
+
+  //home
+  static const String hello = "hello";
+  static const String welcome = "welcome";
+  static const String passwordHealth = "password_health";
+
+  //bottom navigation bar
+  static const String home = 'home';
+  static const String menu = 'menu';
+  static const String generator = 'generator';
+  static const String passwords = 'passwords';
+
+  //password generator
+  static const String passwordGenerator = "password_generator";
+  static const String passwordLength = "password_length";
+  static const String options = 'options';
+  static const String uppercaseLetters = 'uppercase_letters';
+  static const String lowercaseLetters = 'lowercase_letters';
+  static const String numbers = 'numbers';
+  static const String specialCharacters = 'special_characters';
+  static const String minimumNumbers = 'minimum_numbers';
+  static const String minimumSpecial = 'minimum_special';
+  static const String avoidAmbiguousCharacters = 'avoid_ambiguous_characters';
+  static const String copiedSuccessfully = 'copied_successfully';
 }

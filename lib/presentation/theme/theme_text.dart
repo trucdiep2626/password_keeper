@@ -237,8 +237,8 @@ extension CommonFontColor on TextStyle {
   /// color: AppColors.blue500;
   TextStyle get blue500Color => copyWith(color: AppColors.blue500);
 
-  // /// color: AppColors.blue600;
-  // TextStyle get blue600Color => copyWith(color: AppColors.blue600);
+  /// color: AppColors.blue600;
+  TextStyle get blue600Color => copyWith(color: AppColors.blue600);
   //
   // /// color: AppColors.blue700;
   // TextStyle get blue700Color => copyWith(color: AppColors.blue700);

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
-import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/verify_master_password/verify_master_password_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
@@ -37,14 +36,14 @@ class VerifyMasterPasswordScreen
                   height: AppDimens.space_8,
                 ),
                 Text(
-                  TransactionConstants.welcomBack.tr,
+                  TranslationConstants.welcomBack.tr,
                   style: ThemeText.bodySemibold.s24.blue400,
                 ),
                 SizedBox(
                   height: AppDimens.space_8,
                 ),
                 Text(
-                  TransactionConstants.enterMasterPassword.tr,
+                  TranslationConstants.enterMasterPassword.tr,
                   style: ThemeText.bodyMedium.s14.grey500Color,
                   textAlign: TextAlign.center,
                 ),
@@ -52,24 +51,22 @@ class VerifyMasterPasswordScreen
                   height: AppDimens.space_24,
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: AppDimens.space_4,
-                  horizontal: AppDimens.space_12),
+                  padding: EdgeInsets.symmetric(
+                      vertical: AppDimens.space_4,
+                      horizontal: AppDimens.space_12),
                   decoration: BoxDecoration(
-                    color: AppColors.grey200,
-                    borderRadius: BorderRadius.circular(AppDimens.radius_12)
-                  ),
+                      color: AppColors.grey200,
+                      borderRadius: BorderRadius.circular(AppDimens.radius_12)),
                   child: Text(
-                    'trucdiep2626@gmail.com'
-                        ,
+                    'trucdiep2626@gmail.com',
                     style: ThemeText.bodyMedium,
                   ),
                 ),
                 SizedBox(
                   height: AppDimens.space_36,
                 ),
-
                 Obx(
-                      () => AppTextField(
+                  () => AppTextField(
                     prefixIcon: AppImageWidget(
                       fit: BoxFit.scaleDown,
                       asset: Assets.images.svg.icPassword,
@@ -89,7 +86,7 @@ class VerifyMasterPasswordScreen
                             : AppColors.grey,
                       ),
                     ),
-                    hintText: TransactionConstants.masterPassword.tr,
+                    hintText: TranslationConstants.masterPassword.tr,
                     controller: controller.masterPwdController,
                     errorText: controller.masterPwdValidate.value,
                     obscureText: !(controller.showMasterPwd.value),
@@ -103,30 +100,29 @@ class VerifyMasterPasswordScreen
                 SizedBox(
                   height: AppDimens.space_8,
                 ),
-
                 Obx(
-                      () => controller.errorText.value.isNotEmpty
+                  () => controller.errorText.value.isNotEmpty
                       ? Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: AppDimens.space_16,
-                      vertical: AppDimens.space_4,
-                    ),
-                    width: MediaQuery.of(context).size.width -
-                        AppDimens.space_16 * 2,
-                    child: Text(
-                      controller.errorText.value,
-                      style: ThemeText.errorText,
-                    ),
-                  )
+                          margin: EdgeInsets.symmetric(
+                            horizontal: AppDimens.space_16,
+                            vertical: AppDimens.space_4,
+                          ),
+                          width: MediaQuery.of(context).size.width -
+                              AppDimens.space_16 * 2,
+                          child: Text(
+                            controller.errorText.value,
+                            style: ThemeText.errorText,
+                          ),
+                        )
                       : const SizedBox.shrink(),
                 ),
                 SizedBox(
                   height: AppDimens.space_20,
                 ),
                 Obx(
-                      () => AppButton(
-                        enable: controller.buttonEnable.value,
-                    title: TransactionConstants.unlock.tr,
+                  () => AppButton(
+                    enable: controller.buttonEnable.value,
+                    title: TranslationConstants.unlock.tr,
                     onPressed: () => controller.onPressedRegister(),
                     loaded: controller.rxLoadedButton.value,
                   ),
@@ -143,10 +139,12 @@ class VerifyMasterPasswordScreen
                         asset: Assets.images.svg.icFingerScan,
                         size: AppDimens.space_24,
                       ),
-                      SizedBox(width: AppDimens.space_4,),
+                      SizedBox(
+                        width: AppDimens.space_4,
+                      ),
                       Flexible(
                         child: Text(
-                          TransactionConstants.unlockBiometric.tr,
+                          TranslationConstants.unlockBiometric.tr,
                           style: ThemeText.bodyRegular.s16,
                           textAlign: TextAlign.center,
                         ),
@@ -156,11 +154,13 @@ class VerifyMasterPasswordScreen
                 ),
                 Spacer(),
                 Text(
-                  TransactionConstants.getMasterPasswordHint.tr,
+                  TranslationConstants.getMasterPasswordHint.tr,
                   style: ThemeText.bodyMedium.blue300,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: AppDimens.space_36,),
+                SizedBox(
+                  height: AppDimens.space_36,
+                ),
               ],
             ),
           ),

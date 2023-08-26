@@ -55,7 +55,7 @@ class AppValidator {
     return error(
       emailCtrl.text,
       AppValidation.email,
-      TransactionConstants.invalidEmail.tr,
+      TranslationConstants.invalidEmail.tr,
     );
   }
   //
@@ -72,14 +72,14 @@ class AppValidator {
     return error(
       passwordCtrl.text.trim(),
       AppValidation.password,
-      TransactionConstants.passwordFormatError.tr,
+      TranslationConstants.passwordFormatError.tr,
     );
   }
 
   static String validateConfirmPassword(TextEditingController passwordCtrl,
       TextEditingController confirmPasswordCtrl) {
     if (passwordCtrl.text.compareTo(confirmPasswordCtrl.text) != 0) {
-      return TransactionConstants.confirmPasswordError.tr;
+      return TranslationConstants.confirmPasswordError.tr;
     }
     return '';
   }

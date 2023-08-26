@@ -12,19 +12,21 @@ class AppTouchable extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final OutlinedBorder? outlinedBorder;
+  final BorderRadius? borderRadius;
 
-  const AppTouchable(
-      {Key? key,
-      required this.onPressed,
-      required this.child,
-      this.width,
-      this.height,
-      this.backgroundColor,
-      this.rippleColor,
-      this.padding,
-      this.margin,
-      this.outlinedBorder})
-      : super(key: key);
+  const AppTouchable({
+    Key? key,
+    required this.onPressed,
+    required this.child,
+    this.width,
+    this.height,
+    this.backgroundColor,
+    this.rippleColor,
+    this.padding,
+    this.margin,
+    this.outlinedBorder,
+    this.borderRadius,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,9 @@ class AppTouchable extends StatelessWidget {
       width: width,
       height: height,
       margin: margin ?? EdgeInsets.zero,
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+      ),
       child: TextButton(
         onPressed: onPressed,
         child: child ?? const SizedBox.shrink(),
@@ -43,7 +48,8 @@ class AppTouchable extends StatelessWidget {
           shape: MaterialStateProperty.all(
             outlinedBorder ??
                 RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppDimens.radius_12),
+                  borderRadius:
+                      borderRadius ?? BorderRadius.circular(AppDimens.space_12),
                 ),
           ),
           padding: MaterialStateProperty.all(padding ?? EdgeInsets.zero),

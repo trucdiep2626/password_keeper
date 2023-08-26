@@ -47,14 +47,14 @@ class RegisterScreen extends GetView<RegisterController> {
               height: AppDimens.space_8,
             ),
             Text(
-              TransactionConstants.createAccount.tr,
+              TranslationConstants.createAccount.tr,
               style: ThemeText.bodySemibold.s18.blue400,
             ),
             SizedBox(
               height: AppDimens.space_4,
             ),
             Text(
-              TransactionConstants.setupNewAccount.tr,
+              TranslationConstants.setupNewAccount.tr,
               style: ThemeText.bodyMedium.s14.grey600Color,
             ),
             SizedBox(
@@ -69,7 +69,7 @@ class RegisterScreen extends GetView<RegisterController> {
                       ? AppColors.blue400
                       : AppColors.grey,
                 ),
-                hintText: TransactionConstants.fullname.tr,
+                hintText: TranslationConstants.fullname.tr,
                 controller: controller.fullNameController,
                 keyboardType: TextInputType.name,
                 errorText: controller.fullNameValidate.value,
@@ -85,7 +85,7 @@ class RegisterScreen extends GetView<RegisterController> {
             ),
             Obx(
               () => AppTextField(
-                hintText: TransactionConstants.email.tr,
+                hintText: TranslationConstants.email.tr,
                 prefixIcon: AppImageWidget(
                   fit: BoxFit.scaleDown,
                   asset: Assets.images.svg.icMessage,
@@ -127,7 +127,7 @@ class RegisterScreen extends GetView<RegisterController> {
                         : AppColors.grey,
                   ),
                 ),
-                hintText: TransactionConstants.password.tr,
+                hintText: TranslationConstants.password.tr,
                 controller: controller.passwordController,
                 errorText: controller.passwordValidate.value,
                 obscureText: !(controller.showPassword.value),
@@ -162,7 +162,7 @@ class RegisterScreen extends GetView<RegisterController> {
                         : AppColors.grey,
                   ),
                 ),
-                hintText: TransactionConstants.confirmPassword.tr,
+                hintText: TranslationConstants.confirmPassword.tr,
                 controller: controller.confirmPasswordController,
                 errorText: controller.confirmPasswordValidate.value,
                 obscureText: !(controller.showConfirmPassword.value),
@@ -198,7 +198,7 @@ class RegisterScreen extends GetView<RegisterController> {
             Obx(
               () => AppButton(
                 enable: controller.buttonEnable.value,
-                title: TransactionConstants.signUp.tr,
+                title: TranslationConstants.signUp.tr,
                 onPressed: () => controller.onPressedRegister(),
                 loaded: controller.rxLoadedButton.value,
               ),
@@ -207,7 +207,7 @@ class RegisterScreen extends GetView<RegisterController> {
               height: AppDimens.space_20,
             ),
             Text(
-              TransactionConstants.orSignInWith.tr,
+              TranslationConstants.orSignInWith.tr,
               style: ThemeText.bodyMedium.s16,
             ),
             SizedBox(
@@ -224,7 +224,7 @@ class RegisterScreen extends GetView<RegisterController> {
             ),
             RichText(
               text: TextSpan(
-                text: TransactionConstants.alreadyHaveAnAccount.tr,
+                text: TranslationConstants.alreadyHaveAnAccount.tr,
                 style: ThemeText.bodyMedium,
                 children: [
                   WidgetSpan(
@@ -235,7 +235,7 @@ class RegisterScreen extends GetView<RegisterController> {
                       },
                       padding: EdgeInsets.only(left: AppDimens.space_4),
                       child: Text(
-                        TransactionConstants.signIn.tr,
+                        TranslationConstants.signIn.tr,
                         style: ThemeText.bodySemibold.blue400,
                       ),
                     ),

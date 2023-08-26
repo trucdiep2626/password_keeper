@@ -67,12 +67,12 @@ class AppController extends SuperController with MixinController {
 
   _updateState(ConnectivityResult result) {
     if (result == ConnectivityResult.none) {
-      showTopSnackBarError(Get.context!, TransactionConstants.offline.tr);
+      showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
     } else {
       showTopSnackBar(
           type: SnackBarType.done,
           Get.context!,
-          message: TransactionConstants.internetRestore.tr);
+          message: TranslationConstants.internetRestore.tr);
     }
   }
 

@@ -55,7 +55,7 @@ class LoginController extends GetxController with MixinController {
     if (connectivityResult == ConnectivityResult.none) {
       if (Get.context != null) {
         showTopSnackBarError(
-            Get.context!, TransactionConstants.noConnectionError.tr);
+            Get.context!, TranslationConstants.noConnectionError.tr);
       }
       rxLoadedButton.value = LoadedType.finish;
       return;
@@ -91,7 +91,7 @@ class LoginController extends GetxController with MixinController {
     if (connectivityResult == ConnectivityResult.none) {
       if (Get.context != null) {
         showTopSnackBarError(
-            Get.context!, TransactionConstants.noConnectionError.tr);
+            Get.context!, TranslationConstants.noConnectionError.tr);
       }
       rxLoadedButton.value = LoadedType.finish;
       return;
@@ -108,7 +108,7 @@ class LoginController extends GetxController with MixinController {
       } else {
         if (Get.context != null) {
           showTopSnackBarError(
-              Get.context!, TransactionConstants.unknownError.tr);
+              Get.context!, TranslationConstants.unknownError.tr);
         }
       }
     } on FirebaseAuthException catch (e) {

@@ -34,14 +34,14 @@ class VerifyEmailScreen extends GetView<VerifyEmailController> {
                   height: AppDimens.space_36,
                 ),
                 Text(
-                  TransactionConstants.verifyEmail.tr,
+                  TranslationConstants.verifyEmail.tr,
                   style: ThemeText.bodySemibold.s24.blue400,
                 ),
                 SizedBox(
                   height: AppDimens.space_16,
                 ),
                 Text(
-                  TransactionConstants.verifyEmailDescription.tr,
+                  TranslationConstants.verifyEmailDescription.tr,
                   style: ThemeText.bodyMedium.s14.grey600Color,
                   textAlign: TextAlign.center,
                 ),
@@ -50,7 +50,7 @@ class VerifyEmailScreen extends GetView<VerifyEmailController> {
                 ),
                 Obx(
                   () => AppButton(
-                    title: TransactionConstants.continueButton.tr,
+                    title: TranslationConstants.continueButton.tr,
                     onPressed: () => controller.onPressedContinueButton(),
                     loaded: controller.rxLoadedButton.value,
                   ),
@@ -61,7 +61,7 @@ class VerifyEmailScreen extends GetView<VerifyEmailController> {
                 GestureDetector(
                   onTap: controller.sendVerifyEmail,
                   child: Text(
-                    TransactionConstants.resendEmailLink.tr,
+                    TranslationConstants.resendEmailLink.tr,
                     style: ThemeText.bodySemibold.s16.blue300,
                   ),
                 ),

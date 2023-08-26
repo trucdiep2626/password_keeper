@@ -72,7 +72,7 @@ class RegisterController extends GetxController with MixinController {
     if (connectivityResult == ConnectivityResult.none) {
       if (Get.context != null) {
         showTopSnackBarError(
-            Get.context!, TransactionConstants.noConnectionError.tr);
+            Get.context!, TranslationConstants.noConnectionError.tr);
       }
       rxLoadedButton.value = LoadedType.finish;
       return;
@@ -89,7 +89,7 @@ class RegisterController extends GetxController with MixinController {
       } else {
         if (Get.context != null) {
           showTopSnackBarError(
-              Get.context!, TransactionConstants.unknownError.tr);
+              Get.context!, TranslationConstants.unknownError.tr);
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -118,7 +118,7 @@ class RegisterController extends GetxController with MixinController {
     if (connectivityResult == ConnectivityResult.none) {
       if (Get.context != null) {
         showTopSnackBarError(
-            Get.context!, TransactionConstants.noConnectionError.tr);
+            Get.context!, TranslationConstants.noConnectionError.tr);
       }
       rxLoadedButton.value = LoadedType.finish;
       return;
@@ -142,11 +142,11 @@ class RegisterController extends GetxController with MixinController {
           Get.toNamed(AppRoutes.verifyEmail);
         }
         // else {
-        //   showTopSnackBarError(context, TransactionConstants.unknownError.tr);
+        //   showTopSnackBarError(context, TranslationConstants.unknownError.tr);
         //   //
         //   // } else {
         //   //   debugPrint('đăng nhập thất bại');
-        //   //   errorText.value = TransactionConstants.loginError.tr;
+        //   //   errorText.value = TranslationConstants.loginError.tr;
         // }
 
       } on FirebaseAuthException catch (e) {
