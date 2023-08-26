@@ -45,7 +45,7 @@ class AccountProfile {
     this.masterPasswordHint,
     this.hashedMasterPassword,
     this.key,
-    // this.name,
+    this.name,
     // this.stamp,
     // this.orgIdentifier,
     // this.avatarColor,
@@ -81,6 +81,7 @@ class AccountProfile {
     kdfIterations = json['kdf_iterations'];
     kdfMemory = json['kdf_memory'];
     kdfParallelism = json['kdf_parallelism'];
+    name = json['name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -92,6 +93,7 @@ class AccountProfile {
     data['kdf_iterations'] = this.kdfIterations;
     data['kdf_memory'] = this.kdfMemory;
     data['kdf_parallelism'] = this.kdfParallelism;
+    data['name'] = this.name;
     return data;
   }
 }

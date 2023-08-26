@@ -47,10 +47,9 @@ class RegisterController extends GetxController with MixinController {
 
   void checkButtonEnable() {
     if (emailController.text.trim().isNotEmpty &&
-            passwordController.text.isNotEmpty &&
-            confirmPasswordController.text.isNotEmpty
-        // && fullNameController.text.trim().isNotEmpty
-        ) {
+        passwordController.text.isNotEmpty &&
+        confirmPasswordController.text.isNotEmpty &&
+        fullNameController.text.trim().isNotEmpty) {
       buttonEnable.value = true;
     } else {
       buttonEnable.value = false;
@@ -111,9 +110,9 @@ class RegisterController extends GetxController with MixinController {
     confirmPasswordValidate.value = AppValidator.validateConfirmPassword(
         passwordController, confirmPasswordController);
 
-    // fullNameValidate.value = AppValidator.validateName(
-    //   fullNameController,
-    // );
+    fullNameValidate.value = AppValidator.validateName(
+      fullNameController,
+    );
 
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -127,11 +126,12 @@ class RegisterController extends GetxController with MixinController {
 
     if (emailValidate.value.isEmpty &&
         passwordValidate.value.isEmpty &&
-        //    fullNameValidate.value.isEmpty &&
+        fullNameValidate.value.isEmpty &&
         confirmPasswordValidate.value.isEmpty) {
       rxLoadedButton.value = LoadedType.start;
       try {
         final result = await accountUsecase.signUpWithEmail(
+          fullname: fullNameController.text.trim(),
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
@@ -166,7 +166,7 @@ class RegisterController extends GetxController with MixinController {
 
   void onTapEmailTextField() {
     pwdHasFocus.value = false;
-    //  fullNameHasFocus.value = false;
+    fullNameHasFocus.value = false;
     emailHasFocus.value = true;
     confirmPwdHasFocus.value = false;
   }
@@ -185,7 +185,7 @@ class RegisterController extends GetxController with MixinController {
   void onTapPwdTextField() {
     confirmPwdHasFocus.value = false;
     pwdHasFocus.value = true;
-    //  fullNameHasFocus.value = false;
+    fullNameHasFocus.value = false;
     emailHasFocus.value = false;
   }
 
@@ -255,9 +255,9 @@ class RegisterController extends GetxController with MixinController {
     passwordFocusNode.addListener(() {
       pwdHasFocus.value = passwordFocusNode.hasFocus;
     });
-    // fullNameFocusNode.addListener(() {
-    //   fullNameHasFocus.value = fullNameFocusNode.hasFocus;
-    // });
+    fullNameFocusNode.addListener(() {
+      fullNameHasFocus.value = fullNameFocusNode.hasFocus;
+    });
     confirmPasswordFocusNode.addListener(() {
       confirmPwdHasFocus.value = confirmPasswordFocusNode.hasFocus;
     });

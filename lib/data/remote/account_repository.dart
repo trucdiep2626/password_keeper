@@ -15,14 +15,16 @@ class AccountRepository {
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
 
   Future<UserCredential> signUpWithEmail({
+    required String fullname,
     required String email,
     required String password,
   }) async {
-    final user = await auth.createUserWithEmailAndPassword(
+    final newUser = await auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-    return user;
+    await user.updateDisplayName(fullname);
+    return newUser;
   }
 
   Future<void> loginWithEmail({

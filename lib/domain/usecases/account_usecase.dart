@@ -14,12 +14,14 @@ class AccountUseCase {
   Stream<User?> get authState => accountRepo.authState;
 
   Future<UserCredential> signUpWithEmail({
+    required String fullname,
     required String email,
     required String password,
   }) async {
     return await accountRepo.signUpWithEmail(
       email: email,
       password: password,
+      fullname: fullname,
     );
   }
 

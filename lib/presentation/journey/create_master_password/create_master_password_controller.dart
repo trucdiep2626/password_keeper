@@ -110,6 +110,7 @@ class CreateMasterPasswordController extends GetxController
 
       final profile = AccountProfile(
         email: accountUsecase.user.email,
+        name: accountUsecase.user.displayName,
         userId: accountUsecase.user.uid,
         hashedMasterPassword: hashedPassword,
         masterPasswordHint: masterPwdHintController.text.trim(),

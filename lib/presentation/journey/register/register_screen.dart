@@ -60,30 +60,29 @@ class RegisterScreen extends GetView<RegisterController> {
             SizedBox(
               height: AppDimens.space_48,
             ),
-            // Obx(
-            //   () => AppTextField(
-            //     prefixIcon: AppImageWidget(
-            //       fit: BoxFit.scaleDown,
-            //       asset: Assets.images.svg.icUser,
-            //       color: controller.fullNameHasFocus.value
-            //           ? AppColors.blue400
-            //           : AppColors.grey,
-            //     ),
-            //     hintText: TransactionConstants.fullname.tr,
-            //     controller: controller.fullNameController,
-            //     keyboardType: TextInputType.name,
-            //     errorText: controller.fullNameValidate.value,
-            //     onChangedText: (value) => controller.onChangedFullName(),
-            //     onTap: () => controller.onTapFullNameTextField(),
-            //     textInputAction: TextInputAction.next,
-            //     onEditingComplete: () =>
-            //         controller.onEditingCompleteFullName(),
-            //     focusNode: controller.fullNameFocusNode,
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: AppDimens.space_12,
-            // ),
+            Obx(
+              () => AppTextField(
+                prefixIcon: AppImageWidget(
+                  fit: BoxFit.scaleDown,
+                  asset: Assets.images.svg.icUser,
+                  color: controller.fullNameHasFocus.value
+                      ? AppColors.blue400
+                      : AppColors.grey,
+                ),
+                hintText: TransactionConstants.fullname.tr,
+                controller: controller.fullNameController,
+                keyboardType: TextInputType.name,
+                errorText: controller.fullNameValidate.value,
+                onChangedText: (value) => controller.onChangedFullName(),
+                onTap: () => controller.onTapFullNameTextField(),
+                textInputAction: TextInputAction.next,
+                onEditingComplete: () => controller.onEditingCompleteFullName(),
+                focusNode: controller.fullNameFocusNode,
+              ),
+            ),
+            SizedBox(
+              height: AppDimens.space_12,
+            ),
             Obx(
               () => AppTextField(
                 hintText: TransactionConstants.email.tr,
