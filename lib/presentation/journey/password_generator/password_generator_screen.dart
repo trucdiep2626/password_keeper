@@ -39,7 +39,25 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
                     style: ThemeText.bodyMedium.grey600Color,
                   ),
                 ),
-                _buildOptionals(),
+                //options
+                Container(
+                  color: AppColors.white,
+                  child: Obx(() =>
+                          // Column(
+                          //   children: [
+                          // _buildPasswordType(),
+                          // controller.selectedType.value == PasswordType.password
+                          //     ?
+                          _buildOptionalsForPassword()
+                      //     : _buildOptionalsForPassphrase()
+                      //   ],
+                      // ),
+                      ),
+                ),
+
+                SizedBox(
+                  height: AppDimens.space_24,
+                )
               ],
             ),
           ),
@@ -48,109 +66,238 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
     );
   }
 
-  Widget _buildOptionals() {
-    return Container(
-      // padding: EdgeInsets.all(AppDimens.space_16),
-      color: AppColors.white,
-      child: Obx(
-        () => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: AppDimens.space_16,
-                left: AppDimens.space_16,
-                right: AppDimens.space_16,
-              ),
-              child: Text(
-                '${TranslationConstants.passwordLength.tr}: ${controller.pwdLength.value}',
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-            ),
-            Slider(
-              value: controller.pwdLength.value.toDouble(),
-              max: 100,
-              min: 8,
-              divisions: 5,
-              activeColor: AppColors.blue400,
-              inactiveColor: AppColors.blue200,
-              onChanged: (double value) =>
-                  controller.onChangedPwdLength(value.round()),
-            ),
-            SwitchListTile(
-              activeColor: AppColors.blue400,
-              value: controller.useUppercase.value,
-              onChanged: (value) => controller.onChangedUseUppercase(),
-              title: Text(
-                TranslationConstants.uppercaseLetters.tr,
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-            ),
-            SwitchListTile(
-              activeColor: AppColors.blue400,
-              value: controller.useLowercase.value,
-              onChanged: (value) => controller.onChangedUseLowercase(),
-              title: Text(
-                TranslationConstants.lowercaseLetters.tr,
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-            ),
-            SwitchListTile(
-              activeColor: AppColors.blue400,
-              value: controller.useNumbers.value,
-              onChanged: (value) => controller.onChangedUseNumbers(),
-              title: Text(
-                TranslationConstants.numbers.tr,
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-            ),
-            SwitchListTile(
-              activeColor: AppColors.blue400,
-              value: controller.useSpecial.value,
-              onChanged: (value) => controller.onChangedUseSpecial(),
-              title: Text(
-                TranslationConstants.specialCharacters.tr,
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-            ),
-            ListTile(
-              title: Text(
-                TranslationConstants.minimumNumbers.tr,
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-              trailing: Obx(
-                () => _buildChangeQuantity(
-                  onPressedIncrease: () => controller.increaseMinimumNumbers(),
-                  onPressedDecrease: () => controller.decreaseMinimumNumbers(),
-                  value: controller.minimumNumbers.value,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text(
-                TranslationConstants.minimumSpecial.tr,
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-              trailing: Obx(
-                () => _buildChangeQuantity(
-                  onPressedIncrease: () => controller.increaseMinimumSpecial(),
-                  onPressedDecrease: () => controller.decreaseMinimumSpecial(),
-                  value: controller.minimumSpecial.value,
-                ),
-              ),
-            ),
-            SwitchListTile(
-              activeColor: AppColors.blue400,
-              value: controller.avoidAmbiguous.value,
-              onChanged: (value) => controller.onChangedAvoidAmbiguous(),
-              title: Text(
-                TranslationConstants.avoidAmbiguousCharacters.tr,
-                style: ThemeText.bodyRegular.grey600Color,
-              ),
-            ),
-          ],
+  Widget _buildPasswordType() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+            top: AppDimens.space_16,
+            left: AppDimens.space_16,
+            right: AppDimens.space_16,
+          ),
+          child: Text(
+            TranslationConstants.passwordType.tr,
+            style: ThemeText.bodyMedium.grey700Color,
+          ),
         ),
-      ),
+        RadioListTile(
+          activeColor: AppColors.blue400,
+          title: Text(
+            PasswordType.password.name.capitalize ?? '',
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+          value: PasswordType.password,
+          groupValue: controller.selectedType.value,
+          onChanged: (value) =>
+              controller.onChangedPasswordType(PasswordType.password),
+        ),
+        RadioListTile(
+          activeColor: AppColors.blue400,
+          title: Text(
+            PasswordType.passphrase.name.capitalize ?? '',
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+          value: PasswordType.passphrase,
+          groupValue: controller.selectedType.value,
+          onChanged: (value) =>
+              controller.onChangedPasswordType(PasswordType.passphrase),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOptionalsForPassphrase() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        //num of words
+        ListTile(
+          title: Text(
+            TranslationConstants.numWords.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+          trailing: Obx(
+            () => _buildChangeQuantity(
+              onPressedIncrease: () async =>
+                  await controller.increaseNumWords(),
+              onPressedDecrease: () async =>
+                  await controller.decreaseNumWords(),
+              value: controller.numWords.value,
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: EdgeInsets.only(left: AppDimens.space_16),
+          child: Text(
+            TranslationConstants.wordSeparator.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+        //word separator
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
+          child: AppTextField(
+            contentPadding: EdgeInsets.zero,
+            isUnderline: true,
+            borderColor: AppColors.grey400,
+            //  labelText: TranslationConstants.wordSeparator.tr,
+            controller: controller.wordSeparatorColtroller,
+            //      onTap: () => controller.onTapMasterPwdHintTextField(),
+            //    textInputAction: TextInputAction.done,
+            // onEditingComplete: () =>
+            //     controller.onEditingCompleteMasterPwdHint(),
+            //   focusNode: controller.masterPwdHintFocusNode,
+            maxLines: 7,
+          ),
+        ),
+
+        //capitalize
+        SwitchListTile(
+          activeColor: AppColors.blue400,
+          value: controller.capitalize.value,
+          onChanged: (value) async => await controller.onChangedCapitalize(),
+          title: Text(
+            TranslationConstants.capitalize.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+
+        //include number
+        SwitchListTile(
+          activeColor: AppColors.blue400,
+          value: controller.includeNumber.value,
+          onChanged: (value) async => await controller.onChangedIncludeNumber(),
+          title: Text(
+            TranslationConstants.includeNumber.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOptionalsForPassword() {
+    final minLengthRequired =
+        controller.minSpecial.value + controller.minNumbers.value;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        //password length
+        Padding(
+          padding: EdgeInsets.only(
+            top: AppDimens.space_16,
+            left: AppDimens.space_16,
+            right: AppDimens.space_16,
+          ),
+          child: Text(
+            '${TranslationConstants.passwordLength.tr}: ${controller.pwdLength.value}',
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+        Slider(
+          value: controller.pwdLength.value.toDouble(),
+          max: 100,
+          min: (minLengthRequired > 8 ? minLengthRequired : 8).toDouble(),
+          //   divisions: 1,
+          activeColor: AppColors.blue400,
+          inactiveColor: AppColors.blue200,
+          onChanged: (double value) async =>
+              await controller.onChangedPwdLength(value.round()),
+        ),
+
+        //uppercase
+        SwitchListTile(
+          activeColor: AppColors.blue400,
+          value: controller.useUppercase.value,
+          onChanged: (value) async => await controller.onChangedUseUppercase(),
+          title: Text(
+            TranslationConstants.uppercaseLetters.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+
+        //lowercase
+        SwitchListTile(
+          activeColor: AppColors.blue400,
+          value: controller.useLowercase.value,
+          onChanged: (value) async => await controller.onChangedUseLowercase(),
+          title: Text(
+            TranslationConstants.lowercaseLetters.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+
+        // numbers
+        SwitchListTile(
+          activeColor: AppColors.blue400,
+          value: controller.useNumbers.value,
+          onChanged: (value) async => await controller.onChangedUseNumbers(),
+          title: Text(
+            TranslationConstants.numbers.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+
+        //special
+        SwitchListTile(
+          activeColor: AppColors.blue400,
+          value: controller.useSpecial.value,
+          onChanged: (value) async => await controller.onChangedUseSpecial(),
+          title: Text(
+            TranslationConstants.specialCharacters.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+
+        // min numbers
+        ListTile(
+          title: Text(
+            TranslationConstants.minimumNumbers.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+          trailing: Obx(
+            () => _buildChangeQuantity(
+              onPressedIncrease: () async =>
+                  await controller.increaseMinimumNumbers(),
+              onPressedDecrease: () async =>
+                  await controller.decreaseMinimumNumbers(),
+              value: controller.minNumbers.value,
+            ),
+          ),
+        ),
+
+        //min special
+        ListTile(
+          title: Text(
+            TranslationConstants.minimumSpecial.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+          trailing: Obx(
+            () => _buildChangeQuantity(
+              onPressedIncrease: () async =>
+                  await controller.increaseMinimumSpecial(),
+              onPressedDecrease: () async =>
+                  await controller.decreaseMinimumSpecial(),
+              value: controller.minSpecial.value,
+            ),
+          ),
+        ),
+
+        //avoid Ambiguous
+        SwitchListTile(
+          activeColor: AppColors.blue400,
+          value: controller.avoidAmbiguous.value,
+          onChanged: (value) async =>
+              await controller.onChangedAvoidAmbiguous(),
+          title: Text(
+            TranslationConstants.avoidAmbiguousCharacters.tr,
+            style: ThemeText.bodyRegular.grey600Color,
+          ),
+        ),
+      ],
     );
   }
 
@@ -222,7 +369,7 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
                   type: SnackBarType.done);
             },
             child: AppImageWidget(
-              asset: Assets.images.svg.icGenerator,
+              asset: Assets.images.svg.icCopy,
             ),
           ),
           SizedBox(

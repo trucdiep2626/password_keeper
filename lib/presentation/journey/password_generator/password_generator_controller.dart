@@ -1,5 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/common/utils/password_helper.dart';
+import 'package:password_keeper/domain/models/password_generation_option.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/widgets/export.dart';
 
 class PasswordGeneratorController extends GetxController with MixinController {
   RxBool useUppercase = true.obs;
@@ -9,56 +16,174 @@ class PasswordGeneratorController extends GetxController with MixinController {
   RxBool avoidAmbiguous = false.obs;
 
   RxInt pwdLength = 10.obs;
-  RxInt minimumNumbers = 0.obs;
-  RxInt minimumSpecial = 0.obs;
+  RxInt minNumbers = 0.obs;
+  RxInt minSpecial = 0.obs;
+  RxInt numWords = 0.obs;
 
-  RxString generatedPassword = 'gbadsghdrgfhsdhsdfbdcxbsdefrhdfhdsfnv'.obs;
+  TextEditingController wordSeparatorColtroller = TextEditingController();
+  RxBool capitalize = false.obs;
+  RxBool includeNumber = false.obs;
 
-  PasswordGeneratorController();
+  RxString generatedPassword = ''.obs;
 
-  void onChangedUseUppercase() {
+  Rx<PasswordType> selectedType = PasswordType.password.obs;
+
+  final PasswordUsecase passwordUsecase;
+  PasswordGenerationOptions _option = PasswordGenerationOptions();
+
+  PasswordGenerationOptions _defaultOption = PasswordGenerationOptions();
+
+  PasswordGeneratorController({required this.passwordUsecase});
+
+  Future<void> onChangedPasswordType(PasswordType type) async {
+    selectedType.value = type;
+    await onChangedOptions();
+  }
+
+  Future<void> onChangedUseUppercase() async {
     useUppercase.value = !useUppercase.value;
+    await onChangedOptions();
   }
 
-  void onChangedUseLowercase() {
+  Future<void> onChangedUseLowercase() async {
     useLowercase.value = !useLowercase.value;
+    await onChangedOptions();
   }
 
-  void onChangedUseNumbers() {
+  Future<void> onChangedUseNumbers() async {
     useNumbers.value = !useNumbers.value;
+    await onChangedOptions();
   }
 
-  void onChangedUseSpecial() {
+  Future<void> onChangedUseSpecial() async {
     useSpecial.value = !useSpecial.value;
+    await onChangedOptions();
   }
 
-  void onChangedAvoidAmbiguous() {
+  Future<void> onChangedAvoidAmbiguous() async {
     avoidAmbiguous.value = !avoidAmbiguous.value;
+    await onChangedOptions();
   }
 
-  void onChangedPwdLength(int value) {
+  Future<void> onChangedPwdLength(int value) async {
     pwdLength.value = value;
+    await onChangedOptions();
   }
 
-  void increaseMinimumNumbers() {
-    minimumNumbers.value = minimumNumbers.value + 1;
-  }
-
-  void decreaseMinimumNumbers() {
-    if (minimumNumbers.value > 0) {
-      minimumNumbers.value = minimumNumbers.value - 1;
+  Future<void> increaseMinimumNumbers() async {
+    if (pwdLength.value > (minNumbers.value + minSpecial.value)) {
+      minNumbers.value = minNumbers.value + 1;
+      await onChangedOptions();
     }
   }
 
-  void decreaseMinimumSpecial() {
-    if (minimumSpecial.value > 0) {
-      minimumSpecial.value = minimumSpecial.value - 1;
+  Future<void> decreaseMinimumNumbers() async {
+    if (minNumbers.value > 0) {
+      minNumbers.value = minNumbers.value - 1;
+      await onChangedOptions();
     }
   }
 
-  void increaseMinimumSpecial() {
-    minimumSpecial.value = minimumSpecial.value + 1;
+  Future<void> decreaseMinimumSpecial() async {
+    if (minSpecial.value > 0) {
+      minSpecial.value = minSpecial.value - 1;
+      await onChangedOptions();
+    }
   }
 
-  void generatePassword() {}
+  Future<void> increaseMinimumSpecial() async {
+    if (pwdLength.value > (minNumbers.value + minSpecial.value)) {
+      minSpecial.value = minSpecial.value + 1;
+      await onChangedOptions();
+    }
+  }
+
+  Future<void> decreaseNumWords() async {
+    if (numWords.value > 0) {
+      numWords.value = numWords.value - 1;
+      await onChangedOptions();
+    }
+  }
+
+  Future<void> increaseNumWords() async {
+    numWords.value = numWords.value + 1;
+    await onChangedOptions();
+  }
+
+  Future<void> onChangedCapitalize() async {
+    capitalize.value = !capitalize.value;
+    await onChangedOptions();
+  }
+
+  Future<void> onChangedIncludeNumber() async {
+    includeNumber.value = !includeNumber.value;
+    await onChangedOptions();
+  }
+
+  Future<void> onChangedOptions() async {
+    await saveOption();
+    await generatePassword();
+  }
+
+  Future<void> generatePassword() async {
+    generatedPassword.value = await PasswordHelper.generatePassword(_option);
+  }
+
+  PasswordGenerationOptions getOption() {
+    PasswordGenerationOptions? option =
+        passwordUsecase.getPasswordGenerationOptions;
+    option ??= _defaultOption;
+
+    return option;
+  }
+
+  Future<void> saveOption() async {
+    try {
+      _option = PasswordGenerationOptions(
+        avoidAmbiguous: avoidAmbiguous.value,
+        minNumbers: minNumbers.value,
+        minSpecial: minSpecial.value,
+        useSpecial: useSpecial.value,
+        useUppercase: useUppercase.value,
+        useLowercase: useLowercase.value,
+        useNumbers: useNumbers.value,
+        pwdLength: pwdLength.value,
+        numWords: numWords.value,
+        capitalize: capitalize.value,
+        includeNumber: includeNumber.value,
+        type: selectedType.value,
+        wordSeparator: wordSeparatorColtroller.text,
+      );
+      await passwordUsecase.setPasswordGenerationOptions(option: _option);
+    } catch (e) {
+      logger(e.toString());
+      showTopSnackBarError(context, e.toString());
+    }
+  }
+
+  void applyOption(PasswordGenerationOptions option) {
+    useUppercase.value = option.useUppercase ?? true;
+
+    useLowercase.value = option.useLowercase ?? true;
+
+    useNumbers.value = option.useNumbers ?? true;
+    useSpecial.value = option.useSpecial ?? false;
+    avoidAmbiguous.value = option.avoidAmbiguous ?? true;
+    pwdLength.value = option.pwdLength ?? 14;
+    minNumbers.value = option.minNumbers ?? 1;
+    minSpecial.value = option.minSpecial ?? 1;
+    numWords.value = option.numWords ?? 3;
+    wordSeparatorColtroller.text = '-';
+    capitalize.value = option.capitalize ?? false;
+    includeNumber.value = option.includeNumber ?? false;
+    selectedType.value = option.type ?? PasswordType.password;
+  }
+
+  @override
+  void onReady() async {
+    _option = getOption();
+
+    applyOption(_option);
+    await generatePassword();
+  }
 }

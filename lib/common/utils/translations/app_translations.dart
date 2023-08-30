@@ -125,4 +125,10 @@ class TranslationConstants {
   static const String minimumSpecial = 'minimum_special';
   static const String avoidAmbiguousCharacters = 'avoid_ambiguous_characters';
   static const String copiedSuccessfully = 'copied_successfully';
+  static const String passwordType = "password_type";
+  static const String passphrase = "passphrase";
+  static const String numWords = "num_words";
+  static const String wordSeparator = "word_separator";
+  static const String capitalize = "capitalize";
+  static const String includeNumber = "include_number";
 }

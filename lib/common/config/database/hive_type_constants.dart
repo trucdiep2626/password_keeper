@@ -1,13 +1,11 @@
 class HiveTypeConstants {
-  static const int school = 0;
-  static const int personal = 1;
-  static const int student = 2;
-  static const int scoresCell = 3;
+  static const int generatedPasswordKey = 0;
 }
 
 class HiveKey {
-  static const schoolCollection = 'school';
-  static const personalCollection = 'personal';
-  static const studentInfoCollection = 'student';
-  static const scoresCell = 'scoresCell';
+  static const boxKey = 'hive_key';
+  static const passwordGenerationOptionKey = 'password_generation_option_key';
+  static const userKey = 'user_key';
+  static const passwordKey = 'password_key';
+  static const generatedPasswordKey = 'generated_password_key';
 }

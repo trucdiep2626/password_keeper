@@ -58,3 +58,5 @@ enum HashPurpose {
   const HashPurpose(this.id);
   final int id;
 }
+
+enum PasswordType { password, passphrase }

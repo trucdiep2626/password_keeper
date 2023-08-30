@@ -38,6 +38,8 @@ class AppTextField extends StatefulWidget {
     this.enableSuggestions = true,
     this.textInputAction,
     this.suffixIcon,
+    this.isUnderline = false,
+    this.contentPadding,
   }) : super(key: key);
 
   final String? labelText;
@@ -71,6 +73,8 @@ class AppTextField extends StatefulWidget {
   final bool autocorrect;
   final bool enableSuggestions;
   final TextInputAction? textInputAction;
+  final bool isUnderline;
+  final EdgeInsets? contentPadding;
 
   @override
   AppTextFieldState createState() => AppTextFieldState();
@@ -120,13 +124,23 @@ class AppTextFieldState extends State<AppTextField> {
           //  height: 48.h,
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(
-                color: widget.borderColor ??
-                    (_focusNode.hasFocus
-                        ? AppColors.blue400
-                        : AppColors.greyF0FF),
-                width: 1.0),
+            borderRadius: widget.isUnderline ? null : BorderRadius.circular(5),
+            border: widget.isUnderline
+                ? Border(
+                    bottom: BorderSide(
+                      color: widget.borderColor ??
+                          (_focusNode.hasFocus
+                              ? AppColors.blue400
+                              : AppColors.greyF0FF),
+                      width: 1.0,
+                    ),
+                  )
+                : Border.all(
+                    color: widget.borderColor ??
+                        (_focusNode.hasFocus
+                            ? AppColors.blue400
+                            : AppColors.greyF0FF),
+                    width: 1.0),
           ),
           child: TextField(
             textInputAction: widget.textInputAction,
@@ -157,8 +171,10 @@ class AppTextFieldState extends State<AppTextField> {
                 color: AppColors.grey,
               ),
               helperText: widget.helpText,
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: AppDimens.width_16, vertical: AppDimens.space_12),
+              contentPadding: widget.contentPadding ??
+                  EdgeInsets.symmetric(
+                      horizontal: AppDimens.width_16,
+                      vertical: AppDimens.space_12),
               prefixIcon: widget.prefixIcon != null
                   ? Padding(
                       padding: EdgeInsets.only(

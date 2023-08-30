@@ -41,6 +41,7 @@ dependencies:
 
   #local database
   hive: 2.2.3
+  hive_flutter: 1.1.0
 
   # Simple Animation
   simple_animations: 5.0.2

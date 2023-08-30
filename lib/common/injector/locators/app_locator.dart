@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:password_keeper/common/config/database/hive_services.dart';
 import 'package:password_keeper/common/constants/shared_preferences_constants.dart';
+import 'package:password_keeper/data/account_repository.dart';
 import 'package:password_keeper/data/local_repository.dart';
-import 'package:password_keeper/data/remote/account_repository.dart';
+import 'package:password_keeper/data/password_repository.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/app_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/state_controller.dart';
@@ -29,8 +32,8 @@ void configLocator() {
   getIt.registerFactory<MainController>(() => MainController());
   getIt.registerFactory<HomeController>(
       () => HomeController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<PasswordGeneratorController>(
-      () => PasswordGeneratorController());
+  getIt.registerFactory<PasswordGeneratorController>(() =>
+      PasswordGeneratorController(passwordUsecase: getIt<PasswordUsecase>()));
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<LoginController>(
@@ -52,14 +55,19 @@ void configLocator() {
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(
       accountRepo: getIt<AccountRepository>(),
       localRepo: getIt<LocalRepository>()));
+  getIt.registerFactory<PasswordUsecase>(
+      () => PasswordUsecase(passwordRepository: getIt<PasswordRepository>()));
 
   /// Repositories
   getIt.registerFactory<AccountRepository>(() => AccountRepository(
         auth: FirebaseAuth.instance,
         db: FirebaseFirestore.instance,
       ));
+  getIt.registerFactory<PasswordRepository>(
+      () => PasswordRepository(hiveServices: getIt<HiveServices>()));
   getIt.registerFactory<LocalRepository>(() => LocalRepository());
 
   getIt.registerFactory<SharePreferencesConstants>(
       () => SharePreferencesConstants());
+  getIt.registerLazySingleton<HiveServices>(() => HiveServices());
 }

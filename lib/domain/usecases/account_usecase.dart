@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:password_keeper/data/account_repository.dart';
 import 'package:password_keeper/data/local_repository.dart';
-import 'package:password_keeper/data/remote/account_repository.dart';
 import 'package:password_keeper/domain/models/account.dart';
 
 class AccountUseCase {

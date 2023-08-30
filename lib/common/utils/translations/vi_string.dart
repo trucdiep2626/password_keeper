@@ -102,5 +102,11 @@ const viString = {
   "minimum_numbers": "Minimum numbers",
   "minimum_special": "Minimum special",
   "avoid_ambiguous_characters": "Avoid ambiguous characters",
-  "copied_successfully": "Copied successfully!"
+  "copied_successfully": "Copied successfully!",
+  "password_type": "Password type",
+  "passphrase": "Passphrase",
+  "num_words": "Number of words",
+  "word_separator": "Word separator",
+  "capitalize": "Capitalize",
+  "include_number": "Include number",
 };
