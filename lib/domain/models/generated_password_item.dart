@@ -1,19 +1,24 @@
-import 'package:hive/hive.dart';
-import 'package:password_keeper/common/config/database/hive_type_constants.dart';
-
-part 'generated_password_item.g.dart';
-
-@HiveType(typeId: HiveTypeConstants.generatedPasswordKey)
 class GeneratedPasswordItem {
-  @HiveField(0)
   String? password;
-  @HiveField(1)
   String? id;
-  @HiveField(2)
-  DateTime? createAt;
+  String? createAt;
   GeneratedPasswordItem({
     this.password,
     this.id,
     this.createAt,
   });
+
+  GeneratedPasswordItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    password = json['password'];
+    createAt = json['create_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = id;
+    data['password'] = password;
+    data['create_at'] = createAt;
+    return data;
+  }
 }

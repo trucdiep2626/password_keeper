@@ -1,4 +1,5 @@
 import 'package:password_keeper/data/password_repository.dart';
+import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 
 class PasswordUsecase {
@@ -7,11 +8,41 @@ class PasswordUsecase {
   PasswordUsecase({required this.passwordRepository});
 
   //Password Generation Option
-  PasswordGenerationOptions? get getPasswordGenerationOptions =>
-      passwordRepository.getPasswordGenerationOptions;
+  PasswordGenerationOptions? get getPasswordGenerationOptionsLocal =>
+      passwordRepository.getPasswordGenerationOptionsLocal;
 
-  Future<void> setPasswordGenerationOptions(
+  Future<void> setPasswordGenerationOptionsLocal(
       {PasswordGenerationOptions? option}) async {
-    await passwordRepository.setPasswordGenerationOptions(option: option);
+    await passwordRepository.setPasswordGenerationOptionsLocal(option: option);
+  }
+
+  Future setPasswordGenerationOption({
+    required String userId,
+    required PasswordGenerationOptions option,
+  }) async {
+    await passwordRepository.setPasswordGenerationOption(
+      userId: userId,
+      option: option,
+    );
+  }
+
+  Future<PasswordGenerationOptions?> getPasswordGenerationOption(
+      {required String userId}) async {
+    return await passwordRepository.getPasswordGenerationOption(userId: userId);
+  }
+
+  Future addGeneratedPassword({
+    required String userId,
+    required GeneratedPasswordItem passwordItem,
+  }) async {
+    await passwordRepository.addGeneratedPassword(
+      userId: userId,
+      passwordItem: passwordItem,
+    );
+  }
+
+  Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory(
+      {required String userId}) async {
+    return await passwordRepository.getGeneratedPasswordHistory(userId: userId);
   }
 }

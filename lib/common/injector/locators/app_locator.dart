@@ -30,10 +30,13 @@ void configLocator() {
       () => AppController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<SplashController>(() => SplashController());
   getIt.registerFactory<MainController>(() => MainController());
-  getIt.registerFactory<HomeController>(
-      () => HomeController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<HomeController>(() => HomeController(
+      //    accountUsecase: getIt<AccountUseCase>()
+      ));
   getIt.registerFactory<PasswordGeneratorController>(() =>
-      PasswordGeneratorController(passwordUsecase: getIt<PasswordUsecase>()));
+      PasswordGeneratorController(passwordUsecase: getIt<PasswordUsecase>(),
+          accountUseCase: getIt<AccountUseCase>()
+      ));
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<LoginController>(
@@ -61,14 +64,18 @@ void configLocator() {
   /// Repositories
   getIt.registerFactory<AccountRepository>(() => AccountRepository(
         auth: FirebaseAuth.instance,
-        db: FirebaseFirestore.instance,
+        db: getIt<FirebaseFirestore>(),
         hiveServices: getIt<HiveServices>(),
       ));
-  getIt.registerFactory<PasswordRepository>(
-      () => PasswordRepository(hiveServices: getIt<HiveServices>()));
+  getIt.registerFactory<PasswordRepository>(() => PasswordRepository(
+        hiveServices: getIt<HiveServices>(),
+        db: getIt<FirebaseFirestore>(),
+      ));
   getIt.registerFactory<LocalRepository>(() => LocalRepository());
 
   getIt.registerFactory<SharePreferencesConstants>(
       () => SharePreferencesConstants());
   getIt.registerLazySingleton<HiveServices>(() => HiveServices());
+  getIt.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance);
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
+import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
@@ -29,11 +30,16 @@ class PasswordGeneratorController extends GetxController with MixinController {
   Rx<PasswordType> selectedType = PasswordType.password.obs;
 
   final PasswordUsecase passwordUsecase;
+  final AccountUseCase accountUseCase;
+
   PasswordGenerationOptions _option = PasswordGenerationOptions();
 
   PasswordGenerationOptions _defaultOption = PasswordGenerationOptions();
 
-  PasswordGeneratorController({required this.passwordUsecase});
+  PasswordGeneratorController({
+    required this.passwordUsecase,
+    required this.accountUseCase,
+  });
 
   final PasswordGenerationController _passwordGenerationController =
       Get.find<PasswordGenerationController>();
@@ -133,9 +139,9 @@ class PasswordGeneratorController extends GetxController with MixinController {
         await _passwordGenerationController.generatePassword(_option);
   }
 
-  PasswordGenerationOptions getOption() {
-    PasswordGenerationOptions? option =
-        passwordUsecase.getPasswordGenerationOptions;
+  Future<PasswordGenerationOptions> getOption() async {
+    PasswordGenerationOptions? option = await passwordUsecase
+        .getPasswordGenerationOption(userId: accountUseCase.user.uid);
     option ??= _defaultOption;
 
     return option;
@@ -158,7 +164,10 @@ class PasswordGeneratorController extends GetxController with MixinController {
         type: selectedType.value,
         wordSeparator: wordSeparatorColtroller.text,
       );
-      await passwordUsecase.setPasswordGenerationOptions(option: _option);
+      await passwordUsecase.setPasswordGenerationOption(
+        option: _option,
+        userId: accountUseCase.user.uid,
+      );
     } catch (e) {
       logger(e.toString());
       showTopSnackBarError(context, e.toString());
@@ -185,7 +194,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
 
   @override
   void onReady() async {
-    _option = getOption();
+    _option = await getOption();
 
     applyOption(_option);
     await generatePassword();

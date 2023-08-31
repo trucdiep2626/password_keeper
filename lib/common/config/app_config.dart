@@ -17,4 +17,7 @@ class AppConfig {
   //firebase
   static const String userCollection = 'users';
   static const String profileCollection = 'profile';
+  static const String passwordGenerationOptionCollection = 'password_generation_option';
+  static const String generatedPasswordsCollection = 'generated_passwords';
+  static const String passwordsCollection = 'passwords';
 }

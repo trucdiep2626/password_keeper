@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:password_keeper/data/account_repository.dart';
 import 'package:password_keeper/data/local_repository.dart';
 import 'package:password_keeper/domain/models/account.dart';
+import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 
 class AccountUseCase {
   final AccountRepository accountRepo;
@@ -12,6 +13,17 @@ class AccountUseCase {
   User get user => accountRepo.user;
 
   Stream<User?> get authState => accountRepo.authState;
+
+  //Account
+  Account? get getAccount => accountRepo.getAccount;
+
+  SymmetricCryptoKey? get getUserKey => getAccount?.volatileData?.key;
+
+  bool get hasUserKey => getUserKey != null;
+
+  Future<void> setAccount({Account? account}) async {
+    return await accountRepo.setAccount();
+  }
 
   Future<UserCredential> signUpWithEmail({
     required String fullname,

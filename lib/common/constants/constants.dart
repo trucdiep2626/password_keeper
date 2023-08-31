@@ -28,6 +28,8 @@ class Constants {
   static const String numCharSet = "23456789";
   static const String specialCharSet = "!@#\$%^&*";
 
+  static const int maxGeneratedPasswordInHistory = 100;
+
   static String vaultTimeoutKey(String userId) => "vaultTimeout_$userId";
   static String vaultTimeoutActionKey(String userId) =>
       "vaultTimeoutAction_$userId";
