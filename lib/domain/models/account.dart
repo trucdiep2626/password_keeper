@@ -3,20 +3,44 @@ import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 
 class Account {
   AccountProfile? profile;
-  AccountTokens? tokens;
-  AccountSettings? settings;
+  // AccountTokens? tokens;
+  // AccountSettings? settings;
   AccountVolatileData? volatileData;
 
-  Account({required this.profile, required this.tokens}) {
-    settings = AccountSettings();
+  Account({
+    required this.profile,
+    //  required this.tokens
+  }) {
+    //  settings = AccountSettings();
     volatileData = AccountVolatileData();
   }
 
   Account.copy(Account account)
       : profile = AccountProfile.copy(account.profile!),
-        tokens = AccountTokens.copy(account.tokens!),
-        settings = AccountSettings.copy(account.settings!),
+        // tokens = AccountTokens.copy(account.tokens!),
+        // settings = AccountSettings.copy(account.settings!),
         volatileData = AccountVolatileData();
+
+  Account.fromJson(Map<String, dynamic> json) {
+    profile = json['profile'] != null
+        ? AccountProfile.fromJson(json['profile'])
+        : null;
+    volatileData = json['volatile_data'] != null
+        ? AccountVolatileData.fromJson(json['volatile_data'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (profile != null) {
+      data['profile'] = profile!.toJson();
+    }
+    if (volatileData != null) {
+      data['volatile_data'] = volatileData!.toJson();
+    }
+
+    return data;
+  }
 }
 
 class AccountProfile {
@@ -98,40 +122,65 @@ class AccountProfile {
   }
 }
 
-class AccountTokens {
-  String? accessToken;
-  String? refreshToken;
-
-  AccountTokens();
-
-  AccountTokens.copy(AccountTokens copy) {
-    accessToken = copy.accessToken;
-    refreshToken = copy.refreshToken;
-  }
-}
-
-class AccountSettings {
-  EnvironmentUrlData? environmentUrls;
-  int? vaultTimeout;
-  VaultTimeoutAction? vaultTimeoutAction;
-  bool? screenCaptureAllowed;
-
-  AccountSettings();
-
-  AccountSettings.copy(AccountSettings copy) {
-    environmentUrls = copy.environmentUrls;
-    vaultTimeout = copy.vaultTimeout;
-    vaultTimeoutAction = copy.vaultTimeoutAction;
-    screenCaptureAllowed = copy.screenCaptureAllowed;
-  }
-}
+// class AccountTokens {
+//   String? accessToken;
+//   String? refreshToken;
+//
+//   AccountTokens();
+//
+//   AccountTokens.copy(AccountTokens copy) {
+//     accessToken = copy.accessToken;
+//     refreshToken = copy.refreshToken;
+//   }
+// }
+//
+// class AccountSettings {
+//   EnvironmentUrlData? environmentUrls;
+//   int? vaultTimeout;
+//   VaultTimeoutAction? vaultTimeoutAction;
+//   bool? screenCaptureAllowed;
+//
+//   AccountSettings();
+//
+//   AccountSettings.copy(AccountSettings copy) {
+//     environmentUrls = copy.environmentUrls;
+//     vaultTimeout = copy.vaultTimeout;
+//     vaultTimeoutAction = copy.vaultTimeoutAction;
+//     screenCaptureAllowed = copy.screenCaptureAllowed;
+//   }
+// }
 
 class AccountVolatileData {
   SymmetricCryptoKey? key;
   EncryptedString? pinProtectedKey;
   bool? biometricLocked;
 
-  AccountVolatileData();
+  AccountVolatileData({
+    this.key,
+    this.biometricLocked,
+    this.pinProtectedKey,
+  });
+
+  AccountVolatileData.fromJson(Map<String, dynamic> json) {
+    key = json['key'] != null ? SymmetricCryptoKey.fromJson(json['key']) : null;
+    pinProtectedKey = json['pin_protected_key'] != null
+        ? EncryptedString.fromJson(json['pin_protected_key'])
+        : null;
+    biometricLocked = json['biometric_locked'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (key != null) {
+      data['key'] = key!.toJson();
+    }
+    if (pinProtectedKey != null) {
+      data['pin_protected_key'] = pinProtectedKey!.toJson();
+    }
+
+    data['biometric_locked'] = this.biometricLocked;
+    return data;
+  }
 }
 
 class EnvironmentUrlData {

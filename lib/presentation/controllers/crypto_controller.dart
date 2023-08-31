@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:math' as math;
+import 'dart:math';
 import 'dart:typed_data';
 
 //import 'package:argon2/argon2.dart' as argon2;
@@ -376,7 +376,7 @@ class CryptoController extends GetxController with MixinController {
 
     var resultHex = uint8ListToHexString(result);
 
-    log('Result: $resultHex');
+    logger('Result: $resultHex');
 
     return result;
   }
@@ -513,7 +513,7 @@ class CryptoController extends GetxController with MixinController {
     //
     var resultHex = uint8ListToHexString(Uint8List.fromList(result.rawBytes));
     //
-    log('Result: ${result.hexString}');
+    logger('Result: ${result.hexString}');
 
     return Uint8List.fromList(result.rawBytes);
   }
@@ -1014,5 +1014,26 @@ class CryptoController extends GetxController with MixinController {
         .replaceAll("\r\n", " ") // Windows-style new line => space
         .replaceAll("\n", " ") // New line => space
         .replaceAll(" ", " "); // No-break space (00A0) => space
+  }
+
+  Future<int> randomNumber() async {
+    final rng = Random.secure();
+    final uint8List = Uint8List(4); // 4 bytes for a 32-bit integer
+    for (var i = 0; i < 4; i++) {
+      uint8List[i] = rng.nextInt(256);
+    }
+    return ByteData.sublistView(uint8List).getInt32(0);
+  }
+
+  Future<int> randomNumberAsyncWithRange(int min, int max) async {
+    max = max + 1;
+
+    final diff = max - min;
+    final upperBound = (4294967295 / diff).floor() * diff;
+    int ui;
+    do {
+      ui = await randomNumber();
+    } while (ui >= upperBound);
+    return min + (ui % diff);
   }
 }

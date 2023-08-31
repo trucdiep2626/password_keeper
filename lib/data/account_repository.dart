@@ -3,16 +3,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_keeper/common/config/app_config.dart';
+import 'package:password_keeper/common/config/database/hive_services.dart';
+import 'package:password_keeper/common/config/database/hive_type_constants.dart';
 import 'package:password_keeper/domain/models/account.dart';
 
 class AccountRepository {
   final FirebaseAuth auth;
   final FirebaseFirestore db;
-  AccountRepository({required this.auth, required this.db});
+  final HiveServices hiveServices;
+  AccountRepository({
+    required this.auth,
+    required this.db,
+    required this.hiveServices,
+  });
 
   User get user => auth.currentUser!;
 
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
+
+  //Account
+  Account? get getAccount => Account.fromJson(
+        Map<String, dynamic>.from(
+            hiveServices.hiveBox.get(HiveKey.accountKey) as Map),
+      );
+
+  Future<void> setAccount({Account? account}) async {
+    return await hiveServices.hiveBox
+        .put(HiveKey.accountKey, account?.toJson());
+  }
 
   Future<UserCredential> signUpWithEmail({
     required String fullname,

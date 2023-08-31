@@ -251,6 +251,21 @@ class StateController extends GetxController with MixinController {
         options: reconciledOptions);
   }
 
+  Future<UserKey> getUserKeyAsync({String userId}) async {
+    var options = await getAccountAsync(reconcileOptions(
+        StorageOptions(userId: userId),
+        await getDefaultInMemoryOptionsAsync()));
+    return options?.volatileData?.userKey;
+  }
+
+  Future<void> setUserKeyAsync(UserKey value, {String userId}) async {
+    var reconciledOptions = reconcileOptions(
+        StorageOptions(userId: userId), await getDefaultInMemoryOptionsAsync());
+    var account = await getAccountAsync(reconciledOptions);
+    account.volatileData.userKey = value;
+    await saveAccountAsync(account, reconciledOptions);
+  }
+
   Future checkState() async {
     // if (!_migrationChecked)
     // {

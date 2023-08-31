@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/encryption_helper.dart';
 import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 
@@ -35,6 +36,28 @@ class EncryptedString {
     if (mac != null) {
       encryptedString = "$encryptedString|$mac";
     }
+  }
+
+  EncryptedString.fromJson(Map<String, dynamic> json) {
+    decryptedValue = json['decrypted_value'];
+    encryptedString = json['encrypted_string'];
+    encryptionType = json['encryption_type'] != null
+        ? EncryptionHelper.getEncryptionTypeFromId(json['encryption_type'])
+        : null;
+    iv = json['iv'];
+    data = json['data'];
+    mac = json['mac'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['decrypted_value'] = this.decryptedValue;
+    data['encrypted_string'] = this.encryptedString;
+    data['encryption_type'] = this.encryptionType?.id;
+    data['iv'] = this.iv;
+    data['data'] = this.data;
+    data['mac'] = this.mac;
+    return data;
   }
 
   EncryptedString.fromString({String? encryptedString}) {

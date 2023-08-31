@@ -23,6 +23,11 @@ class Constants {
   static const String defaultFido2KeyAlgorithm = "ECDSA";
   static const String defaultFido2KeyCurve = "P-256";
 
+  static const String lowercaseCharSet = "abcdefghijkmnopqrstuvwxyz";
+  static const String uppercaseCharSet = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  static const String numCharSet = "23456789";
+  static const String specialCharSet = "!@#\$%^&*";
+
   static String vaultTimeoutKey(String userId) => "vaultTimeout_$userId";
   static String vaultTimeoutActionKey(String userId) =>
       "vaultTimeoutAction_$userId";

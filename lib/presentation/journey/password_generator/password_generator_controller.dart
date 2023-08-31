@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
-import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 class PasswordGeneratorController extends GetxController with MixinController {
@@ -34,6 +34,9 @@ class PasswordGeneratorController extends GetxController with MixinController {
   PasswordGenerationOptions _defaultOption = PasswordGenerationOptions();
 
   PasswordGeneratorController({required this.passwordUsecase});
+
+  final PasswordGenerationController _passwordGenerationController =
+      Get.find<PasswordGenerationController>();
 
   Future<void> onChangedPasswordType(PasswordType type) async {
     selectedType.value = type;
@@ -126,7 +129,8 @@ class PasswordGeneratorController extends GetxController with MixinController {
   }
 
   Future<void> generatePassword() async {
-    generatedPassword.value = await PasswordHelper.generatePassword(_option);
+    generatedPassword.value =
+        await _passwordGenerationController.generatePassword(_option);
   }
 
   PasswordGenerationOptions getOption() {

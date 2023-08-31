@@ -62,6 +62,7 @@ void configLocator() {
   getIt.registerFactory<AccountRepository>(() => AccountRepository(
         auth: FirebaseAuth.instance,
         db: FirebaseFirestore.instance,
+        hiveServices: getIt<HiveServices>(),
       ));
   getIt.registerFactory<PasswordRepository>(
       () => PasswordRepository(hiveServices: getIt<HiveServices>()));
