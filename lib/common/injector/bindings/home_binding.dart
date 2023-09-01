@@ -7,5 +7,4 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.put(getIt<HomeController>());
   }
-
 }
