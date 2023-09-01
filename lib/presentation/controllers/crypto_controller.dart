@@ -602,12 +602,13 @@ class CryptoController extends GetxController with MixinController {
         key: key);
   }
 
-  Future<String?> aesDecryptToUtf8(
-      {EncryptionType? encType,
-      String? data,
-      String? iv,
-      String? mac,
-      SymmetricCryptoKey? key}) async {
+  Future<String?> aesDecryptToUtf8({
+    EncryptionType? encType,
+    String? data,
+    String? iv,
+    String? mac,
+    SymmetricCryptoKey? key,
+  }) async {
     var keyForEnc = await getKeyForEncryption(key: key);
     var theKey = resolveLegacyKey(encType: encType, key: keyForEnc);
 
@@ -658,12 +659,13 @@ class CryptoController extends GetxController with MixinController {
     return utf8.decode(decryptedBytes);
   }
 
-  Future<Uint8List?> aesDecryptToBytes(
-      {EncryptionType? encType,
-      Uint8List? data,
-      Uint8List? iv,
-      Uint8List? mac,
-      SymmetricCryptoKey? key}) async {
+  Future<Uint8List?> aesDecryptToBytes({
+    EncryptionType? encType,
+    Uint8List? data,
+    Uint8List? iv,
+    Uint8List? mac,
+    SymmetricCryptoKey? key,
+  }) async {
     var keyForEnc = await getKeyForEncryption(key: key);
     var theKey = resolveLegacyKey(encType: encType, key: keyForEnc);
     if (theKey?.macKey != null && mac == null) {
@@ -713,8 +715,10 @@ class CryptoController extends GetxController with MixinController {
     return await getKey();
   }
 
-  SymmetricCryptoKey? resolveLegacyKey(
-      {EncryptionType? encType, SymmetricCryptoKey? key}) {
+  SymmetricCryptoKey? resolveLegacyKey({
+    EncryptionType? encType,
+    SymmetricCryptoKey? key,
+  }) {
     if (encType == EncryptionType.aesCbc128HmacSha256B64 &&
         key?.encType == EncryptionType.aesCbc256B64) {
       // Old encrypt-then-mac scheme, make a new key
@@ -772,10 +776,11 @@ class CryptoController extends GetxController with MixinController {
     return _getOrgKeysFunction;
   }
 
-  Future<Uint8List> rsaDecrypt(
-      {required Uint8List data,
-      required Uint8List privateKey,
-      CryptoHashAlgorithm? algorithm}) async {
+  Future<Uint8List> rsaDecrypt({
+    required Uint8List data,
+    required Uint8List privateKey,
+    CryptoHashAlgorithm? algorithm,
+  }) async {
     AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> keyPair =
         parsePrivateKey(privateKey);
     RSAPrivateKey rsaPrivateKey = keyPair.privateKey;

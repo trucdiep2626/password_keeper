@@ -54,7 +54,7 @@ class PasswordRepository {
     }
   }
 
-  Future addGeneratedPassword({
+  Future<void> addGeneratedPassword({
     required String userId,
     required GeneratedPasswordItem passwordItem,
   }) async {
@@ -62,8 +62,64 @@ class PasswordRepository {
         .collection(AppConfig.userCollection)
         .doc(userId)
         .collection(AppConfig.generatedPasswordsCollection)
-        .doc(passwordItem.id)
-        .set(passwordItem.toJson());
+        //    .doc(passwordItem.id)
+        .add(passwordItem.toJson());
+  }
+
+  Future<int> getGeneratedPasswordHistoryLength(
+      {required String userId}) async {
+    final response = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.generatedPasswordsCollection)
+        .get();
+
+    return response.docs.length;
+  }
+
+  Future<bool> deleteOldestGeneratedHistory({required String userId}) async {
+    final oldestItem = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.generatedPasswordsCollection)
+        .orderBy('created_at', descending: false)
+        .limit(1)
+        .get();
+
+    if (oldestItem.docs.isEmpty) {
+      return false;
+    } else {
+      await db
+          .collection(AppConfig.userCollection)
+          .doc(userId)
+          .collection(AppConfig.generatedPasswordsCollection)
+          .doc(oldestItem.docs.first.id)
+          .delete();
+    }
+
+    return true;
+  }
+
+  Future<GeneratedPasswordItem?> getLatestGeneratedHistory(
+      {required String userId}) async {
+    final latest = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.generatedPasswordsCollection)
+        .orderBy('created_at', descending: true)
+        .limit(1)
+        .get();
+
+    if (latest.docs.isEmpty) {
+      return null;
+    }
+    Map<String, dynamic> password = {};
+    password.addAll({'id': latest.docs.first.id});
+    password.addAll(latest.docs.first.data());
+
+    GeneratedPasswordItem latestItem = GeneratedPasswordItem.fromJson(password);
+
+    return latestItem;
   }
 
   Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory(
@@ -72,6 +128,7 @@ class PasswordRepository {
         .collection(AppConfig.userCollection)
         .doc(userId)
         .collection(AppConfig.generatedPasswordsCollection)
+        .orderBy('created_at', descending: true)
         .get();
 
     if (response.docs.isEmpty) {

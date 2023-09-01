@@ -31,7 +31,7 @@ class PasswordUsecase {
     return await passwordRepository.getPasswordGenerationOption(userId: userId);
   }
 
-  Future addGeneratedPassword({
+  Future<void> addGeneratedPassword({
     required String userId,
     required GeneratedPasswordItem passwordItem,
   }) async {
@@ -44,5 +44,21 @@ class PasswordUsecase {
   Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory(
       {required String userId}) async {
     return await passwordRepository.getGeneratedPasswordHistory(userId: userId);
+  }
+
+  Future<int> getGeneratedPasswordHistoryLength(
+      {required String userId}) async {
+    return await passwordRepository.getGeneratedPasswordHistoryLength(
+        userId: userId);
+  }
+
+  Future<bool> deleteOldestGeneratedHistory({required String userId}) async {
+    return await passwordRepository.deleteOldestGeneratedHistory(
+        userId: userId);
+  }
+
+  Future<GeneratedPasswordItem?> getLatestGeneratedHistory(
+      {required String userId}) async {
+    return await passwordRepository.getLatestGeneratedHistory(userId: userId);
   }
 }

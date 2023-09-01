@@ -2,13 +2,18 @@ import 'dart:math';
 
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/constants.dart';
+import 'package:password_keeper/domain/models/encrypted_string.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 
 class PasswordGenerationController extends GetxController with MixinController {
   final CryptoController _cryptoController = Get.find<CryptoController>();
+  final PasswordUsecase passwordUsecase;
+
+  PasswordGenerationController({required this.passwordUsecase});
 
   final List<GeneratedPasswordItem> history = <GeneratedPasswordItem>[];
 
@@ -208,5 +213,92 @@ class PasswordGenerationController extends GetxController with MixinController {
       option.minNumbers = minNumberCalc;
       option.minSpecial = minSpecialCalc;
     }
+  }
+
+  Future<bool> matchesPrevious(
+      {required String userId, required String password}) async {
+    final previous =
+        await passwordUsecase.getLatestGeneratedHistory(userId: userId);
+
+    if (previous == null) {
+      return false;
+    }
+    return previous.password == password;
+  }
+
+  Future<List<GeneratedPasswordItem>> encryptHistory(
+      {List<GeneratedPasswordItem>? history}) async {
+    final encryptedHistory = <GeneratedPasswordItem>[];
+
+    if (history == null || history.isEmpty) {
+      return encryptedHistory;
+    }
+
+    for (var item in history) {
+      final encrypted =
+          await _cryptoController.encryptString(plainValue: item.password);
+
+      if (encrypted != null) {
+        encryptedHistory.add(GeneratedPasswordItem(
+          password: encrypted.encryptedString,
+          createdAt: item.createdAt,
+        ));
+      }
+    }
+
+    return encryptedHistory;
+  }
+
+  Future<List<GeneratedPasswordItem>> decryptHistoryAsync(
+      {List<GeneratedPasswordItem>? history}) async {
+    final decryptedHistory = <GeneratedPasswordItem>[];
+
+    if (history == null || history.isEmpty) {
+      return decryptedHistory;
+    }
+
+    for (var item in history) {
+      final decrypted = await _cryptoController.decryptToUtf8(
+          encString: EncryptedString(data: item.password));
+
+      if (decrypted != null) {
+        decryptedHistory.add(GeneratedPasswordItem(
+          password: decrypted,
+          createdAt: item.createdAt,
+        ));
+      }
+    }
+
+    /// The line `return decryptedHistory;` is returning the decrypted history of
+    /// generated passwords. It is returning a list of `GeneratedPasswordItem`
+    /// objects with the decrypted password and the corresponding creation date.
+    return decryptedHistory;
+  }
+
+  Future<bool> addGeneratedPassword({
+    required String userId,
+    required String password,
+  }) async {
+    if (await matchesPrevious(userId: userId, password: password)) {
+      return false;
+    }
+
+    final currentHistoryLength =
+        await passwordUsecase.getGeneratedPasswordHistoryLength(userId: userId);
+
+    if (currentHistoryLength >= Constants.maxGeneratedPasswordInHistory) {
+      await passwordUsecase.deleteOldestGeneratedHistory(userId: userId);
+    }
+
+    final encPassword =
+        await _cryptoController.encryptString(plainValue: password);
+
+    await passwordUsecase.addGeneratedPassword(
+        userId: userId,
+        passwordItem: GeneratedPasswordItem(
+          password: encPassword?.encryptedString,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+        ));
+    return true;
   }
 }

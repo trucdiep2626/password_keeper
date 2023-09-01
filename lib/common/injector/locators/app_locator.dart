@@ -30,13 +30,12 @@ void configLocator() {
       () => AppController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<SplashController>(() => SplashController());
   getIt.registerFactory<MainController>(() => MainController());
-  getIt.registerFactory<HomeController>(() => HomeController(
-      //    accountUsecase: getIt<AccountUseCase>()
-      ));
+  getIt.registerFactory<HomeController>(
+      () => HomeController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<PasswordGeneratorController>(() =>
-      PasswordGeneratorController(passwordUsecase: getIt<PasswordUsecase>(),
-          accountUseCase: getIt<AccountUseCase>()
-      ));
+      PasswordGeneratorController(
+          passwordUsecase: getIt<PasswordUsecase>(),
+          accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<LoginController>(
