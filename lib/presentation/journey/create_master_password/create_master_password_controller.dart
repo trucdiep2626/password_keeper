@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
@@ -94,7 +95,7 @@ class CreateMasterPasswordController extends GetxController
         confirmMasterPwdValidate.value.isEmpty) {
       rxLoadedButton.value = LoadedType.start;
       final masterPassword = masterPwdController.text;
-      final email = (accountUsecase.user.email ?? '').trim().toLowerCase();
+      final email = (accountUsecase.user?.email ?? '').trim().toLowerCase();
 
       // Email = Email.Trim().ToLower();
       // var kdfConfig =   KdfConfig(
@@ -109,9 +110,9 @@ class CreateMasterPasswordController extends GetxController
       //  var keys = await _cryptoController.makeKeyPair(encKey.Item1);
 
       final profile = AccountProfile(
-        email: accountUsecase.user.email,
-        name: accountUsecase.user.displayName,
-        userId: accountUsecase.user.uid,
+        email: accountUsecase.user?.email,
+        name: accountUsecase.user?.displayName,
+        userId: accountUsecase.user?.uid,
         hashedMasterPassword: hashedPassword,
         masterPasswordHint: masterPwdHintController.text.trim(),
         kdfIterations: Constants.argon2Iterations,
@@ -124,6 +125,7 @@ class CreateMasterPasswordController extends GetxController
         await accountUsecase.createUser(profile);
 
         debugPrint('đăng ký thành công');
+        Get.offAllNamed(AppRoutes.verifyMasterPassword);
       } catch (e) {
         debugPrint(e.toString());
         showTopSnackBarError(context, TranslationConstants.unknownError.tr);

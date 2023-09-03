@@ -58,7 +58,7 @@ class VerifyMasterPasswordScreen
                       color: AppColors.grey200,
                       borderRadius: BorderRadius.circular(AppDimens.radius_12)),
                   child: Text(
-                    'trucdiep2626@gmail.com',
+                    controller.user?.email ?? '',
                     style: ThemeText.bodyMedium,
                   ),
                 ),
@@ -93,7 +93,7 @@ class VerifyMasterPasswordScreen
                     onChangedText: (value) => controller.onChangedPwd(),
                     onTap: () => controller.onTapPwdTextField(),
                     textInputAction: TextInputAction.next,
-                    onEditingComplete: () => controller.onPressedRegister(),
+                    onEditingComplete: () => controller.onPressedVerify(),
                     focusNode: controller.masterPwdFocusNode,
                   ),
                 ),
@@ -123,7 +123,7 @@ class VerifyMasterPasswordScreen
                   () => AppButton(
                     enable: controller.buttonEnable.value,
                     title: TranslationConstants.unlock.tr,
-                    onPressed: () => controller.onPressedRegister(),
+                    onPressed: () => controller.onPressedVerify(),
                     loaded: controller.rxLoadedButton.value,
                   ),
                 ),

@@ -156,7 +156,8 @@ class LogInScreen extends GetView<LoginController> {
                 height: AppDimens.space_12,
               ),
               AppLoginSocialWidget(
-                  icon: Assets.images.svg.icGoogle, onTap: () {}),
+                  icon: Assets.images.svg.icGoogle,
+                  onTap: () async => await controller.onTapGoogleSignIn()),
               const Spacer(),
               AppTouchable(
                   onPressed: () => controller.onPressForgotPassword(),

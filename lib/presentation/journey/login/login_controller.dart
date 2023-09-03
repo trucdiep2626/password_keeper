@@ -35,6 +35,8 @@ class LoginController extends GetxController with MixinController {
 
   LoginController({required this.accountUsecase});
 
+  User? get user => accountUsecase.user;
+
   void onChangedShowPassword() {
     showPassword.value = !showPassword.value;
   }
@@ -69,9 +71,23 @@ class LoginController extends GetxController with MixinController {
             email: emailController.text.trim(),
             password: passwordController.text.trim());
 
-        debugPrint('đăng nhập thành công');
+        if (result != null) {
+          debugPrint('đăng nhập thành công');
+          await accountUsecase.setUserCredential(authCredential: result);
 
-        Get.toNamed(AppRoutes.verifyMasterPassword);
+          if (user?.emailVerified ?? false) {
+            final profile =
+                await accountUsecase.getProfile(userId: user?.uid ?? '');
+
+            if (profile != null) {
+              Get.toNamed(AppRoutes.verifyMasterPassword);
+            } else {
+              Get.toNamed(AppRoutes.createMasterPassword);
+            }
+          } else {
+            Get.toNamed(AppRoutes.verifyEmail);
+          }
+        }
       } on FirebaseAuthException catch (e) {
         handleFirebaseException(
           code: e.code,
@@ -102,9 +118,18 @@ class LoginController extends GetxController with MixinController {
       final result = await accountUsecase.signInWithGoogle();
 
       if (result != null) {
+        await accountUsecase.setUserCredential(authCredential: result);
+
         debugPrint('đăng ký thành công');
 
-        Get.toNamed(AppRoutes.createMasterPassword);
+        final profile =
+            await accountUsecase.getProfile(userId: user?.uid ?? '');
+
+        if (profile != null) {
+          Get.toNamed(AppRoutes.verifyMasterPassword);
+        } else {
+          Get.toNamed(AppRoutes.createMasterPassword);
+        }
       } else {
         if (Get.context != null) {
           showTopSnackBarError(

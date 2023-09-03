@@ -1,14 +1,13 @@
-import 'package:password_keeper/common/constants/shared_preferences_constants.dart';
+import 'package:password_keeper/common/config/database/hive_services.dart';
 
 class LocalRepository {
-  Future<void> setPhone(String phone) async {
-    await SharePreferencesConstants.prefs
-        .setString(SharePreferencesConstants.phone, phone);
-  }
+  final HiveServices hiveServices;
 
-  String getPhone() {
-    return SharePreferencesConstants.prefs
-            .getString(SharePreferencesConstants.phone) ??
-        '';
+  LocalRepository({required this.hiveServices});
+
+  dynamic getLocalValue({required String key}) => hiveServices.hiveBox.get(key);
+
+  Future<void> setLocalValue({required String key, dynamic value}) async {
+    return await hiveServices.hiveBox.put(key, value);
   }
 }

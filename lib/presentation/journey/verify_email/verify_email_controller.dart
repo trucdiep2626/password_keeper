@@ -17,8 +17,8 @@ class VerifyEmailController extends GetxController with MixinController {
   VerifyEmailController({required this.accountUseCase});
 
   void onPressedContinueButton() async {
-    await accountUseCase.user.reload();
-    if (accountUseCase.user.emailVerified) {
+    await accountUseCase.user?.reload();
+    if (accountUseCase.user?.emailVerified ?? false) {
       Get.toNamed(AppRoutes.createMasterPassword);
     }
   }
@@ -40,8 +40,8 @@ class VerifyEmailController extends GetxController with MixinController {
 
   void setTimeForAutoRedirect() {
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) async {
-      await accountUseCase.user.reload();
-      if (accountUseCase.user.emailVerified) {
+      await accountUseCase.user?.reload();
+      if (accountUseCase.user?.emailVerified ?? false) {
         timer.cancel();
         Get.toNamed(AppRoutes.createMasterPassword);
       }

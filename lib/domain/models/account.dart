@@ -106,6 +106,7 @@ class AccountProfile {
     kdfMemory = json['kdf_memory'];
     kdfParallelism = json['kdf_parallelism'];
     name = json['name'];
+    userId = json['user_id'];
   }
 
   Map<String, dynamic> toJson() {

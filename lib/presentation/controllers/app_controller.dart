@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
@@ -46,9 +45,9 @@ class AppController extends SuperController with MixinController {
   }
 
   _navigateScreen(User? user) {
-    if (user == null) {
-      Get.offAllNamed(AppRoutes.login);
-    }
+    // if (user == null) {
+    //   Get.offAllNamed(AppRoutes.login);
+    // }
     // else if (!user.emailVerified) {
     //   Get.offAllNamed(AppRoutes.verifyEmail);
     // }

@@ -10,22 +10,30 @@ class AccountUseCase {
 
   AccountUseCase({required this.accountRepo, required this.localRepo});
 
-  User get user => accountRepo.user;
+  User? get user => accountRepo.user;
 
   Stream<User?> get authState => accountRepo.authState;
-
-  //Account
-  Account? get getAccount => accountRepo.getAccount;
 
   SymmetricCryptoKey? get getUserKey => getAccount?.volatileData?.key;
 
   bool get hasUserKey => getUserKey != null;
 
+  //Account
+  Account? get getAccount => accountRepo.getAccount;
+
   Future<void> setAccount({Account? account}) async {
-    return await accountRepo.setAccount();
+    return await accountRepo.setAccount(account: account);
   }
 
-  Future<UserCredential> signUpWithEmail({
+  AuthCredential? getUserCredential() {
+    return accountRepo.getUserCredential();
+  }
+
+  Future<void> setUserCredential({AuthCredential? authCredential}) async {
+    return await accountRepo.setUserCredential(authCredential: authCredential);
+  }
+
+  Future<AuthCredential?> signUpWithEmail({
     required String fullname,
     required String email,
     required String password,
@@ -37,18 +45,27 @@ class AccountUseCase {
     );
   }
 
-  Future<void> loginWithEmail({
+  Future<AuthCredential?> loginWithEmail({
     required String email,
     required String password,
   }) async {
-    await accountRepo.loginWithEmail(email: email, password: password);
+    return await accountRepo.loginWithEmail(
+      email: email,
+      password: password,
+    );
+  }
+
+  Future<AuthCredential?> loginWithAuthCredential(
+      {required AuthCredential authCredential}) async {
+    return await accountRepo.loginWithAuthCredential(
+        authCredential: authCredential);
   }
 
   Future<void> sendEmailVerification() async {
     await accountRepo.sendEmailVerification();
   }
 
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<AuthCredential?> signInWithGoogle() async {
     return await accountRepo.signInWithGoogle();
   }
 
@@ -62,5 +79,9 @@ class AccountUseCase {
 
   Future createUser(AccountProfile profile) async {
     return await accountRepo.createUser(profile);
+  }
+
+  Future<AccountProfile?> getProfile({required String userId}) async {
+    return await accountRepo.getProfile(userId: userId);
   }
 }

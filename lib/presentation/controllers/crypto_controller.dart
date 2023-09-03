@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'dart:math';
@@ -7,6 +6,7 @@ import 'dart:typed_data';
 //import 'package:argon2/argon2.dart' as argon2;
 import 'package:dargon2_flutter/dargon2_flutter.dart' as dargon2;
 import 'package:get/get.dart';
+import 'package:password_keeper/common/config/database/hive_type_constants.dart';
 import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
@@ -16,8 +16,9 @@ import 'package:password_keeper/domain/models/encrypted_object.dart';
 import 'package:password_keeper/domain/models/encrypted_string.dart';
 import 'package:password_keeper/domain/models/protected_value.dart';
 import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
+import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/controllers/state_controller.dart';
 import 'package:pointycastle/export.dart';
 import 'package:pointycastle/pointycastle.dart';
 
@@ -26,9 +27,15 @@ class CryptoController extends GetxController with MixinController {
 
   String RANDOM_STRING_CHARSET = "abcdefghijklmnopqrstuvwxyz1234567890";
 
-  final StateController _stateController = Get.find<StateController>();
+  //final StateController _stateController = Get.find<StateController>();
 
-  // private SymmetricCryptoKey _encKey;
+  LocalUseCase localUseCase;
+  AccountUseCase accountUseCase;
+
+  CryptoController({
+    required this.localUseCase,
+    required this.accountUseCase,
+  }); // private SymmetricCryptoKey _encKey;
   // private SymmetricCryptoKey _legacyEtmKey;
   // private string _keyHash;
   // private byte[] _publicKey;
@@ -286,11 +293,13 @@ class CryptoController extends GetxController with MixinController {
       SymmetricCryptoKey? key,
       HashPurpose hashPurpose = HashPurpose.serverAuthorization}) async {
     key ??= await getKey();
-    if (password == null || key == null) {
+    if (key == null) {
       throw Exception("Invalid parameters.");
     }
     var iterations = hashPurpose == HashPurpose.localAuthorization ? 2 : 1;
-    var hash = await pbkdf2FromStringSalt(
+    //  var hash = argon2FromStringSalt(password: key.key!, salt: password, iterations: iterations, memory: memory, parallelism: parallelism)
+
+    var hash = pbkdf2FromStringSalt(
       password: key.key!,
       salt: password,
       algorithm: CryptoHashAlgorithm.sha256,
@@ -527,7 +536,7 @@ class CryptoController extends GetxController with MixinController {
     }
     Future<SymmetricCryptoKey?> doTask() async {
       try {
-        var encKey = await _stateController.getEncKeyEncrypted();
+        var encKey = await getEncKeyEncrypted();
         if (encKey == null) {
           return null;
         }
@@ -564,15 +573,17 @@ class CryptoController extends GetxController with MixinController {
     return _getEncKeysFunction;
   }
 
-  Future<SymmetricCryptoKey?> getKey({String? userId}) async {
-    var inMemoryKey = await _stateController.getKeyDecrypted(userId: userId);
+  Future<SymmetricCryptoKey?> getKey() async {
+    var inMemoryKey = await getKeyDecrypted();
     if (inMemoryKey != null) {
       return inMemoryKey;
     }
-    var key = await _stateController.getKeyEncrypted(userId: userId);
+    var key = await getKeyEncrypted();
     if (key != null) {
       inMemoryKey = SymmetricCryptoKey(key: base64Decode(key));
-      await _stateController.setKeyDecrypted(inMemoryKey, userId: userId);
+      await setKeyDecrypted(
+        inMemoryKey,
+      );
     }
     return inMemoryKey;
   }
@@ -729,52 +740,52 @@ class CryptoController extends GetxController with MixinController {
     return key;
   }
 
-  Future<SymmetricCryptoKey?> getOrgKeyFromString({String? orgId}) async {
-    if (isNullOrWhiteSpace(orgId)) {
-      return null;
-    }
-    var orgKeys = await getOrgKeys();
-    if (orgKeys == null || !orgKeys.containsKey(orgId)) {
-      return null;
-    }
-    return orgKeys[orgId];
-  }
+  // Future<SymmetricCryptoKey?> getOrgKeyFromString({String? orgId}) async {
+  //   if (isNullOrWhiteSpace(orgId)) {
+  //     return null;
+  //   }
+  //   var orgKeys = await getOrgKeys();
+  //   if (orgKeys == null || !orgKeys.containsKey(orgId)) {
+  //     return null;
+  //   }
+  //   return orgKeys[orgId];
+  // }
 
-  Future<Map<String, SymmetricCryptoKey>?>? getOrgKeys() {
-    if (_orgKeys != null && (_orgKeys?.isNotEmpty ?? false)) {
-      return Future.value(UnmodifiableMapView(_orgKeys!));
-    }
-    if (_getOrgKeysFunction != null
-        //  && !_getOrgKeysFunction.isCompleted && !_getOrgKeysFunction.IsFaulted
-        ) {
-      return _getOrgKeysFunction;
-    }
-    Future<Map<String, SymmetricCryptoKey>?>? doTask() async {
-      try {
-        var encOrgKeys = await _stateController.getOrgKeysEncrypted();
-        // if (encOrgKeys == null) {
-        //   return null;
-        // }  //check
-        var orgKeys = new Map<String, SymmetricCryptoKey>();
-        var setKey = false;
-        for (var org in encOrgKeys.entries) {
-          var decValue = await rsaDecryptFromString(encValue: org.value);
-          orgKeys.addAll({org.key: SymmetricCryptoKey(key: decValue)});
-          setKey = true;
-        }
-
-        if (setKey) {
-          _orgKeys = orgKeys;
-        }
-        return _orgKeys;
-      } finally {
-        _getOrgKeysFunction = null;
-      }
-    }
-
-    _getOrgKeysFunction = doTask();
-    return _getOrgKeysFunction;
-  }
+  // Future<Map<String, SymmetricCryptoKey>?>? getOrgKeys() {
+  //   if (_orgKeys != null && (_orgKeys?.isNotEmpty ?? false)) {
+  //     return Future.value(UnmodifiableMapView(_orgKeys!));
+  //   }
+  //   if (_getOrgKeysFunction != null
+  //       //  && !_getOrgKeysFunction.isCompleted && !_getOrgKeysFunction.IsFaulted
+  //       ) {
+  //     return _getOrgKeysFunction;
+  //   }
+  //   Future<Map<String, SymmetricCryptoKey>?>? doTask() async {
+  //     try {
+  //      // var encOrgKeys = await _stateController.getOrgKeysEncrypted();
+  //       // if (encOrgKeys == null) {
+  //       //   return null;
+  //       // }  //check
+  //       var orgKeys = new Map<String, SymmetricCryptoKey>();
+  //       var setKey = false;
+  //       for (var org in encOrgKeys.entries) {
+  //         var decValue = await rsaDecryptFromString(encValue: org.value);
+  //         orgKeys.addAll({org.key: SymmetricCryptoKey(key: decValue)});
+  //         setKey = true;
+  //       }
+  //
+  //       if (setKey) {
+  //         _orgKeys = orgKeys;
+  //       }
+  //       return _orgKeys;
+  //     } finally {
+  //       _getOrgKeysFunction = null;
+  //     }
+  //   }
+  //
+  //   _getOrgKeysFunction = doTask();
+  //   return _getOrgKeysFunction;
+  // }
 
   Future<Uint8List> rsaDecrypt({
     required Uint8List data,
@@ -822,73 +833,73 @@ class CryptoController extends GetxController with MixinController {
         rsaPublicKey, rsaPrivateKey);
   }
 
-  Future<Uint8List> rsaDecryptFromString(
-      {required String encValue, Uint8List? privateKey}) async {
-    var headerPieces = encValue.split('.');
-    EncryptionType? encType;
-    List<String>? encPieces;
-
-    if (headerPieces.length == 1) {
-      encType = EncryptionType.rsa2048OaepSha256B64;
-      encPieces = [headerPieces[0]];
-    } else if (headerPieces.length == 2 &&
-        EncryptionType.values[int.tryParse(headerPieces[0]) ?? 0] !=
-            null) //check
-    {
-      encType = EncryptionType.values[int.tryParse(headerPieces[0]) ?? 0];
-      encPieces = headerPieces[1].split('|');
-    }
-
-    if (encType == null) {
-      throw Exception("encType unavailable.");
-    }
-    if (encPieces == null || encPieces.length == 0) {
-      throw new Exception("encPieces unavailable.");
-    }
-
-    var data = base64.decode(encPieces[0]);
-
-    if (privateKey == null) {
-      privateKey = await getPrivateKey();
-    }
-
-    if (privateKey == null) {
-      throw new Exception("No private key.");
-    }
-
-    var alg = CryptoHashAlgorithm.sha1;
-    switch (encType) {
-      case EncryptionType.rsa2048OaepSha256B64:
-      case EncryptionType.rsa2048OaepSha256HmacSha256B64:
-        alg = CryptoHashAlgorithm.sha256;
-        break;
-      case EncryptionType.rsa2048OaepSha1B64:
-      case EncryptionType.rsa2048OaepSha1HmacSha256B64:
-        break;
-      default:
-        throw new Exception("encType unavailable.");
-    }
-
-    return rsaDecrypt(
-      data: data,
-      privateKey: privateKey,
-      algorithm: alg,
-    );
-  }
-
-  Future<Uint8List?> getPrivateKey() async {
-    if (_privateKey != null) {
-      return _privateKey;
-    }
-    var encPrivateKey = await _stateController.getPrivateKeyEncrypted();
-    if (encPrivateKey == null) {
-      return null;
-    }
-    _privateKey = await decryptToBytes(
-      encString: EncryptedString(data: encPrivateKey),
-    );
-    return _privateKey;
-  }
+  // Future<Uint8List> rsaDecryptFromString(
+  //     {required String encValue, Uint8List? privateKey}) async {
+  //   var headerPieces = encValue.split('.');
+  //   EncryptionType? encType;
+  //   List<String>? encPieces;
+  //
+  //   if (headerPieces.length == 1) {
+  //     encType = EncryptionType.rsa2048OaepSha256B64;
+  //     encPieces = [headerPieces[0]];
+  //   } else if (headerPieces.length == 2 &&
+  //       EncryptionType.values[int.tryParse(headerPieces[0]) ?? 0] !=
+  //           null) //check
+  //   {
+  //     encType = EncryptionType.values[int.tryParse(headerPieces[0]) ?? 0];
+  //     encPieces = headerPieces[1].split('|');
+  //   }
+  //
+  //   if (encType == null) {
+  //     throw Exception("encType unavailable.");
+  //   }
+  //   if (encPieces == null || encPieces.length == 0) {
+  //     throw new Exception("encPieces unavailable.");
+  //   }
+  //
+  //   var data = base64.decode(encPieces[0]);
+  //
+  //   if (privateKey == null) {
+  //     privateKey = await getPrivateKey();
+  //   }
+  //
+  //   if (privateKey == null) {
+  //     throw new Exception("No private key.");
+  //   }
+  //
+  //   var alg = CryptoHashAlgorithm.sha1;
+  //   switch (encType) {
+  //     case EncryptionType.rsa2048OaepSha256B64:
+  //     case EncryptionType.rsa2048OaepSha256HmacSha256B64:
+  //       alg = CryptoHashAlgorithm.sha256;
+  //       break;
+  //     case EncryptionType.rsa2048OaepSha1B64:
+  //     case EncryptionType.rsa2048OaepSha1HmacSha256B64:
+  //       break;
+  //     default:
+  //       throw new Exception("encType unavailable.");
+  //   }
+  //
+  //   return rsaDecrypt(
+  //     data: data,
+  //     privateKey: privateKey,
+  //     algorithm: alg,
+  //   );
+  // }
+  //
+  // Future<Uint8List?> getPrivateKey() async {
+  //   if (_privateKey != null) {
+  //     return _privateKey;
+  //   }
+  //   var encPrivateKey = await _stateController.getPrivateKeyEncrypted();
+  //   if (encPrivateKey == null) {
+  //     return null;
+  //   }
+  //   _privateKey = await decryptToBytes(
+  //     encString: EncryptedString(data: encPrivateKey),
+  //   );
+  //   return _privateKey;
+  // }
 
   Uint8List hmac(
       {required Uint8List value,
@@ -1040,5 +1051,99 @@ class CryptoController extends GetxController with MixinController {
       ui = await randomNumber();
     } while (ui >= upperBound);
     return min + (ui % diff);
+  }
+
+  Future<String?> getEncKeyEncrypted() async {
+    return await localUseCase.getLocalValue(
+      key: HiveKey.encKeyKey,
+    );
+  }
+
+  Future<void> setEncKeyEncrypted(String value) async {
+    await localUseCase.setLocalValue(
+      key: HiveKey.encKeyKey,
+      value: value,
+    );
+  }
+
+  Future<String?> getKeyEncrypted() async {
+    return await localUseCase.getLocalValue(
+      key: HiveKey.keyKey,
+    );
+  }
+
+  Future<void> setKeyEncrypted(String value) async {
+    await localUseCase.setLocalValue(
+      key: HiveKey.keyKey,
+      value: value,
+    );
+  }
+
+  Future<SymmetricCryptoKey?> getKeyDecrypted() async {
+    var account = await accountUseCase.getAccount;
+    return account?.volatileData?.key;
+  }
+
+  Future<void> setKeyDecrypted(
+    SymmetricCryptoKey value,
+  ) async {
+    var account = accountUseCase.getAccount;
+    account?.volatileData?.key = value;
+    await accountUseCase.setAccount(
+      account: account,
+    );
+  }
+
+  Future<String?> getKeyHash() async {
+    return await localUseCase.getLocalValue(
+      key: HiveKey.keyHashKey,
+    );
+  }
+
+  Future<void> setKeyHash(String value) async {
+    await localUseCase.setLocalValue(
+      key: HiveKey.keyHashKey,
+      value: value,
+    );
+  }
+
+  Future<bool> compareAndUpdateKeyHash({
+    String? masterPassword,
+    SymmetricCryptoKey? key,
+  }) async {
+    var storedKeyHash = await getKeyHash();
+
+    if (!isNullEmpty(masterPassword) && !isNullEmpty(masterPassword)) {
+      var keyHash = await hashPassword(password: masterPassword!, key: key);
+      if (!isNullEmpty(keyHash) && storedKeyHash == keyHash) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<void> setBiometricLocked({
+    bool value = false,
+  }) async {
+    var account = await accountUseCase.getAccount;
+    account?.volatileData?.biometricLocked = value;
+    await accountUseCase.setAccount(
+      account: account,
+    );
+  }
+
+  Future<bool> haskey() async {
+    var key = await getKey();
+    return key != null;
+  }
+
+  Future<bool> hasEncKey() async {
+    var encKey = await getEncKeyEncrypted();
+    return encKey != null;
+  }
+
+  Future<void> setKey(SymmetricCryptoKey key) async {
+    await setKeyDecrypted(key);
+    await setKeyEncrypted(key.keyB64 ?? '');
   }
 }

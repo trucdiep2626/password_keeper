@@ -119,9 +119,9 @@ class EncryptedString {
     try {
       // For demonstration purposes, we assume cryptoService is a valid object that can decrypt data.
       // Replace this part with your actual decryption logic.
-      key ??= await cryptoService.getOrgKeyFromString(orgId: orgId);
-      decryptedValue =
-          await cryptoService.decryptToUtf8(encString: this, key: key);
+      // key ??= await cryptoService.getOrgKeyFromString(orgId: orgId);
+      // decryptedValue =
+      //     await cryptoService.decryptToUtf8(encString: this, key: key);
     } catch (e) {
       decryptedValue = "[error: cannot decrypt]";
     }

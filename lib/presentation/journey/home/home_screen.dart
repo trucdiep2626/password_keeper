@@ -44,7 +44,7 @@ class HomeScreen extends GetView<HomeController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${TranslationConstants.hello.tr} ${controller.accountUsecase.user.displayName ?? 'User'}!',
+            '${TranslationConstants.hello.tr} ${controller.accountUsecase.user?.displayName ?? 'User'}!',
             style: ThemeText.bodyStrong.s24.blue600Color,
           ),
           Text(

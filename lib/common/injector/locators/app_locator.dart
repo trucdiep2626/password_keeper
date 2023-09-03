@@ -7,10 +7,11 @@ import 'package:password_keeper/data/account_repository.dart';
 import 'package:password_keeper/data/local_repository.dart';
 import 'package:password_keeper/data/password_repository.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/app_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
-import 'package:password_keeper/presentation/controllers/state_controller.dart';
+import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/journey/login/login_controller.dart';
@@ -28,7 +29,8 @@ void configLocator() {
   /// Controllers
   getIt.registerLazySingleton<AppController>(
       () => AppController(accountUseCase: getIt<AccountUseCase>()));
-  getIt.registerFactory<SplashController>(() => SplashController());
+  getIt.registerFactory<SplashController>(
+      () => SplashController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<MainController>(() => MainController());
   getIt.registerFactory<HomeController>(
       () => HomeController(accountUsecase: getIt<AccountUseCase>()));
@@ -45,13 +47,22 @@ void configLocator() {
   getIt.registerFactory<MasterPasswordController>(
       () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<VerifyMasterPasswordController>(() =>
-      VerifyMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+      VerifyMasterPasswordController(
+          accountUsecase: getIt<AccountUseCase>(),
+          localUseCase: getIt<LocalUseCase>()));
   getIt.registerFactory<VerifyEmailController>(
       () => VerifyEmailController(accountUseCase: getIt<AccountUseCase>()));
 
   ///helper
-  getIt.registerLazySingleton<CryptoController>(() => CryptoController());
-  getIt.registerLazySingleton<StateController>(() => StateController());
+  getIt.registerLazySingleton<CryptoController>(() => CryptoController(
+        accountUseCase: getIt<AccountUseCase>(),
+        localUseCase: getIt<LocalUseCase>(),
+      ));
+  getIt.registerLazySingleton<PasswordGenerationController>(() =>
+      PasswordGenerationController(passwordUsecase: getIt<PasswordUsecase>()));
+  // getIt.registerLazySingleton<StateController>(() => StateController(
+  //     accountUseCase: getIt<AccountUseCase>(),
+  //     localUseCase: getIt<LocalUseCase>()));
 
   /// UseCases
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(
@@ -59,6 +70,8 @@ void configLocator() {
       localRepo: getIt<LocalRepository>()));
   getIt.registerFactory<PasswordUsecase>(
       () => PasswordUsecase(passwordRepository: getIt<PasswordRepository>()));
+  getIt.registerFactory<LocalUseCase>(
+      () => LocalUseCase(localRepository: getIt<LocalRepository>()));
 
   /// Repositories
   getIt.registerFactory<AccountRepository>(() => AccountRepository(
@@ -70,8 +83,11 @@ void configLocator() {
         hiveServices: getIt<HiveServices>(),
         db: getIt<FirebaseFirestore>(),
       ));
-  getIt.registerFactory<LocalRepository>(() => LocalRepository());
+  getIt.registerFactory<LocalRepository>(() => LocalRepository(
+        hiveServices: getIt<HiveServices>(),
+      ));
 
+  //db
   getIt.registerFactory<SharePreferencesConstants>(
       () => SharePreferencesConstants());
   getIt.registerLazySingleton<HiveServices>(() => HiveServices());
