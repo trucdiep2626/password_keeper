@@ -9,13 +9,19 @@ class AppShimmer extends StatelessWidget {
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
 
-  const AppShimmer({Key? key, this.width, this.height, this.backgroundColor, this.borderRadius}) : super(key: key);
+  const AppShimmer(
+      {Key? key,
+      this.width,
+      this.height,
+      this.backgroundColor,
+      this.borderRadius})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: AppColors.grey200!,
-      highlightColor:  AppColors.grey100!,
+      baseColor: AppColors.grey300!,
+      highlightColor: AppColors.grey200!,
       child: Container(
         width: width ?? 20,
         height: height ?? 20,

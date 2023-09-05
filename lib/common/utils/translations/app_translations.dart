@@ -131,4 +131,5 @@ class TranslationConstants {
   static const String wordSeparator = "word_separator";
   static const String capitalize = "capitalize";
   static const String includeNumber = "include_number";
+  static const String history = "history";
 }

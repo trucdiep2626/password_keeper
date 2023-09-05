@@ -108,3 +108,10 @@ void handleFirebaseException({
     showTopSnackBarError(Get.context!, message);
   }
 }
+
+const String _dateYearFormat = 'dd/MM/yyyy - HH:mm';
+
+String millisecondToDateTimeString({required int millisecond}) {
+  return DateFormat(_dateYearFormat)
+      .format(DateTime.fromMillisecondsSinceEpoch(millisecond));
+}

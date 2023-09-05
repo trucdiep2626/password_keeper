@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
+import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
@@ -22,8 +23,21 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
           backgroundColor: AppColors.blue400,
           title: Text(
             TranslationConstants.passwordGenerator.tr,
-            style: ThemeText.bodySemibold.colorWhite,
+            style: ThemeText.bodySemibold.colorWhite.s16,
           ),
+          actions: [
+            AppTouchable(
+              onPressed: () => Get.toNamed(AppRoutes.history),
+              child: Center(
+                child: AppImageWidget(
+                  margin: EdgeInsets.all(AppDimens.space_8),
+                  color: AppColors.white,
+                  size: AppDimens.space_24 + 8,
+                  asset: Assets.images.svg.icHistory,
+                ),
+              ),
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -369,6 +383,7 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
                   type: SnackBarType.done);
             },
             child: AppImageWidget(
+              size: AppDimens.space_24,
               asset: Assets.images.svg.icCopy,
             ),
           ),
@@ -378,6 +393,7 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
           AppTouchable(
             onPressed: () => controller.generatePassword(),
             child: AppImageWidget(
+              size: AppDimens.space_24,
               asset: Assets.images.svg.icGenerator,
             ),
           ),

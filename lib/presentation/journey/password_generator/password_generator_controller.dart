@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/injector/locators/app_locator.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
@@ -34,7 +36,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
 
   PasswordGenerationOptions _option = PasswordGenerationOptions();
 
-  PasswordGenerationOptions _defaultOption = PasswordGenerationOptions();
+  final PasswordGenerationOptions _defaultOption = PasswordGenerationOptions();
 
   PasswordGeneratorController({
     required this.passwordUsecase,
@@ -42,7 +44,9 @@ class PasswordGeneratorController extends GetxController with MixinController {
   });
 
   final PasswordGenerationController _passwordGenerationController =
-      Get.find<PasswordGenerationController>();
+      getIt<PasswordGenerationController>();
+
+  User? get user => accountUseCase.user;
 
   Future<void> onChangedPasswordType(PasswordType type) async {
     selectedType.value = type;
@@ -137,12 +141,21 @@ class PasswordGeneratorController extends GetxController with MixinController {
   Future<void> generatePassword() async {
     generatedPassword.value =
         await _passwordGenerationController.generatePassword(_option);
+
+    await _passwordGenerationController.addGeneratedPassword(
+      userId: user?.uid ?? '',
+      password: generatedPassword.value,
+    );
   }
 
   Future<PasswordGenerationOptions> getOption() async {
     PasswordGenerationOptions? option = await passwordUsecase
-        .getPasswordGenerationOption(userId: accountUseCase.user.uid);
-    option ??= _defaultOption;
+        .getPasswordGenerationOption(userId: user?.uid ?? '');
+    if (option == null) {
+      option = _defaultOption;
+      await passwordUsecase.setPasswordGenerationOption(
+          userId: user?.uid ?? '', option: _defaultOption);
+    }
 
     return option;
   }
@@ -166,7 +179,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
       );
       await passwordUsecase.setPasswordGenerationOption(
         option: _option,
-        userId: accountUseCase.user.uid,
+        userId: user?.uid ?? '',
       );
     } catch (e) {
       logger(e.toString());

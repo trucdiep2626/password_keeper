@@ -249,7 +249,7 @@ class PasswordGenerationController extends GetxController with MixinController {
     return encryptedHistory;
   }
 
-  Future<List<GeneratedPasswordItem>> decryptHistoryAsync(
+  Future<List<GeneratedPasswordItem>> decryptHistory(
       {List<GeneratedPasswordItem>? history}) async {
     final decryptedHistory = <GeneratedPasswordItem>[];
 
@@ -259,7 +259,8 @@ class PasswordGenerationController extends GetxController with MixinController {
 
     for (var item in history) {
       final decrypted = await _cryptoController.decryptToUtf8(
-          encString: EncryptedString(data: item.password));
+          encString:
+              EncryptedString.fromString(encryptedString: item.password));
 
       if (decrypted != null) {
         decryptedHistory.add(GeneratedPasswordItem(

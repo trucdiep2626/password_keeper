@@ -109,4 +109,5 @@ const enString = {
   "word_separator": "Word separator",
   "capitalize": "Capitalize",
   "include_number": "Include number",
+  "history": "History"
 };

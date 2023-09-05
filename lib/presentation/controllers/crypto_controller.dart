@@ -448,17 +448,17 @@ class CryptoController extends GetxController with MixinController {
     required int parallelism,
   }) async {
     int keySize = 32;
-    var password = 'password';
+    //   var password = 'password';
     //use Salt(List<int> bytes) for a salt from an Integer list
     // var s = Salt.newSalt();
     //Hash with pre-set params (iterations: 32, memory: 256, parallelism: 2,
     //length: 32, type: Argon2Type.i, version: Argon2Version.V13)
-    var result = await dargon2.argon2.hashPasswordString(password,
+    var result = await dargon2.argon2.hashPasswordBytes(password,
         salt: dargon2.Salt(salt),
         iterations: iterations,
         memory: memory,
         parallelism: parallelism,
-        length: 32,
+        length: keySize,
         version: dargon2.Argon2Version.V13);
 
     //Raw hash values available as int list, base 64 string, and hex string
@@ -528,49 +528,49 @@ class CryptoController extends GetxController with MixinController {
   }
 
   Future<SymmetricCryptoKey?> getEncKey({SymmetricCryptoKey? key}) async {
-    if (_encKey != null) {
-      return _encKey;
-    }
-    if (_getEncKeysFunction != null) {
-      return _getEncKeysFunction;
-    }
-    Future<SymmetricCryptoKey?> doTask() async {
-      try {
-        var encKey = await getEncKeyEncrypted();
-        if (encKey == null) {
-          return null;
-        }
-
-        key ??= await getKey();
-        if (key == null) {
-          return null;
-        }
-
-        Uint8List? decEncKey;
-        var encKeyCipher = EncryptedString(data: encKey);
-        if (encKeyCipher.encryptionType == EncryptionType.aesCbc256B64) {
-          decEncKey = await decryptToBytes(encString: encKeyCipher, key: key);
-        } else if (encKeyCipher.encryptionType ==
-            EncryptionType.aesCbc256HmacSha256B64) {
-          var newKey = await stretchKey(key!);
-          decEncKey =
-              await decryptToBytes(encString: encKeyCipher, key: newKey);
-        } else {
-          throw Exception("Unsupported encKey type.");
-        }
-
-        if (decEncKey == null) {
-          return null;
-        }
-        _encKey = SymmetricCryptoKey(key: decEncKey);
-        return _encKey;
-      } finally {
-        _getEncKeysFunction = null;
-      }
+    // if (_encKey != null) {
+    //   return _encKey;
+    // }
+    // if (_getEncKeysFunction != null) {
+    //   return _getEncKeysFunction;
+    // }
+    // Future<SymmetricCryptoKey?> doTask() async {
+    //   try {
+    var encKey = await getEncKeyEncrypted();
+    if (encKey == null) {
+      return null;
     }
 
-    _getEncKeysFunction = doTask();
-    return _getEncKeysFunction;
+    key ??= await getKey();
+    if (key == null) {
+      return null;
+    }
+
+    Uint8List? decEncKey;
+    var encKeyCipher = EncryptedString(data: encKey);
+    if (encKeyCipher.encryptionType == EncryptionType.aesCbc256B64) {
+      decEncKey = await decryptToBytes(encString: encKeyCipher, key: key);
+    } else if (encKeyCipher.encryptionType ==
+        EncryptionType.aesCbc256HmacSha256B64) {
+      var newKey = await stretchKey(key!);
+      decEncKey = await decryptToBytes(encString: encKeyCipher, key: newKey);
+    } else {
+      throw Exception("Unsupported encKey type.");
+    }
+
+    if (decEncKey == null) {
+      return null;
+    }
+    return SymmetricCryptoKey(key: decEncKey);
+    //  return _encKey;
+    //   }
+    //finally {
+    //      _getEncKeysFunction = null;
+    //  }
+    // }
+    //
+    // _getEncKeysFunction = doTask();
+    // return _getEncKeysFunction;
   }
 
   Future<SymmetricCryptoKey?> getKey() async {
@@ -634,8 +634,8 @@ class CryptoController extends GetxController with MixinController {
 
     // Convert data, IV, and MAC from base64 to bytes
     var encKey = theKey?.encKey;
-    var dataBytes = base64.decode(data!);
-    var ivBytes = base64.decode(iv!);
+    var dataBytes = base64.decode(data ?? '');
+    var ivBytes = base64.decode(iv ?? '');
     var macBytes = mac != null ? base64.decode(mac) : null;
 
     // var macDataBytes = new byte[ivBytes.Length + dataBytes.Length];

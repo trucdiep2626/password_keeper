@@ -41,9 +41,16 @@ class PasswordUsecase {
     );
   }
 
-  Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory(
-      {required String userId}) async {
-    return await passwordRepository.getGeneratedPasswordHistory(userId: userId);
+  Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory({
+    required String userId,
+    GeneratedPasswordItem? lastItem,
+    required int pageSize,
+  }) async {
+    return await passwordRepository.getGeneratedPasswordHistory(
+      userId: userId,
+      lastItem: lastItem,
+      pageSize: pageSize,
+    );
   }
 
   Future<int> getGeneratedPasswordHistoryLength(

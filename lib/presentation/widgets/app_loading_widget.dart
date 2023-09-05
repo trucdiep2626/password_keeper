@@ -13,9 +13,9 @@ class AppLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width,
+    return Center(
       child: AppImageWidget(
+        size: width,
         asset: Assets.images.svg.loading,
       ),
     );

@@ -116,20 +116,32 @@ class PasswordRepository {
     Map<String, dynamic> password = {};
     password.addAll({'id': latest.docs.first.id});
     password.addAll(latest.docs.first.data());
-
     GeneratedPasswordItem latestItem = GeneratedPasswordItem.fromJson(password);
 
     return latestItem;
   }
 
-  Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory(
-      {required String userId}) async {
-    final response = await db
-        .collection(AppConfig.userCollection)
-        .doc(userId)
-        .collection(AppConfig.generatedPasswordsCollection)
-        .orderBy('created_at', descending: true)
-        .get();
+  Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory({
+    required String userId,
+    GeneratedPasswordItem? lastItem,
+    required int pageSize,
+  }) async {
+    final response = lastItem == null
+        ? await db
+            .collection(AppConfig.userCollection)
+            .doc(userId)
+            .collection(AppConfig.generatedPasswordsCollection)
+            .orderBy('created_at', descending: true)
+            .limit(pageSize)
+            .get()
+        : await db
+            .collection(AppConfig.userCollection)
+            .doc(userId)
+            .collection(AppConfig.generatedPasswordsCollection)
+            .orderBy('created_at', descending: true)
+            .startAfter([lastItem.createdAt])
+            .limit(pageSize)
+            .get();
 
     if (response.docs.isEmpty) {
       return <GeneratedPasswordItem>[];
@@ -139,10 +151,8 @@ class PasswordRepository {
         Map<String, dynamic> password = {};
         password.addAll({'id': item.id});
         password.addAll(item.data());
-
         GeneratedPasswordItem generatedPasswordItem =
             GeneratedPasswordItem.fromJson(password);
-
         generatedPasswords.add(generatedPasswordItem);
       }
 
