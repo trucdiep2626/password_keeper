@@ -132,4 +132,17 @@ class TranslationConstants {
   static const String capitalize = "capitalize";
   static const String includeNumber = "include_number";
   static const String history = "history";
+
+  //password
+  static const String userId = "user_id";
+  static const String noteOptional = "note_optional";
+  static const String note = "note";
+  static const String signInLocationOrApp = "sign_in_location_or_app";
+  static const String addNewPassword = "add_new_password";
+  static const String editPassword = "edit_password";
+  static const String generatePassword = "generate_password";
+  static const String set = "set";
+  static const String enterWebAddr = "enter_web_addr";
+  static const String apps = "apps";
+  static const String signInLocation = "sign_in_location";
 }

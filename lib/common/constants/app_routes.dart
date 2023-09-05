@@ -8,7 +8,12 @@ class AppRoutes {
   static const String verifyMasterPassword = '/verify_master_password';
   static const String masterPassword = '/master_password';
   static const String verifyEmail = '/verify_email';
+
+  //password generation
   static const String history = '/history';
+
+  //password
+  static const String signInLocation = '/sign_in_location';
 
   //main
   static const String main = '/main';

@@ -1,10 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
-
-import 'dart:typed_data';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 // /
@@ -38,6 +37,7 @@ class AppImageWidget extends StatelessWidget {
     this.isCircle = false,
     this.lottieController,
     this.size,
+    this.padding,
     // ignore: prefer_asserts_with_message
   }) : assert(
           asset == null ||
@@ -61,7 +61,7 @@ class AppImageWidget extends StatelessWidget {
   final BoxBorder? border;
   final BoxShadow? boxShadow;
   final EdgeInsets? margin;
-
+  final EdgeInsets? padding;
   final Color? color;
   final Color? backgroundColor;
   final BoxFit fit;
@@ -194,6 +194,7 @@ class AppImageWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        padding: padding,
         decoration: BoxDecoration(
           borderRadius: borderRadius,
           border: border,

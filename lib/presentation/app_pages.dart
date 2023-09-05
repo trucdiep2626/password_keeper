@@ -7,6 +7,7 @@ import 'package:password_keeper/common/injector/bindings/login_binding.dart';
 import 'package:password_keeper/common/injector/bindings/main_binding.dart';
 import 'package:password_keeper/common/injector/bindings/password_generator_binding.dart';
 import 'package:password_keeper/common/injector/bindings/register_binding.dart';
+import 'package:password_keeper/common/injector/bindings/signin_location_binding.dart';
 import 'package:password_keeper/common/injector/bindings/splash_binding.dart';
 import 'package:password_keeper/common/injector/bindings/verify_email.dart';
 import 'package:password_keeper/common/injector/bindings/verify_master_password_binding.dart';
@@ -15,6 +16,7 @@ import 'package:password_keeper/presentation/journey/generated_password_history/
 import 'package:password_keeper/presentation/journey/login/login_screen.dart';
 import 'package:password_keeper/presentation/journey/main/main_screen.dart';
 import 'package:password_keeper/presentation/journey/register/register_screen.dart';
+import 'package:password_keeper/presentation/journey/signin_location/signin_location_screen.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_screen.dart';
 import 'package:password_keeper/presentation/journey/verify_email/verify_email_screen.dart';
 import 'package:password_keeper/presentation/journey/verify_master_password/verify_master_password_screen.dart';
@@ -59,5 +61,10 @@ List<GetPage> myPages = [
     name: AppRoutes.history,
     page: () => const GeneratedPasswordHistoryScreen(),
     binding: GeneratedPasswordHistoryBinding(),
+  ),
+  GetPage(
+    name: AppRoutes.signInLocation,
+    page: () => const SignInLocationScreen(),
+    binding: SignInLocationBinding(),
   ),
 ];

@@ -109,5 +109,18 @@ const viString = {
   "word_separator": "Word separator",
   "capitalize": "Capitalize",
   "include_number": "Include number",
-  "history": "History"
+  "history": "History",
+
+  //password
+  "user_id": "User ID",
+  "note_optional": "Note (optional)",
+  "note": "Note",
+  "sign_in_location_or_app": "Sign-in location or app",
+  "add_new_password": "Add new password",
+  "edit_password": "Edit password",
+  "generate_password": "Generate password",
+  "set": "Set",
+  "enter_web_addr": "Enter web address or other info",
+  "apps": "Apps",
+  "sign_in_location": "Sign-in location"
 };

@@ -1,5 +1,3 @@
-
-
 import 'package:password_keeper/common/utils/app_screen_utils/flutter_screenutils.dart';
 
 class AppDimens {
@@ -13,6 +11,7 @@ class AppDimens {
   static const double radius_16 = 16;
 
   /// Space
+  static double space_2 = 2.sp;
   static double space_4 = 4.sp;
   static double space_8 = 8.sp;
   static double space_12 = 12.sp;
@@ -21,6 +20,8 @@ class AppDimens {
   static double space_18 = 18.sp;
   static double space_20 = 20.sp;
   static double space_24 = 24.sp;
+  static double space_30 = 30.sp;
+  static double space_32 = 32.sp;
   static double space_36 = 36.sp;
   static double space_48 = 48.sp;
   static double space_60 = 60.sp;
