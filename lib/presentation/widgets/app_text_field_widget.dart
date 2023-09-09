@@ -40,6 +40,7 @@ class AppTextField extends StatefulWidget {
     this.suffixIcon,
     this.isUnderline = false,
     this.contentPadding,
+    this.borderRadius,
   }) : super(key: key);
 
   final String? labelText;
@@ -75,6 +76,7 @@ class AppTextField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final bool isUnderline;
   final EdgeInsets? contentPadding;
+  final double? borderRadius;
 
   @override
   AppTextFieldState createState() => AppTextFieldState();
@@ -124,7 +126,9 @@ class AppTextFieldState extends State<AppTextField> {
           //  height: 48.h,
           decoration: BoxDecoration(
             color: AppColors.white,
-            borderRadius: widget.isUnderline ? null : BorderRadius.circular(5),
+            borderRadius: widget.isUnderline
+                ? null
+                : BorderRadius.circular(widget.borderRadius ?? 5),
             border: widget.isUnderline
                 ? Border(
                     bottom: BorderSide(

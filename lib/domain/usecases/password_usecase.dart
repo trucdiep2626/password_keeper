@@ -2,10 +2,10 @@ import 'package:password_keeper/data/password_repository.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 
-class PasswordUsecase {
+class PasswordUseCase {
   final PasswordRepository passwordRepository;
 
-  PasswordUsecase({required this.passwordRepository});
+  PasswordUseCase({required this.passwordRepository});
 
   //Password Generation Option
   PasswordGenerationOptions? get getPasswordGenerationOptionsLocal =>

@@ -23,7 +23,7 @@ class GeneratedPasswordHistoryController extends GetxController
   final RefreshController historyController = RefreshController();
   final scrollController = ScrollController();
 
-  PasswordUsecase passwordUsecase;
+  PasswordUseCase passwordUseCase;
   AccountUseCase accountUseCase;
 
   GeneratedPasswordItem? lastItem;
@@ -33,12 +33,12 @@ class GeneratedPasswordHistoryController extends GetxController
 
   GeneratedPasswordHistoryController({
     required this.accountUseCase,
-    required this.passwordUsecase,
+    required this.passwordUseCase,
   });
 
   Future<void> getHistory() async {
     try {
-      final result = await passwordUsecase.getGeneratedPasswordHistory(
+      final result = await passwordUseCase.getGeneratedPasswordHistory(
         userId: accountUseCase.user?.uid ?? '',
         lastItem: lastItem,
         pageSize: pageSize,
@@ -65,7 +65,7 @@ class GeneratedPasswordHistoryController extends GetxController
 
   Future<void> getHistoryLength() async {
     try {
-      final result = await passwordUsecase.getGeneratedPasswordHistoryLength(
+      final result = await passwordUseCase.getGeneratedPasswordHistoryLength(
         userId: accountUseCase.user?.uid ?? '',
       );
       totalItems = result;

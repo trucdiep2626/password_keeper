@@ -31,7 +31,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
 
   Rx<PasswordType> selectedType = PasswordType.password.obs;
 
-  final PasswordUsecase passwordUsecase;
+  final PasswordUseCase passwordUseCase;
   final AccountUseCase accountUseCase;
 
   PasswordGenerationOptions _option = PasswordGenerationOptions();
@@ -39,7 +39,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
   final PasswordGenerationOptions _defaultOption = PasswordGenerationOptions();
 
   PasswordGeneratorController({
-    required this.passwordUsecase,
+    required this.passwordUseCase,
     required this.accountUseCase,
   });
 
@@ -149,11 +149,11 @@ class PasswordGeneratorController extends GetxController with MixinController {
   }
 
   Future<PasswordGenerationOptions> getOption() async {
-    PasswordGenerationOptions? option = await passwordUsecase
+    PasswordGenerationOptions? option = await passwordUseCase
         .getPasswordGenerationOption(userId: user?.uid ?? '');
     if (option == null) {
       option = _defaultOption;
-      await passwordUsecase.setPasswordGenerationOption(
+      await passwordUseCase.setPasswordGenerationOption(
           userId: user?.uid ?? '', option: _defaultOption);
     }
 
@@ -177,7 +177,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
         type: selectedType.value,
         wordSeparator: wordSeparatorColtroller.text,
       );
-      await passwordUsecase.setPasswordGenerationOption(
+      await passwordUseCase.setPasswordGenerationOption(
         option: _option,
         userId: user?.uid ?? '',
       );

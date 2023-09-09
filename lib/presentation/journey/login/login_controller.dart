@@ -148,32 +148,32 @@ class LoginController extends GetxController with MixinController {
 
   void onChangedEmail() {
     checkButtonEnable();
-    emailValidate.value = '';
+    //  emailValidate.value = '';
   }
 
   void onTapEmailTextField() {
-    pwdHasFocus.value = false;
-    emailHasFocus.value = true;
+    // pwdHasFocus.value = false;
+    // emailHasFocus.value = true;
   }
 
   void onEditingCompleteEmail() {
-    emailHasFocus.value = false;
-    pwdHasFocus.value = true;
+    // emailHasFocus.value = false;
+    // pwdHasFocus.value = true;
     FocusScope.of(context).requestFocus(passwordFocusNode);
   }
 
   void onChangedPwd() {
     checkButtonEnable();
-    passwordValidate.value = '';
+    //  passwordValidate.value = '';
   }
 
   void onTapPwdTextField() {
-    emailHasFocus.value = false;
-    pwdHasFocus.value = true;
+    // emailHasFocus.value = false;
+    // pwdHasFocus.value = true;
   }
 
   void onEditingCompletePwd() {
-    pwdHasFocus.value = false;
+    // pwdHasFocus.value = false;
     FocusScope.of(context).unfocus();
     if (buttonEnable.value) {
       postLogin();
@@ -181,8 +181,8 @@ class LoginController extends GetxController with MixinController {
   }
 
   void onPressedLogIn() {
-    pwdHasFocus.value = false;
-    emailHasFocus.value = false;
+    // pwdHasFocus.value = false;
+    // emailHasFocus.value = false;
     if (buttonEnable.value) {
       postLogin();
     }

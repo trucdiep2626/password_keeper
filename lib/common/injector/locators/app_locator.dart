@@ -12,6 +12,7 @@ import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/app_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
+import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_controller.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
@@ -38,7 +39,7 @@ void configLocator() {
       () => HomeController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<PasswordGeneratorController>(() =>
       PasswordGeneratorController(
-          passwordUsecase: getIt<PasswordUsecase>(),
+          passwordUseCase: getIt<PasswordUseCase>(),
           accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
@@ -56,10 +57,14 @@ void configLocator() {
       () => VerifyEmailController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<GeneratedPasswordHistoryController>(() =>
       GeneratedPasswordHistoryController(
-          passwordUsecase: getIt<PasswordUsecase>(),
+          passwordUseCase: getIt<PasswordUseCase>(),
           accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<SignInLocationController>(
       () => SignInLocationController());
+  getIt.registerFactory<AddEditPasswordController>(() =>
+      AddEditPasswordController(
+          passwordUseCase: getIt<PasswordUseCase>(),
+          accountUseCase: getIt<AccountUseCase>()));
 
   ///helper
   getIt.registerLazySingleton<CryptoController>(() => CryptoController(
@@ -67,7 +72,7 @@ void configLocator() {
         localUseCase: getIt<LocalUseCase>(),
       ));
   getIt.registerLazySingleton<PasswordGenerationController>(() =>
-      PasswordGenerationController(passwordUsecase: getIt<PasswordUsecase>()));
+      PasswordGenerationController(passwordUseCase: getIt<PasswordUseCase>()));
   // getIt.registerLazySingleton<StateController>(() => StateController(
   //     accountUseCase: getIt<AccountUseCase>(),
   //     localUseCase: getIt<LocalUseCase>()));
@@ -76,8 +81,8 @@ void configLocator() {
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(
       accountRepo: getIt<AccountRepository>(),
       localRepo: getIt<LocalRepository>()));
-  getIt.registerFactory<PasswordUsecase>(
-      () => PasswordUsecase(passwordRepository: getIt<PasswordRepository>()));
+  getIt.registerFactory<PasswordUseCase>(
+      () => PasswordUseCase(passwordRepository: getIt<PasswordRepository>()));
   getIt.registerFactory<LocalUseCase>(
       () => LocalUseCase(localRepository: getIt<LocalRepository>()));
 

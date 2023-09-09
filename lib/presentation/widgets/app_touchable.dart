@@ -13,6 +13,7 @@ class AppTouchable extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final OutlinedBorder? outlinedBorder;
   final BorderRadius? borderRadius;
+  final AlignmentGeometry? alignment;
 
   const AppTouchable({
     Key? key,
@@ -26,6 +27,7 @@ class AppTouchable extends StatelessWidget {
     this.margin,
     this.outlinedBorder,
     this.borderRadius,
+    this.alignment,
   }) : super(key: key);
 
   @override
@@ -34,12 +36,12 @@ class AppTouchable extends StatelessWidget {
       width: width,
       height: height,
       margin: margin ?? EdgeInsets.zero,
+      alignment: alignment,
       decoration: BoxDecoration(
         borderRadius: borderRadius,
       ),
       child: TextButton(
         onPressed: onPressed,
-        child: child ?? const SizedBox.shrink(),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
               backgroundColor ?? AppColors.transparent),
@@ -57,6 +59,7 @@ class AppTouchable extends StatelessWidget {
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           visualDensity: VisualDensity.standard,
         ),
+        child: child ?? const SizedBox.shrink(),
       ),
     );
   }

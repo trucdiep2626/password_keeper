@@ -167,15 +167,15 @@ class RegisterController extends GetxController with MixinController {
   }
 
   void onTapEmailTextField() {
-    pwdHasFocus.value = false;
-    fullNameHasFocus.value = false;
-    emailHasFocus.value = true;
-    confirmPwdHasFocus.value = false;
+    // pwdHasFocus.value = false;
+    // fullNameHasFocus.value = false;
+    // emailHasFocus.value = true;
+    // confirmPwdHasFocus.value = false;
   }
 
   void onEditingCompleteEmail() {
-    pwdHasFocus.value = true;
-    emailHasFocus.value = false;
+    // pwdHasFocus.value = true;
+    // emailHasFocus.value = false;
     FocusScope.of(context).requestFocus(passwordFocusNode);
   }
 
@@ -185,15 +185,15 @@ class RegisterController extends GetxController with MixinController {
   }
 
   void onTapPwdTextField() {
-    confirmPwdHasFocus.value = false;
-    pwdHasFocus.value = true;
-    fullNameHasFocus.value = false;
-    emailHasFocus.value = false;
+    // confirmPwdHasFocus.value = false;
+    // pwdHasFocus.value = true;
+    // fullNameHasFocus.value = false;
+    // emailHasFocus.value = false;
   }
 
   void onEditingCompletePwd() {
-    confirmPwdHasFocus.value = true;
-    pwdHasFocus.value = false;
+    // confirmPwdHasFocus.value = true;
+    // pwdHasFocus.value = false;
     FocusScope.of(context).requestFocus(confirmPasswordFocusNode);
   }
 
@@ -203,14 +203,14 @@ class RegisterController extends GetxController with MixinController {
   }
 
   void onTapConfirmPwdTextField() {
-    pwdHasFocus.value = false;
-    fullNameHasFocus.value = false;
-    emailHasFocus.value = false;
-    confirmPwdHasFocus.value = true;
+    // pwdHasFocus.value = false;
+    // fullNameHasFocus.value = false;
+    // emailHasFocus.value = false;
+    // confirmPwdHasFocus.value = true;
   }
 
   void onEditingCompleteConfirmPwd() {
-    confirmPwdHasFocus.value = false;
+    // confirmPwdHasFocus.value = false;
     FocusScope.of(context).unfocus();
     if (buttonEnable.value) {
       postRegister();
@@ -223,22 +223,22 @@ class RegisterController extends GetxController with MixinController {
   }
 
   void onTapFullNameTextField() {
-    pwdHasFocus.value = false;
-    fullNameHasFocus.value = true;
-    emailHasFocus.value = false;
-    confirmPwdHasFocus.value = false;
+    // pwdHasFocus.value = false;
+    // fullNameHasFocus.value = true;
+    // emailHasFocus.value = false;
+    // confirmPwdHasFocus.value = false;
   }
 
   void onEditingCompleteFullName() {
-    fullNameHasFocus.value = false;
-    emailHasFocus.value = true;
+    // fullNameHasFocus.value = false;
+    // emailHasFocus.value = true;
     FocusScope.of(context).requestFocus(emailFocusNode);
   }
 
   void onPressedRegister() {
-    pwdHasFocus.value = false;
-    fullNameHasFocus.value = false;
-    emailHasFocus.value = false;
+    // pwdHasFocus.value = false;
+    // fullNameHasFocus.value = false;
+    // emailHasFocus.value = false;
     if (buttonEnable.value) {
       postRegister();
     }

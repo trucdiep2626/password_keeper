@@ -133,11 +133,11 @@ class CreateMasterPasswordScreen
                 hintText: TranslationConstants.masterPasswordHint.tr,
                 controller: controller.masterPwdHintController,
                 onTap: () => controller.onTapMasterPwdHintTextField(),
-                textInputAction: TextInputAction.done,
+                textInputAction: TextInputAction.newline,
+                keyboardType: TextInputType.multiline,
                 onEditingComplete: () =>
                     controller.onEditingCompleteMasterPwdHint(),
                 focusNode: controller.masterPwdHintFocusNode,
-                maxLines: 7,
               ),
               //  ),
               SizedBox(

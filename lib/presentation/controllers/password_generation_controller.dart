@@ -11,9 +11,9 @@ import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.
 
 class PasswordGenerationController extends GetxController with MixinController {
   final CryptoController _cryptoController = Get.find<CryptoController>();
-  final PasswordUsecase passwordUsecase;
+  final PasswordUseCase passwordUseCase;
 
-  PasswordGenerationController({required this.passwordUsecase});
+  PasswordGenerationController({required this.passwordUseCase});
 
   final List<GeneratedPasswordItem> history = <GeneratedPasswordItem>[];
 
@@ -218,7 +218,7 @@ class PasswordGenerationController extends GetxController with MixinController {
   Future<bool> matchesPrevious(
       {required String userId, required String password}) async {
     final previous =
-        await passwordUsecase.getLatestGeneratedHistory(userId: userId);
+        await passwordUseCase.getLatestGeneratedHistory(userId: userId);
 
     if (previous == null) {
       return false;
@@ -285,16 +285,16 @@ class PasswordGenerationController extends GetxController with MixinController {
     }
 
     final currentHistoryLength =
-        await passwordUsecase.getGeneratedPasswordHistoryLength(userId: userId);
+        await passwordUseCase.getGeneratedPasswordHistoryLength(userId: userId);
 
     if (currentHistoryLength >= Constants.maxGeneratedPasswordInHistory) {
-      await passwordUsecase.deleteOldestGeneratedHistory(userId: userId);
+      await passwordUseCase.deleteOldestGeneratedHistory(userId: userId);
     }
 
     final encPassword =
         await _cryptoController.encryptString(plainValue: password);
 
-    await passwordUsecase.addGeneratedPassword(
+    await passwordUseCase.addGeneratedPassword(
         userId: userId,
         passwordItem: GeneratedPasswordItem(
           password: encPassword?.encryptedString,
