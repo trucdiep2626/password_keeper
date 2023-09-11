@@ -4,6 +4,7 @@ import 'package:password_keeper/common/config/database/hive_services.dart';
 import 'package:password_keeper/common/config/database/hive_type_constants.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
+import 'package:password_keeper/domain/models/password_model.dart';
 
 class PasswordRepository {
   final HiveServices hiveServices;
@@ -157,6 +158,56 @@ class PasswordRepository {
       }
 
       return generatedPasswords;
+    }
+  }
+
+  Future<void> addPasswordItem({
+    required String userId,
+    required PasswordItem passwordItem,
+  }) async {
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.passwordsCollection)
+        //    .doc(passwordItem.id)
+        .add(passwordItem.toJson());
+  }
+
+  Future<List<PasswordItem>> getPasswordList({
+    required String userId,
+    PasswordItem? lastItem,
+    required int pageSize,
+  }) async {
+    final response = lastItem == null
+        ? await db
+            .collection(AppConfig.userCollection)
+            .doc(userId)
+            .collection(AppConfig.passwordsCollection)
+            .orderBy('created_at', descending: true)
+            .limit(pageSize)
+            .get()
+        : await db
+            .collection(AppConfig.userCollection)
+            .doc(userId)
+            .collection(AppConfig.passwordsCollection)
+            .orderBy('created_at', descending: true)
+            .startAfter([lastItem.createdAt])
+            .limit(pageSize)
+            .get();
+
+    if (response.docs.isEmpty) {
+      return <PasswordItem>[];
+    } else {
+      List<PasswordItem> passwords = [];
+      for (var item in response.docs) {
+        Map<String, dynamic> password = {};
+        password.addAll({'id': item.id});
+        password.addAll(item.data());
+        PasswordItem passwordItem = PasswordItem.fromJson(password);
+        passwords.add(passwordItem);
+      }
+
+      return passwords;
     }
   }
 }

@@ -11,6 +11,7 @@ class AppRoutes {
 
   //password generation
   static const String history = '/history';
+  static const String passwordGenerator = '/password_generator';
 
   //password
   static const String signInLocation = '/sign_in_location';

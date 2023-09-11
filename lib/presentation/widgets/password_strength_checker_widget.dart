@@ -19,7 +19,7 @@ class PasswordStrengthChecker extends StatelessWidget {
         value: passwordStrength.lineLength,
         backgroundColor: AppColors.grey300,
         color: passwordStrength.color,
-        minHeight: 15,
+        minHeight: 5,
       ),
     );
   }

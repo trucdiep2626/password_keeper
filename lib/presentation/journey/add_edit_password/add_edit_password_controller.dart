@@ -2,13 +2,18 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:installed_apps/app_info.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
+import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
 import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dart';
 
 class AddEditPasswordController extends GetxController with MixinController {
@@ -29,14 +34,22 @@ class AddEditPasswordController extends GetxController with MixinController {
 
   RxBool buttonEnable = false.obs;
 
-  // RxBool userIdHasFocus = false.obs;
-  // RxBool pwdHasFocus = false.obs;
-  // RxBool noteHasFocus = false.obs;
+  Rx<AppInfo?> selectedApp = (null as AppInfo?).obs;
+  RxString selectedUrl = ''.obs;
+
+  RxBool showBottomBarAboveKeyBoard = false.obs;
+  RxBool showPasswordStrengthChecker = false.obs;
+  RxBool showPassword = false.obs;
+
+  Rx<PasswordStrengthLevel> passwordStrength =
+      PasswordStrengthLevel.veryWeak.obs;
 
   AccountUseCase accountUseCase;
   PasswordUseCase passwordUseCase;
 
-  RxBool showPassword = false.obs;
+  RxDouble bottomPadding = 0.0.obs;
+
+  final _cryptoController = Get.find<CryptoController>();
 
   AddEditPasswordController({
     required this.accountUseCase,
@@ -51,7 +64,8 @@ class AddEditPasswordController extends GetxController with MixinController {
 
   void checkButtonEnable() {
     if (userIdController.text.isNotEmpty &&
-        passwordController.text.isNotEmpty) {
+        passwordController.text.isNotEmpty &&
+        (!isNullEmpty(selectedApp.value) || !isNullEmpty(selectedUrl.value))) {
       buttonEnable.value = true;
     } else {
       buttonEnable.value = false;
@@ -63,6 +77,7 @@ class AddEditPasswordController extends GetxController with MixinController {
     errorText.value = '';
 
     var connectivityResult = await Connectivity().checkConnectivity();
+
     if (connectivityResult == ConnectivityResult.none) {
       if (Get.context != null) {
         showTopSnackBarError(
@@ -72,13 +87,53 @@ class AddEditPasswordController extends GetxController with MixinController {
       return;
     }
 
-    if (userIdValidate.value.isEmpty && passwordValidate.value.isEmpty) {
-      rxLoadedButton.value = LoadedType.start;
+    rxLoadedButton.value = LoadedType.start;
 
-      try {} catch (e) {}
+    try {
+      final encPassword = await _cryptoController.encryptString(
+          plainValue: passwordController.text);
+
+      if (encPassword == null) {
+        return;
+      }
+
+      try {
+        final passwordItem = PasswordItem(
+          url: selectedUrl.value,
+          appIcon: selectedApp.value?.icon,
+          appName: selectedApp.value?.name,
+          password: encPassword,
+          userId: userIdController.text,
+          note: noteController.text,
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          updatedAt: DateTime.now().millisecondsSinceEpoch,
+        );
+
+        final result = await passwordUseCase.addPasswordItem(
+          userId: user?.uid ?? '',
+          passwordItem: passwordItem,
+        );
+
+        showTopSnackBar(
+          Get.context!,
+          message: TranslationConstants.addPasswordSuccessful.tr,
+          type: SnackBarType.done,
+        );
+        clearData();
+      } catch (e, s) {
+        logger(s.toString());
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      if (Get.context != null) {
+        showTopSnackBarError(
+          Get.context!,
+          TranslationConstants.unknownError.tr,
+        );
+      }
+    } finally {
+      rxLoadedButton.value = LoadedType.finish;
     }
-
-    rxLoadedButton.value = LoadedType.finish;
   }
 
   void onChangedUserId() {
@@ -86,70 +141,58 @@ class AddEditPasswordController extends GetxController with MixinController {
     userIdValidate.value = '';
   }
 
-  void onTapUserIdTextField() {
-    // pwdHasFocus.value = false;
-    // userIdHasFocus.value = true;
-    // noteHasFocus.value = false;
-  }
-
-  void onEditingCompleteUserId() {
-    // userIdHasFocus.value = false;
-    // pwdHasFocus.value = true;
-    // noteHasFocus.value = false;
-    FocusScope.of(context).requestFocus(passwordFocusNode);
+  void clearData() {
+    selectedApp.value = null;
+    selectedUrl.value = '';
+    userIdController.clear();
+    passwordController.clear();
+    noteController.clear();
+    showPassword.value = false;
+    passwordStrength.value = PasswordStrengthLevel.veryWeak;
+    showPasswordStrengthChecker.value = false;
   }
 
   void onChangedPwd() {
+    checkPasswordStrength();
     checkButtonEnable();
     passwordValidate.value = '';
   }
 
-  void onTapPwdTextField() {
-    // userIdHasFocus.value = false;
-    // pwdHasFocus.value = true;
-    // noteHasFocus.value = false;
-  }
-
-  void onEditingCompletePwd() {
-    //   pwdHasFocus.value = false;
-    FocusScope.of(context).unfocus();
-  }
-
-  void onEditingCompleteNote() {
-    //  noteHasFocus.value = false;
-    FocusScope.of(context).unfocus();
-  }
-
-  void onTapNoteTextField() {
-    // pwdHasFocus.value = false;
-    // noteHasFocus.value = true;
-    // userIdHasFocus.value = false;
-  }
-
-  void onPressedSave() {
-    // pwdHasFocus.value = false;
-    //   userIdHasFocus.value = false;
-    // noteHasFocus.value = false;
-    if (buttonEnable.value) {
-      handleSave();
+  void checkPasswordStrength() {
+    if (passwordController.text.isNotEmpty) {
+      passwordStrength.value =
+          PasswordHelper.checkPasswordStrength(passwordController.text);
+      showPasswordStrengthChecker.value = true;
+    } else {
+      showPasswordStrengthChecker.value = false;
     }
   }
 
-  onPressPickLocationOrApp() {
-    Get.toNamed(AppRoutes.signInLocation);
+  Future<void> onPressPickLocationOrApp() async {
+    final result = await Get.toNamed(AppRoutes.signInLocation);
+    if (result != null && result is Map) {
+      selectedApp.value = result['app'];
+      selectedUrl.value = result['url'] ?? '';
+      checkButtonEnable();
+    }
+  }
+
+  Future<void> onPressedGeneratePassword() async {
+    Get.find<PasswordGeneratorController>().setFromAddEditPwd();
+    final result = await Get.toNamed(
+      AppRoutes.passwordGenerator,
+    );
+    if (result != null && result is String) {
+      passwordController.text = result;
+      checkButtonEnable();
+    }
   }
 
   @override
   void onReady() async {
     super.onReady();
-    // userIdFocusNode.addListener(() {
-    //   userIdHasFocus.value = userIdFocusNode.hasFocus;
-    // });
-    // passwordFocusNode.addListener(() {
-    //   pwdHasFocus.value = passwordFocusNode.hasFocus;
-    // });
-    // noteFocusNode.addListener(() {
-    //   noteHasFocus.value = passwordFocusNode.hasFocus;
-    // });
+    passwordFocusNode.addListener(() {
+      checkPasswordStrength();
+    });
   }
 }

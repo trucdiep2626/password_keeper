@@ -17,6 +17,7 @@ import 'package:password_keeper/presentation/journey/create_master_password/crea
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_screen.dart';
 import 'package:password_keeper/presentation/journey/login/login_screen.dart';
 import 'package:password_keeper/presentation/journey/main/main_screen.dart';
+import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
 import 'package:password_keeper/presentation/journey/register/register_screen.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_screen.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_screen.dart';
@@ -32,6 +33,7 @@ List<GetPage> myPages = [
   GetPage(name: AppRoutes.main, page: () => MainScreen(), bindings: [
     MainBinding(),
     HomeBinding(),
+    // AddEditPasswordBinding(),
     PasswordGeneratorBinding(),
   ]),
   GetPage(
@@ -73,5 +75,10 @@ List<GetPage> myPages = [
     name: AppRoutes.addEditPassword,
     page: () => const AddEditPasswordScreen(),
     binding: AddEditPasswordBinding(),
+  ),
+  GetPage(
+    name: AppRoutes.passwordGenerator,
+    page: () => const PasswordGeneratorScreen(),
+    binding: PasswordGeneratorBinding(),
   ),
 ];

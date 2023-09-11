@@ -57,6 +57,7 @@ const viString = {
   "not_you": "Not you?",
   "enter_master_password": "Enter your Master Password to Log in",
   "unlock_biometric": "Unlock with Face ID/Touch ID",
+  "wrong_master_password": "Invalid master password. Try again.",
 
   //verify email
   "verify_email": "Verify your email address",
@@ -122,5 +123,6 @@ const viString = {
   "set": "Set",
   "enter_web_addr": "Enter web address or other info",
   "apps": "Apps",
-  "sign_in_location": "Sign-in location"
+  "sign_in_location": "Sign-in location",
+  "add_password_successful": "Password was added successfully."
 };

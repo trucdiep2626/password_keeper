@@ -23,6 +23,8 @@ class PasswordGeneratorController extends GetxController with MixinController {
   RxInt minSpecial = 0.obs;
   RxInt numWords = 0.obs;
 
+  RxBool fromAddPassword = false.obs;
+
   TextEditingController wordSeparatorColtroller = TextEditingController();
   RxBool capitalize = false.obs;
   RxBool includeNumber = false.obs;
@@ -205,11 +207,22 @@ class PasswordGeneratorController extends GetxController with MixinController {
     selectedType.value = option.type ?? PasswordType.password;
   }
 
+  void setFromAddEditPwd() {
+    fromAddPassword.value = true;
+  }
+
   @override
   void onReady() async {
+    super.onReady();
     _option = await getOption();
 
     applyOption(_option);
     await generatePassword();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    fromAddPassword.value = Get.arguments ?? false;
   }
 }

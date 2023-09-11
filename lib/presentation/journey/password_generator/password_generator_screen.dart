@@ -26,17 +26,38 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
             style: ThemeText.bodySemibold.colorWhite.s16,
           ),
           actions: [
-            AppTouchable(
-              onPressed: () => Get.toNamed(AppRoutes.history),
-              child: Center(
-                child: AppImageWidget(
-                  margin: EdgeInsets.all(AppDimens.space_8),
-                  color: AppColors.white,
-                  size: AppDimens.space_24 + 8,
-                  asset: Assets.images.svg.icHistory,
-                ),
-              ),
-            ),
+            Obx(
+              () => controller.fromAddPassword.value
+                  ? AppTouchable(
+                      padding: EdgeInsets.all(AppDimens.space_8),
+                      onPressed: () =>
+                          Get.back(result: controller.generatedPassword.value),
+                      child: Center(
+                          child: Icon(
+                        Icons.check,
+                        size: AppDimens.space_30,
+                        color: AppColors.white,
+                      )
+                          // AppImageWidget(
+                          //   margin: EdgeInsets.all(AppDimens.space_8),
+                          //   color: AppColors.white,
+                          //   size: AppDimens.space_24,
+                          //   asset: Assets.images.svg.icTick,
+                          // ),
+                          ),
+                    )
+                  : AppTouchable(
+                      onPressed: () => Get.toNamed(AppRoutes.history),
+                      child: Center(
+                        child: AppImageWidget(
+                          margin: EdgeInsets.all(AppDimens.space_8),
+                          color: AppColors.white,
+                          size: AppDimens.space_24 + 8,
+                          asset: Assets.images.svg.icHistory,
+                        ),
+                      ),
+                    ),
+            )
           ],
         ),
         body: SingleChildScrollView(

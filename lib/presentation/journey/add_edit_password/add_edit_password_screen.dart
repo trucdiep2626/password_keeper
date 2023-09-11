@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
+import 'package:password_keeper/presentation/widgets/confirm_widget.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
+import 'package:password_keeper/presentation/widgets/password_strength_checker_widget.dart';
 
 class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
   const AddEditPasswordScreen({Key? key}) : super(key: key);
@@ -15,38 +17,25 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
   Widget build(BuildContext context) {
     controller.context = context;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.grey50,
       appBar: AppBar(
         backgroundColor: AppColors.blue400,
+        automaticallyImplyLeading: false,
         title: Text(
           TranslationConstants.addNewPassword.tr,
           style: ThemeText.bodySemibold.colorWhite.s16,
         ),
-        actions: [
-          GestureDetector(
-            onTap: controller.handleSave,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
-              child: Center(
-                  child: AppImageWidget(
-                asset: Assets.images.svg.icAdd,
-                color: AppColors.white,
-                size: AppDimens.space_32,
-              )
-                  // Text(
-                  //   TranslationConstants.save.tr,
-                  //   style: ThemeText.bodyMedium.colorWhite,
-                  // ),
-                  ),
-            ),
-          )
-        ],
       ),
-
-      // bottomNavigationBar: ConfirmWidget(
-      //   firstOnTap: controller.handleSave,
-      //   firstText: TranslationConstants.save,
-      // ),
+      bottomNavigationBar: Obx(
+        () => ConfirmWidget(
+          firstOnTap: () => controller.handleSave(),
+          firstText: TranslationConstants.save.tr,
+          secondOnTap: () => Get.back(),
+          secondText: TranslationConstants.cancel.tr,
+          activeFirst: controller.buttonEnable.value,
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.all(AppDimens.space_16),
         child: SingleChildScrollView(
@@ -55,8 +44,6 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                  // left: AppDimens.space_16,
-                  //  top: AppDimens.space_16,
                   bottom: AppDimens.space_12,
                 ),
                 child: Text(
@@ -64,62 +51,64 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
                   style: ThemeText.bodyMedium.grey600Color,
                 ),
               ),
-              AppTouchable(
-                alignment: Alignment.centerLeft,
-                onPressed: () {},
-                //controller.onPressPickLocationOrApp,
-                backgroundColor: AppColors.white,
-                width: Get.width,
-                padding: EdgeInsets.all(AppDimens.space_16),
-                child: Row(
-                  children: [
-                    Text(
-                      TranslationConstants.set.tr,
-                      style: ThemeText.bodyRegular,
-                      textAlign: TextAlign.start,
-                    ),
-                    Spacer()
-                  ],
+              Obx(
+                () => AppTouchable(
+                  alignment: Alignment.centerLeft,
+                  onPressed: () async =>
+                      await controller.onPressPickLocationOrApp(),
+                  backgroundColor: AppColors.white,
+                  width: Get.width,
+                  padding: EdgeInsets.all(AppDimens.space_16),
+                  child: Row(
+                    children: _getSignInLocation(),
+                  ),
                 ),
               ),
-              SizedBox(
-                height: AppDimens.space_12,
-              ),
-              Obx(
-                () => AppTextField(
-                  // prefixIcon: AppImageWidget(
-                  //   fit: BoxFit.scaleDown,
-                  //   asset: Assets.images.svg.icMessage,
-                  //   color: controller.userIdHasFocus.value
-                  //       ? AppColors.blue400
-                  //       : AppColors.grey,
-                  // ),
-                  labelText: TranslationConstants.userId.tr,
-                  hintText: TranslationConstants.userId.tr,
-                  controller: controller.userIdController,
-                  keyboardType: TextInputType.name,
-                  errorText: controller.userIdValidate.value,
-                  onChangedText: (value) => controller.onChangedUserId(),
-                  onTap: () => controller.onTapUserIdTextField(),
-                  textInputAction: TextInputAction.next,
-                  onEditingComplete: () => controller.onEditingCompleteUserId(),
-                  focusNode: controller.userIdFocusNode,
-                  borderColor: AppColors.white,
-                  borderRadius: AppDimens.space_12,
+              Padding(
+                padding: EdgeInsets.only(
+                  top: AppDimens.space_16,
+                  bottom: AppDimens.space_12,
+                ),
+                child: Text(
+                  TranslationConstants.accountInformation.tr,
+                  style: ThemeText.bodyMedium.grey600Color,
                 ),
               ),
-              SizedBox(
-                height: AppDimens.space_12,
-              ),
-              Obx(
-                () => AppTextField(
-                  // prefixIcon: AppImageWidget(
-                  //   fit: BoxFit.scaleDown,
-                  //   asset: Assets.images.svg.icPassword,
-                  //   color: controller.pwdHasFocus.value
-                  //       ? AppColors.blue400
-                  //       : AppColors.grey,
-                  // ),
+              _buildAccount()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAccount() {
+    return Column(
+      children: [
+        Obx(
+          () => AppTextField(
+            labelText: TranslationConstants.userId.tr,
+            hintText: TranslationConstants.userId.tr,
+            controller: controller.userIdController,
+            keyboardType: TextInputType.name,
+            errorText: controller.userIdValidate.value,
+            onChangedText: (value) => controller.onChangedUserId(),
+            textInputAction: TextInputAction.next,
+            onEditingComplete: () => FocusScope.of(controller.context)
+                .requestFocus(controller.passwordFocusNode),
+            focusNode: controller.userIdFocusNode,
+            borderColor: AppColors.white,
+            borderRadius: AppDimens.space_12,
+          ),
+        ),
+        SizedBox(
+          height: AppDimens.space_12,
+        ),
+        Row(
+          children: [
+            Obx(
+              () => Expanded(
+                child: AppTextField(
                   suffixIcon: AppTouchable(
                     onPressed: controller.onChangedShowPassword,
                     child: AppImageWidget(
@@ -127,11 +116,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
                       asset: controller.showPassword.value
                           ? Assets.images.svg.icEyeSlash
                           : Assets.images.svg.icEye,
-                      color:
-                          // controller.pwdHasFocus.value
-                          //     ? AppColors.blue400
-                          //     :
-                          AppColors.grey,
+                      color: AppColors.grey,
                     ),
                   ),
                   labelText: TranslationConstants.password.tr,
@@ -140,33 +125,95 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
                   errorText: controller.passwordValidate.value,
                   obscureText: !(controller.showPassword.value),
                   onChangedText: (value) => controller.onChangedPwd(),
-                  onTap: () => controller.onTapPwdTextField(),
                   textInputAction: TextInputAction.done,
-                  onEditingComplete: () => controller.onEditingCompletePwd(),
+                  onEditingComplete: () =>
+                      FocusScope.of(controller.context).unfocus(),
                   focusNode: controller.passwordFocusNode,
                   borderColor: AppColors.white,
                   borderRadius: AppDimens.space_12,
                 ),
               ),
-              SizedBox(
-                height: AppDimens.space_12,
+            ),
+            AppTouchable(
+              margin: EdgeInsets.only(left: AppDimens.space_16),
+              onPressed: () async =>
+                  await controller.onPressedGeneratePassword(),
+              child: AppImageWidget(
+                fit: BoxFit.scaleDown,
+                asset: Assets.images.svg.icGenerator,
+                color: AppColors.grey,
               ),
-              AppTextField(
-                labelText: TranslationConstants.note.tr,
-                hintText: TranslationConstants.noteOptional.tr,
-                controller: controller.noteController,
-                onTap: () => controller.onTapNoteTextField(),
-                textInputAction: TextInputAction.newline,
-                keyboardType: TextInputType.multiline,
-                onEditingComplete: () => controller.onEditingCompleteNote(),
-                focusNode: controller.noteFocusNode,
-                borderColor: AppColors.white,
-                borderRadius: AppDimens.space_12,
-              ),
-            ],
-          ),
+            )
+          ],
         ),
-      ),
+        Obx(
+          () => controller.showPasswordStrengthChecker.value
+              ? PasswordStrengthChecker(
+                  passwordStrength: controller.passwordStrength.value)
+              : const SizedBox.shrink(),
+        ),
+        SizedBox(
+          height: AppDimens.space_12,
+        ),
+        AppTextField(
+          labelText: TranslationConstants.note.tr,
+          hintText: TranslationConstants.noteOptional.tr,
+          controller: controller.noteController,
+          textInputAction: TextInputAction.newline,
+          keyboardType: TextInputType.multiline,
+          onEditingComplete: () => FocusScope.of(controller.context).unfocus(),
+          focusNode: controller.noteFocusNode,
+          borderColor: AppColors.white,
+          borderRadius: AppDimens.space_12,
+        ),
+      ],
     );
+  }
+
+  List<Widget> _getSignInLocation() {
+    List<Widget> item = [];
+    if (!isNullEmpty(controller.selectedApp.value)) {
+      item.addAll(
+        [
+          AppImageWidget(
+            bytes: controller.selectedApp.value!.icon!,
+            padding: EdgeInsets.all(AppDimens.space_2),
+            backgroundColor: AppColors.white,
+            size: AppDimens.space_36,
+            margin: EdgeInsets.all(AppDimens.space_4),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          SizedBox(
+            width: AppDimens.space_16,
+          ),
+          Expanded(
+            child: Text(
+              controller.selectedApp.value?.name ?? '',
+              style: ThemeText.bodyRegular,
+              textAlign: TextAlign.start,
+            ),
+          ),
+        ],
+      );
+    } else if (!isNullEmpty(controller.selectedUrl.value)) {
+      item.addAll([
+        Text(
+          controller.selectedUrl.value,
+          style: ThemeText.bodyRegular,
+          textAlign: TextAlign.start,
+        ),
+        const Spacer(),
+      ]);
+    } else {
+      item.addAll([
+        Text(
+          TranslationConstants.set.tr,
+          style: ThemeText.bodyRegular,
+          textAlign: TextAlign.start,
+        ),
+        const Spacer(),
+      ]);
+    }
+    return item;
   }
 }

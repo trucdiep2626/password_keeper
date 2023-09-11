@@ -125,7 +125,7 @@ class AppTextFieldState extends State<AppTextField> {
         Container(
           //  height: 48.h,
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: widget.backgroundColor ?? AppColors.white,
             borderRadius: widget.isUnderline
                 ? null
                 : BorderRadius.circular(widget.borderRadius ?? 5),

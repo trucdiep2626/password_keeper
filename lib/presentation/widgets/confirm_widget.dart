@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
+import 'package:password_keeper/presentation/widgets/export.dart';
 
 class ConfirmWidget extends StatelessWidget {
   const ConfirmWidget({
@@ -19,30 +21,37 @@ class ConfirmWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        secondText == null
-            ? const SizedBox.shrink()
-            : GestureDetector(
-                onTap: secondOnTap,
-                child: Expanded(
-                  child: Text(
-                    secondText ?? '',
-                    style: ThemeText.bodyMedium,
+    return SizedBox(
+      width: double.infinity,
+      child: Row(
+        children: [
+          secondText == null
+              ? const SizedBox.shrink()
+              : Expanded(
+                  child: AppTouchable(
+                    padding: EdgeInsets.symmetric(vertical: AppDimens.space_16),
+                    onPressed: secondOnTap,
+                    child: Text(
+                      secondText ?? '',
+                      style: ThemeText.bodySemibold.blue600Color,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
+          Expanded(
+            child: AppTouchable(
+              padding: EdgeInsets.symmetric(vertical: AppDimens.space_16),
+              onPressed: activeFirst ? firstOnTap : null,
+              child: Text(
+                firstText,
+                style: ThemeText.bodySemibold.copyWith(
+                    color: activeFirst ? AppColors.blue600 : AppColors.grey400),
+                textAlign: TextAlign.center,
               ),
-        GestureDetector(
-          onTap: activeFirst ? firstOnTap : null,
-          child: Expanded(
-            child: Text(
-              firstText ?? '',
-              style: ThemeText.bodyMedium.copyWith(
-                  color: activeFirst ? AppColors.black : AppColors.grey600),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

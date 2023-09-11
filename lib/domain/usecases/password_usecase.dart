@@ -1,6 +1,7 @@
 import 'package:password_keeper/data/password_repository.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
+import 'package:password_keeper/domain/models/password_model.dart';
 
 class PasswordUseCase {
   final PasswordRepository passwordRepository;
@@ -67,5 +68,27 @@ class PasswordUseCase {
   Future<GeneratedPasswordItem?> getLatestGeneratedHistory(
       {required String userId}) async {
     return await passwordRepository.getLatestGeneratedHistory(userId: userId);
+  }
+
+  Future<void> addPasswordItem({
+    required String userId,
+    required PasswordItem passwordItem,
+  }) async {
+    return await passwordRepository.addPasswordItem(
+      userId: userId,
+      passwordItem: passwordItem,
+    );
+  }
+
+  Future<List<PasswordItem>> getPasswordList({
+    required String userId,
+    PasswordItem? lastItem,
+    required int pageSize,
+  }) async {
+    return await passwordRepository.getPasswordList(
+      userId: userId,
+      pageSize: pageSize,
+      lastItem: lastItem,
+    );
   }
 }

@@ -83,6 +83,7 @@ class TranslationConstants {
   static const String notYou = "not_you";
   static const String enterMasterPassword = "enter_master_password";
   static const String unlockBiometric = "unlock_biometric";
+  static const String wrongMasterPassword = "wrong_master_password";
 
   //verify email
   static const String verifyEmail = "verify_email";
@@ -145,4 +146,5 @@ class TranslationConstants {
   static const String enterWebAddr = "enter_web_addr";
   static const String apps = "apps";
   static const String signInLocation = "sign_in_location";
+  static const String addPasswordSuccessful = "add_password_successful";
 }
