@@ -49,7 +49,6 @@ class CreateMasterPasswordScreen
               SizedBox(
                 height: AppDimens.space_36,
               ),
-
               Obx(
                 () => AppTextField(
                   prefixIcon: AppImageWidget(
@@ -76,7 +75,6 @@ class CreateMasterPasswordScreen
                   errorText: controller.masterPwdValidate.value,
                   obscureText: !(controller.showMasterPwd.value),
                   onChangedText: (value) => controller.onChangedPwd(),
-                  onTap: () => controller.onTapPwdTextField(),
                   textInputAction: TextInputAction.next,
                   onEditingComplete: () => controller.onEditingCompletePwd(),
                   focusNode: controller.masterPwdFocusNode,
@@ -88,7 +86,6 @@ class CreateMasterPasswordScreen
                         passwordStrength: controller.passwordStrength.value)
                     : const SizedBox.shrink(),
               ),
-
               SizedBox(
                 height: AppDimens.space_8,
               ),
@@ -118,7 +115,6 @@ class CreateMasterPasswordScreen
                   errorText: controller.confirmMasterPwdValidate.value,
                   obscureText: !(controller.showConfirmMasterPwd.value),
                   onChangedText: (value) => controller.onChangedConfirmPwd(),
-                  onTap: () => controller.onTapConfirmPwdTextField(),
                   textInputAction: TextInputAction.next,
                   onEditingComplete: () =>
                       controller.onEditingCompleteConfirmPwd(),
@@ -128,18 +124,15 @@ class CreateMasterPasswordScreen
               SizedBox(
                 height: AppDimens.space_8,
               ),
-              //Obx(() =>
               AppTextField(
                 hintText: TranslationConstants.masterPasswordHint.tr,
                 controller: controller.masterPwdHintController,
-                onTap: () => controller.onTapMasterPwdHintTextField(),
                 textInputAction: TextInputAction.newline,
                 keyboardType: TextInputType.multiline,
                 onEditingComplete: () =>
                     controller.onEditingCompleteMasterPwdHint(),
                 focusNode: controller.masterPwdHintFocusNode,
               ),
-              //  ),
               SizedBox(
                 height: AppDimens.space_4,
               ),

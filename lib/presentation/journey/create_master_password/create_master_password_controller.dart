@@ -128,22 +128,17 @@ class CreateMasterPasswordController extends GetxController
         Get.offAllNamed(AppRoutes.verifyMasterPassword);
       } catch (e) {
         debugPrint(e.toString());
-        showTopSnackBarError(context, TranslationConstants.unknownError.tr);
+        if (Get.context != null) {
+          showTopSnackBarError(
+              Get.context!, TranslationConstants.unknownError.tr);
+        }
       } finally {
         rxLoadedButton.value = LoadedType.finish;
       }
     }
   }
 
-  void onTapPwdTextField() {
-    confirmMasterPwdHasFocus.value = false;
-    masterPwdHasFocus.value = true;
-    masterPwdHintHasFocus.value = false;
-  }
-
   void onEditingCompletePwd() {
-    confirmMasterPwdHasFocus.value = true;
-    masterPwdHasFocus.value = false;
     FocusScope.of(context).requestFocus(confirmMasterPwdFocusNode);
   }
 
@@ -164,33 +159,15 @@ class CreateMasterPasswordController extends GetxController
     confirmMasterPwdValidate.value = '';
   }
 
-  void onTapConfirmPwdTextField() {
-    masterPwdHasFocus.value = false;
-    masterPwdHintHasFocus.value = false;
-    confirmMasterPwdHasFocus.value = true;
-  }
-
   void onEditingCompleteConfirmPwd() {
-    confirmMasterPwdHasFocus.value = false;
-    masterPwdHintHasFocus.value = true;
     FocusScope.of(context).requestFocus(masterPwdHintFocusNode);
   }
 
   void onEditingCompleteMasterPwdHint() {
-    masterPwdHintHasFocus.value = false;
     FocusScope.of(context).unfocus();
   }
 
-  void onTapMasterPwdHintTextField() {
-    masterPwdHasFocus.value = false;
-    masterPwdHintHasFocus.value = true;
-    confirmMasterPwdHasFocus.value = false;
-  }
-
   void onPressedRegister() {
-    masterPwdHasFocus.value = false;
-    masterPwdHintHasFocus.value = false;
-    confirmMasterPwdHasFocus.value = false;
     if (buttonEnable.value) {
       postRegister();
     }

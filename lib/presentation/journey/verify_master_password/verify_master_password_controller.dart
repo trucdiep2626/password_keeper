@@ -126,13 +126,22 @@ class VerifyMasterPasswordController extends GetxController
         //     message: TranslationConstants..tr,
         //     type: SnackBarType.done);
         Get.offAllNamed(AppRoutes.main);
+      } else {
+        // if (Get.context != null) {
+        //   showTopSnackBarError(
+        //       Get.context!, TranslationConstants.loginError.tr);
+        // }
+        //
+        // } else {
+        //   debugPrint('đăng nhập thất bại');
+        errorText.value = TranslationConstants.loginError.tr;
       }
 
       //    }
     } else {
-      if (Get.context != null) {
-        showTopSnackBarError(Get.context!, TranslationConstants.loginError.tr);
-      }
+      // if (Get.context != null) {
+      //   showTopSnackBarError(Get.context!, TranslationConstants.loginError.tr);
+      // }
       //
       // } else {
       //   debugPrint('đăng nhập thất bại');

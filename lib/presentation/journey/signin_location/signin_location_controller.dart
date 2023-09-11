@@ -13,16 +13,24 @@ class SignInLocationController extends GetxController with MixinController {
 
   TextEditingController webAddrController = TextEditingController();
 
-  void onEditingCompleteWebAddr() {}
-
   Future<void> getAllInstalledApps() async {
+    rxLoadedLocation.value = LoadedType.start;
     try {
       List<AppInfo> installedApps =
           await InstalledApps.getInstalledApps(true, true);
       apps.value = [...installedApps];
     } catch (e) {
       showTopSnackBarError(context, TranslationConstants.unknownError);
+    } finally {
+      rxLoadedLocation.value = LoadedType.finish;
     }
+  }
+
+  void saveSignInLocation({AppInfo? appInfo, String? url}) {
+    Get.back(result: {
+      'app': appInfo,
+      'url': url,
+    });
   }
 
   @override

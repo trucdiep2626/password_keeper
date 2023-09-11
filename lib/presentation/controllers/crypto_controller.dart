@@ -552,7 +552,7 @@ class CryptoController extends GetxController with MixinController {
       decEncKey = await decryptToBytes(encString: encKeyCipher, key: key);
     } else if (encKeyCipher.encryptionType ==
         EncryptionType.aesCbc256HmacSha256B64) {
-      var newKey = await stretchKey(key!);
+      var newKey = await stretchKey(key);
       decEncKey = await decryptToBytes(encString: encKeyCipher, key: newKey);
     } else {
       throw Exception("Unsupported encKey type.");

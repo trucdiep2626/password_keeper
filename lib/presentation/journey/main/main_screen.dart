@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
+import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/home/home_screen.dart';
@@ -15,16 +16,16 @@ class MainScreen extends GetView<MainController> {
 
   final List<String> titles = [
     TranslationConstants.home.tr,
-    TranslationConstants.passwords.tr,
-    TranslationConstants.home.tr,
+    //  TranslationConstants.passwords.tr,
+    //  TranslationConstants.home.tr,
     TranslationConstants.generator.tr,
     TranslationConstants.menu.tr,
   ];
 
   final List<SvgGenImage> icons = [
     Assets.images.svg.icHome,
-    Assets.images.svg.icPassword,
-    Assets.images.svg.icAdd,
+    //  Assets.images.svg.icPassword,
+    // Assets.images.svg.icAdd,
     Assets.images.svg.icGenerator,
     Assets.images.svg.icMenu,
   ];
@@ -43,7 +44,7 @@ class MainScreen extends GetView<MainController> {
           borderRadius: BorderRadius.circular(0),
         ),
         // height: 70.sp,
-        width: Get.width / 5,
+        width: Get.width / 3,
         padding: EdgeInsets.only(
           top: AppDimens.space_12,
           bottom: MediaQuery.of(context).padding.bottom + AppDimens.space_12,
@@ -89,42 +90,40 @@ class MainScreen extends GetView<MainController> {
                 asset: icons[1],
                 isSelected: controller.rxCurrentNavIndex.value == 1,
                 onPressed: () => controller.onChangedNav(1)),
-            SizedBox(
-              width: Get.width / 5,
-            ),
+            // SizedBox(
+            //   width: Get.width / 5,
+            // ),
             _buildBottomNavigationItemWidget(context,
-                title: titles[3],
-                asset: icons[3],
+                title: titles[2],
+                asset: icons[2],
                 isSelected: controller.rxCurrentNavIndex.value == 3,
-                onPressed: () => controller.onChangedNav(3)),
-            _buildBottomNavigationItemWidget(context,
-                title: titles[4],
-                asset: icons[4],
-                isSelected: controller.rxCurrentNavIndex.value == 4,
-                onPressed: () => controller.onChangedNav(4))
+                onPressed: () => controller.onChangedNav(2)),
+            // _buildBottomNavigationItemWidget(context,
+            //     title: titles[4],
+            //     asset: icons[4],
+            //     isSelected: controller.rxCurrentNavIndex.value == 4,
+            //     onPressed: () => controller.onChangedNav(4))
           ],
         );
       },
     );
   }
 
+  final List<Widget> pages = [
+    const HomeScreen(),
+    const PasswordGeneratorScreen(),
+    const HomeScreen(),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final List<Widget> pages = [
-      HomeScreen(),
-      HomeScreen(),
-      HomeScreen(),
-      PasswordGeneratorScreen(),
-      HomeScreen(),
-    ];
-
     return Scaffold(
       backgroundColor: AppColors.grey100,
       body: Obx(() => pages[controller.rxCurrentNavIndex.value]),
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         shape: const CircularNotchedRectangle(),
-        notchMargin: 5,
+        notchMargin: 3,
         child: _buildBottomNavigationBar(context),
       ),
       floatingActionButton: Visibility(
@@ -132,22 +131,23 @@ class MainScreen extends GetView<MainController> {
         child: Container(
           width: Get.width / 5,
           decoration: BoxDecoration(
-              color: AppColors.blue400,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                    color: AppColors.black.withOpacity(0.2),
-                    offset: const Offset(0.5, 0.5),
-                    blurRadius: 3,
-                    spreadRadius: 1)
-              ]),
+            color: AppColors.blue400,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                  color: AppColors.black.withOpacity(0.2),
+                  offset: const Offset(0.5, 0.5),
+                  blurRadius: 3,
+                  spreadRadius: 1)
+            ],
+          ),
           child: AppTouchable(
             width: Get.width / 5,
             borderRadius:
                 BorderRadius.circular(Get.width / 5 - AppDimens.space_36),
-            onPressed: () => controller.onChangedNav(2),
+            onPressed: () => Get.toNamed(AppRoutes.addEditPassword),
             child: AppImageWidget(
-              asset: icons[2],
+              asset: Assets.images.svg.icAdd,
               // height: AppDimens.space_20,
               color: AppColors.white,
               size: Get.width / 5 - AppDimens.space_36,
@@ -160,7 +160,7 @@ class MainScreen extends GetView<MainController> {
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

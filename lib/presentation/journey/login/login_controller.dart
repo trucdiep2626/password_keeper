@@ -66,34 +66,34 @@ class LoginController extends GetxController with MixinController {
     if (emailValidate.value.isEmpty && passwordValidate.value.isEmpty) {
       rxLoadedButton.value = LoadedType.start;
 
-      try {
-        final result = await accountUsecase.loginWithEmail(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim());
+      //   try {
+      final result = await accountUsecase.loginWithEmail(
+          email: emailController.text.trim(),
+          password: passwordController.text.trim());
 
-        if (result != null) {
-          debugPrint('đăng nhập thành công');
-          await accountUsecase.setUserCredential(authCredential: result);
+      if (result != null) {
+        debugPrint('đăng nhập thành công');
+        await accountUsecase.setUserCredential(authCredential: result);
 
-          if (user?.emailVerified ?? false) {
-            final profile =
-                await accountUsecase.getProfile(userId: user?.uid ?? '');
+        if (user?.emailVerified ?? false) {
+          final profile =
+              await accountUsecase.getProfile(userId: user?.uid ?? '');
 
-            if (profile != null) {
-              Get.toNamed(AppRoutes.verifyMasterPassword);
-            } else {
-              Get.toNamed(AppRoutes.createMasterPassword);
-            }
+          if (profile != null) {
+            Get.toNamed(AppRoutes.verifyMasterPassword);
           } else {
-            Get.toNamed(AppRoutes.verifyEmail);
+            Get.toNamed(AppRoutes.createMasterPassword);
           }
+        } else {
+          Get.toNamed(AppRoutes.verifyEmail);
         }
-      } on FirebaseAuthException catch (e) {
-        handleFirebaseException(
-          code: e.code,
-          isSignIn: true,
-        );
       }
+      // } on FirebaseAuthException catch (e) {
+      //   handleFirebaseException(
+      //     code: e.code,
+      //     isSignIn: true,
+      //   );
+      // }
     }
 
     rxLoadedButton.value = LoadedType.finish;

@@ -32,7 +32,7 @@ class LogInScreen extends GetView<LoginController> {
       padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
       child: SingleChildScrollView(
         child: SizedBox(
-          height: Get.height,
+          //  height: Get.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -158,7 +158,10 @@ class LogInScreen extends GetView<LoginController> {
               AppLoginSocialWidget(
                   icon: Assets.images.svg.icGoogle,
                   onTap: () async => await controller.onTapGoogleSignIn()),
-              const Spacer(),
+              //      const Spacer(),
+              SizedBox(
+                height: AppDimens.space_12,
+              ),
               AppTouchable(
                   onPressed: () => controller.onPressForgotPassword(),
                   child: Text(
