@@ -270,9 +270,6 @@ class PasswordGenerationController extends GetxController with MixinController {
       }
     }
 
-    /// The line `return decryptedHistory;` is returning the decrypted history of
-    /// generated passwords. It is returning a list of `GeneratedPasswordItem`
-    /// objects with the decrypted password and the corresponding creation date.
     return decryptedHistory;
   }
 

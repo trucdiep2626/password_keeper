@@ -7,6 +7,7 @@ class AppDimens {
   static double appBarHeight = height_50;
 
   /// Radius
+  static const double radius_4 = 4;
   static const double radius_12 = 12;
   static const double radius_16 = 16;
 

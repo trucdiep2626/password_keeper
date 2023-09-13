@@ -8,15 +8,18 @@ enum SnackBarType { done, error, warning }
 enum NetworkMethod { get, post, delete, path, put }
 
 enum PasswordStrengthLevel {
-  veryWeak(color: AppColors.red, lineLength: 1 / 4),
-  weak(color: AppColors.orange, lineLength: 2 / 4),
-  good(color: AppColors.blue, lineLength: 3 / 4),
-  strong(color: AppColors.green, lineLength: 4 / 4);
+  veryWeak(id: 0, color: AppColors.red, lineLength: 1 / 4),
+  weak(id: 1, color: AppColors.orange, lineLength: 2 / 4),
+  good(id: 2, color: AppColors.blue, lineLength: 3 / 4),
+  strong(id: 3, color: AppColors.green, lineLength: 4 / 4);
 
   const PasswordStrengthLevel({
+    required this.id,
     required this.color,
     required this.lineLength,
   });
+
+  final int id;
   final Color color;
   final double lineLength;
 }

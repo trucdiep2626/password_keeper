@@ -11,6 +11,9 @@ const enString = {
   "welcome_back": "Welcome back!",
   "unlock": "Unlock",
   "continue": "Continue",
+  "search": "Search",
+  "try_again": "Try again",
+  "continue_anyway": "Continue anyway",
 
   //account
   "contact_information": "Contact Information",
@@ -78,7 +81,8 @@ const enString = {
   "internet_restore": "Internet connection restored.",
   "password_format_error":
       "Your password must be at least 8 characters long and include a combination of uppercase and lowercase letters, numbers, and special characters.",
-  "weak_password_error": "Please choose a stronger password.",
+  "weak_password_error":
+      "Your password is too weak. Please retype a stronger password.",
   "existing_email": "An account with this email address already exists.",
 
   //home
@@ -124,5 +128,12 @@ const enString = {
   "enter_web_addr": "Enter web address or other info",
   "apps": "Apps",
   "sign_in_location": "Sign-in location",
-  "add_password_successful": "Password was added successfully."
+  "add_password_successful": "Password was added successfully.",
+
+//password list
+  "password_list_empty":
+      "You have not added any password to your list yet.\nClick on 'Add' button to get started.",
+  "weak_password_warning": "Weak password warning",
+  "weak_password_warning_message":
+      "Sorry, but the password you've entered is a bit too weak. For better security, consider using a mix of uppercase, lowercase, letters, numbers, and special characters. Would you like to give it another shot?",
 };

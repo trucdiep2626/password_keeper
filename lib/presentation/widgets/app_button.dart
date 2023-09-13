@@ -17,6 +17,7 @@ class AppButton extends StatelessWidget {
   final double? width;
   final Function()? onPressed;
   final bool enable;
+  final titleFontSize;
 
   const AppButton({
     Key? key,
@@ -25,6 +26,7 @@ class AppButton extends StatelessWidget {
     this.loaded = LoadedType.finish,
     this.backgroundColor = AppColors.blue400,
     this.titleColor = AppColors.white,
+    this.titleFontSize,
     this.width,
     this.onPressed,
   }) : super(key: key);
@@ -88,8 +90,10 @@ class AppButton extends StatelessWidget {
                 ? const SizedBox.shrink()
                 : Text(
                     title,
-                    style:
-                        ThemeText.bodySemibold.s16.copyWith(color: titleColor),
+                    style: ThemeText.bodySemibold.copyWith(
+                      color: titleColor,
+                      fontSize: titleFontSize ?? AppDimens.space_16,
+                    ),
                   ),
           ),
         ),

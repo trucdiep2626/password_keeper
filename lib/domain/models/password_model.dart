@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:azlistview/azlistview.dart';
+import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/domain/models/encrypted_string.dart';
 
-class PasswordItem {
+class PasswordItem extends ISuspensionBean {
   String? id;
   String? url;
   String? appName;
@@ -13,6 +16,8 @@ class PasswordItem {
   String? note;
   int? createdAt;
   int? updatedAt;
+  PasswordStrengthLevel? passwordStrengthLevel;
+  String? tagIndex;
 
   PasswordItem({
     this.id,
@@ -24,6 +29,8 @@ class PasswordItem {
     this.appName,
     this.createdAt,
     this.updatedAt,
+    this.passwordStrengthLevel,
+    this.tagIndex,
   });
 
   PasswordItem.fromJson(Map<String, dynamic> json) {
@@ -43,10 +50,12 @@ class PasswordItem {
 
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    passwordStrengthLevel = PasswordHelper.getPasswordStrengthFromId(
+        json['password_strength_level']);
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
 
     if (password != null) {
       data['password'] = password!.encryptedString;
@@ -60,6 +69,10 @@ class PasswordItem {
     }
     data['updated_at'] = updatedAt;
     data['created_at'] = createdAt;
+    data['password_strength_level'] = passwordStrengthLevel?.id;
     return data;
   }
+
+  @override
+  String getSuspensionTag() => tagIndex ?? '';
 }

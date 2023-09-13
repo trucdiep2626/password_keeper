@@ -604,7 +604,11 @@ class CryptoController extends GetxController with MixinController {
   }
 
   Future<String?> decryptToUtf8(
-      {required EncryptedString encString, SymmetricCryptoKey? key}) async {
+      {EncryptedString? encString, SymmetricCryptoKey? key}) async {
+    if (encString == null) {
+      return null;
+    }
+
     return await aesDecryptToUtf8(
         encType: encString.encryptionType,
         data: encString.data,

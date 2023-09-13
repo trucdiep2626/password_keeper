@@ -43,6 +43,9 @@ class TranslationConstants {
   static const String welcomBack = "welcome_back";
   static const String unlock = "unlock";
   static const String continueButton = "continue";
+  static const String search = "search";
+  static const String continueAnyway = "continue_anyway";
+  static const String tryAgain = "try_again";
 
   //account
   static const String contactInformation = "contact_information";
@@ -147,4 +150,10 @@ class TranslationConstants {
   static const String apps = "apps";
   static const String signInLocation = "sign_in_location";
   static const String addPasswordSuccessful = "add_password_successful";
+
+  //password list
+  static const String passwordListEmpty = "password_list_empty";
+  static const String weakPasswordWarning = "weak_password_warning";
+  static const String weakPasswordWarningMessage =
+      "weak_password_warning_message";
 }

@@ -91,4 +91,8 @@ class PasswordUseCase {
       lastItem: lastItem,
     );
   }
+
+  Future<int> getPasswordListLength({required String userId}) async {
+    return await passwordRepository.getPasswordListLength(userId: userId);
+  }
 }

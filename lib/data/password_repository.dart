@@ -183,14 +183,14 @@ class PasswordRepository {
             .collection(AppConfig.userCollection)
             .doc(userId)
             .collection(AppConfig.passwordsCollection)
-            .orderBy('created_at', descending: true)
+            //  .orderBy('app_name', descending: false)
             .limit(pageSize)
             .get()
         : await db
             .collection(AppConfig.userCollection)
             .doc(userId)
             .collection(AppConfig.passwordsCollection)
-            .orderBy('created_at', descending: true)
+            //  .orderBy('app_name', descending: false)
             .startAfter([lastItem.createdAt])
             .limit(pageSize)
             .get();
@@ -209,5 +209,15 @@ class PasswordRepository {
 
       return passwords;
     }
+  }
+
+  Future<int> getPasswordListLength({required String userId}) async {
+    final response = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.passwordsCollection)
+        .get();
+
+    return response.docs.length;
   }
 }

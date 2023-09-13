@@ -14,6 +14,8 @@ import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
+import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
+import 'package:password_keeper/presentation/widgets/app_dialog.dart';
 import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dart';
 
 class AddEditPasswordController extends GetxController with MixinController {
@@ -48,6 +50,8 @@ class AddEditPasswordController extends GetxController with MixinController {
   PasswordUseCase passwordUseCase;
 
   RxDouble bottomPadding = 0.0.obs;
+
+  RxBool ignoreWeakPassword = false.obs;
 
   final _cryptoController = Get.find<CryptoController>();
 
@@ -87,6 +91,34 @@ class AddEditPasswordController extends GetxController with MixinController {
       return;
     }
 
+    //show weak password warning
+    if ((passwordStrength.value == PasswordStrengthLevel.weak ||
+        passwordStrength.value == PasswordStrengthLevel.veryWeak)) {
+      if (Get.context != null) {
+        await showAppDialog(
+          Get.context!,
+          TranslationConstants.weakPasswordWarning.tr,
+          TranslationConstants.weakPasswordWarningMessage.tr,
+          confirmButtonText: TranslationConstants.continueAnyway.tr,
+          messageTextAlign: TextAlign.start,
+          dismissAble: true,
+          confirmButtonCallback: () {
+            ignoreWeakPassword.value = true;
+            Get.back(result: true);
+          },
+          cancelButtonText: TranslationConstants.tryAgain.tr,
+          cancelButtonCallback: () {
+            ignoreWeakPassword.value = false;
+            Get.back(result: false);
+          },
+        );
+      }
+
+      if (!ignoreWeakPassword.value) {
+        return;
+      }
+    }
+
     rxLoadedButton.value = LoadedType.start;
 
     try {
@@ -97,32 +129,33 @@ class AddEditPasswordController extends GetxController with MixinController {
         return;
       }
 
-      try {
-        final passwordItem = PasswordItem(
-          url: selectedUrl.value,
-          appIcon: selectedApp.value?.icon,
-          appName: selectedApp.value?.name,
-          password: encPassword,
-          userId: userIdController.text,
-          note: noteController.text,
-          createdAt: DateTime.now().millisecondsSinceEpoch,
-          updatedAt: DateTime.now().millisecondsSinceEpoch,
-        );
+      final passwordItem = PasswordItem(
+        passwordStrengthLevel: passwordStrength.value,
+        url: selectedUrl.value,
+        appIcon: selectedApp.value?.icon,
+        appName: selectedApp.value?.name,
+        password: encPassword,
+        userId: userIdController.text,
+        note: noteController.text,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        updatedAt: DateTime.now().millisecondsSinceEpoch,
+      );
 
-        final result = await passwordUseCase.addPasswordItem(
-          userId: user?.uid ?? '',
-          passwordItem: passwordItem,
-        );
+      final result = await passwordUseCase.addPasswordItem(
+        userId: user?.uid ?? '',
+        passwordItem: passwordItem,
+      );
 
-        showTopSnackBar(
-          Get.context!,
-          message: TranslationConstants.addPasswordSuccessful.tr,
-          type: SnackBarType.done,
-        );
-        clearData();
-      } catch (e, s) {
-        logger(s.toString());
-      }
+      showTopSnackBar(
+        Get.context!,
+        message: TranslationConstants.addPasswordSuccessful.tr,
+        type: SnackBarType.done,
+      );
+      clearData();
+
+      //refresh password list
+      await Get.find<PasswordListController>().onRefresh();
+      Get.back();
     } catch (e) {
       debugPrint(e.toString());
       if (Get.context != null) {

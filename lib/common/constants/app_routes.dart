@@ -16,6 +16,7 @@ class AppRoutes {
   //password
   static const String signInLocation = '/sign_in_location';
   static const String addEditPassword = '/add_edit_password';
+  static const String passwordList = '/password_list';
 
   //main
   static const String main = '/main';

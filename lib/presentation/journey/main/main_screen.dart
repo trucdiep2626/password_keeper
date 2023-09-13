@@ -6,6 +6,7 @@ import 'package:password_keeper/common/utils/translations/app_translations.dart'
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/home/home_screen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
+import 'package:password_keeper/presentation/journey/password_list/password_list_screen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -16,7 +17,7 @@ class MainScreen extends GetView<MainController> {
 
   final List<String> titles = [
     TranslationConstants.home.tr,
-    //  TranslationConstants.passwords.tr,
+    TranslationConstants.passwords.tr,
     //  TranslationConstants.home.tr,
     TranslationConstants.generator.tr,
     TranslationConstants.menu.tr,
@@ -24,7 +25,7 @@ class MainScreen extends GetView<MainController> {
 
   final List<SvgGenImage> icons = [
     Assets.images.svg.icHome,
-    //  Assets.images.svg.icPassword,
+    Assets.images.svg.icPassword,
     // Assets.images.svg.icAdd,
     Assets.images.svg.icGenerator,
     Assets.images.svg.icMenu,
@@ -44,7 +45,7 @@ class MainScreen extends GetView<MainController> {
           borderRadius: BorderRadius.circular(0),
         ),
         // height: 70.sp,
-        width: Get.width / 3,
+        width: Get.width / 4,
         padding: EdgeInsets.only(
           top: AppDimens.space_12,
           bottom: MediaQuery.of(context).padding.bottom + AppDimens.space_12,
@@ -96,13 +97,13 @@ class MainScreen extends GetView<MainController> {
             _buildBottomNavigationItemWidget(context,
                 title: titles[2],
                 asset: icons[2],
-                isSelected: controller.rxCurrentNavIndex.value == 3,
+                isSelected: controller.rxCurrentNavIndex.value == 2,
                 onPressed: () => controller.onChangedNav(2)),
-            // _buildBottomNavigationItemWidget(context,
-            //     title: titles[4],
-            //     asset: icons[4],
-            //     isSelected: controller.rxCurrentNavIndex.value == 4,
-            //     onPressed: () => controller.onChangedNav(4))
+            _buildBottomNavigationItemWidget(context,
+                title: titles[3],
+                asset: icons[3],
+                isSelected: controller.rxCurrentNavIndex.value == 3,
+                onPressed: () => controller.onChangedNav(3))
           ],
         );
       },
@@ -111,6 +112,7 @@ class MainScreen extends GetView<MainController> {
 
   final List<Widget> pages = [
     const HomeScreen(),
+    const PasswordListScreen(),
     const PasswordGeneratorScreen(),
     const HomeScreen(),
   ];

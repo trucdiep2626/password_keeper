@@ -7,6 +7,7 @@ import 'package:password_keeper/common/injector/bindings/home_binding.dart';
 import 'package:password_keeper/common/injector/bindings/login_binding.dart';
 import 'package:password_keeper/common/injector/bindings/main_binding.dart';
 import 'package:password_keeper/common/injector/bindings/password_generator_binding.dart';
+import 'package:password_keeper/common/injector/bindings/password_list_binding.dart';
 import 'package:password_keeper/common/injector/bindings/register_binding.dart';
 import 'package:password_keeper/common/injector/bindings/signin_location_binding.dart';
 import 'package:password_keeper/common/injector/bindings/splash_binding.dart';
@@ -33,6 +34,7 @@ List<GetPage> myPages = [
   GetPage(name: AppRoutes.main, page: () => MainScreen(), bindings: [
     MainBinding(),
     HomeBinding(),
+    PasswordListBinding(),
     // AddEditPasswordBinding(),
     PasswordGeneratorBinding(),
   ]),
@@ -81,4 +83,9 @@ List<GetPage> myPages = [
     page: () => const PasswordGeneratorScreen(),
     binding: PasswordGeneratorBinding(),
   ),
+  // GetPage(
+  //   name: AppRoutes.passwordList,
+  //   page: () => const PasswordListScreen(),
+  //   binding: PasswordListBinding(),
+  // ),
 ];

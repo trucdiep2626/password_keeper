@@ -20,6 +20,7 @@ import 'package:password_keeper/presentation/journey/login/login_controller.dart
 import 'package:password_keeper/presentation/journey/main/main_controller.dart';
 import 'package:password_keeper/presentation/journey/master_password/master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
+import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_controller.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_controller.dart';
@@ -35,12 +36,15 @@ void configLocator() {
   getIt.registerFactory<SplashController>(
       () => SplashController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<MainController>(() => MainController());
-  getIt.registerFactory<HomeController>(
-      () => HomeController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<PasswordGeneratorController>(() =>
-      PasswordGeneratorController(
-          passwordUseCase: getIt<PasswordUseCase>(),
-          accountUseCase: getIt<AccountUseCase>()));
+  getIt.registerFactory<HomeController>(() => HomeController(
+        accountUsecase: getIt<AccountUseCase>(),
+        passwordUseCase: getIt<PasswordUseCase>(),
+      ));
+  getIt.registerFactory<PasswordGeneratorController>(
+      () => PasswordGeneratorController(
+            passwordUseCase: getIt<PasswordUseCase>(),
+            accountUseCase: getIt<AccountUseCase>(),
+          ));
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<LoginController>(
@@ -49,22 +53,29 @@ void configLocator() {
       CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<MasterPasswordController>(
       () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<VerifyMasterPasswordController>(() =>
-      VerifyMasterPasswordController(
-          accountUsecase: getIt<AccountUseCase>(),
-          localUseCase: getIt<LocalUseCase>()));
+  getIt.registerFactory<VerifyMasterPasswordController>(
+      () => VerifyMasterPasswordController(
+            accountUsecase: getIt<AccountUseCase>(),
+            localUseCase: getIt<LocalUseCase>(),
+          ));
   getIt.registerFactory<VerifyEmailController>(
       () => VerifyEmailController(accountUseCase: getIt<AccountUseCase>()));
-  getIt.registerFactory<GeneratedPasswordHistoryController>(() =>
-      GeneratedPasswordHistoryController(
-          passwordUseCase: getIt<PasswordUseCase>(),
-          accountUseCase: getIt<AccountUseCase>()));
+  getIt.registerFactory<GeneratedPasswordHistoryController>(
+      () => GeneratedPasswordHistoryController(
+            passwordUseCase: getIt<PasswordUseCase>(),
+            accountUseCase: getIt<AccountUseCase>(),
+          ));
   getIt.registerFactory<SignInLocationController>(
       () => SignInLocationController());
-  getIt.registerFactory<AddEditPasswordController>(() =>
-      AddEditPasswordController(
-          passwordUseCase: getIt<PasswordUseCase>(),
-          accountUseCase: getIt<AccountUseCase>()));
+  getIt.registerFactory<AddEditPasswordController>(
+      () => AddEditPasswordController(
+            passwordUseCase: getIt<PasswordUseCase>(),
+            accountUseCase: getIt<AccountUseCase>(),
+          ));
+  getIt.registerFactory<PasswordListController>(() => PasswordListController(
+        passwordUseCase: getIt<PasswordUseCase>(),
+        accountUseCase: getIt<AccountUseCase>(),
+      ));
 
   ///helper
   getIt.registerLazySingleton<CryptoController>(() => CryptoController(
@@ -79,8 +90,9 @@ void configLocator() {
 
   /// UseCases
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(
-      accountRepo: getIt<AccountRepository>(),
-      localRepo: getIt<LocalRepository>()));
+        accountRepo: getIt<AccountRepository>(),
+        localRepo: getIt<LocalRepository>(),
+      ));
   getIt.registerFactory<PasswordUseCase>(
       () => PasswordUseCase(passwordRepository: getIt<PasswordRepository>()));
   getIt.registerFactory<LocalUseCase>(

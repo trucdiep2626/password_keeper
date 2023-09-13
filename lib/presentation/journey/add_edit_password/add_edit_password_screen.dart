@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
+import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
@@ -16,69 +17,76 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.grey50,
-      appBar: AppBar(
-        backgroundColor: AppColors.blue400,
-        automaticallyImplyLeading: false,
-        title: Text(
-          TranslationConstants.addNewPassword.tr,
-          style: ThemeText.bodySemibold.colorWhite.s16,
-        ),
-      ),
-      bottomNavigationBar: Obx(
-        () => ConfirmWidget(
-          firstOnTap: () => controller.handleSave(),
-          firstText: TranslationConstants.save.tr,
-          secondOnTap: () => Get.back(),
-          secondText: TranslationConstants.cancel.tr,
-          activeFirst: controller.buttonEnable.value,
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(AppDimens.space_16),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  bottom: AppDimens.space_12,
-                ),
-                child: Text(
-                  TranslationConstants.signInLocationOrApp.tr,
-                  style: ThemeText.bodyMedium.grey600Color,
-                ),
-              ),
-              Obx(
-                () => AppTouchable(
-                  alignment: Alignment.centerLeft,
-                  onPressed: () async =>
-                      await controller.onPressPickLocationOrApp(),
-                  backgroundColor: AppColors.white,
-                  width: Get.width,
-                  padding: EdgeInsets.all(AppDimens.space_16),
-                  child: Row(
-                    children: _getSignInLocation(),
+    return Stack(
+      children: [
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: AppColors.grey50,
+          appBar: AppBar(
+            backgroundColor: AppColors.blue400,
+            automaticallyImplyLeading: false,
+            title: Text(
+              TranslationConstants.addNewPassword.tr,
+              style: ThemeText.bodySemibold.colorWhite.s16,
+            ),
+          ),
+          bottomNavigationBar: Obx(
+            () => ConfirmWidget(
+              firstOnTap: () => controller.handleSave(),
+              firstText: TranslationConstants.save.tr,
+              secondOnTap: () => Get.back(),
+              secondText: TranslationConstants.cancel.tr,
+              activeFirst: controller.buttonEnable.value,
+            ),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(AppDimens.space_16),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: AppDimens.space_12,
+                    ),
+                    child: Text(
+                      TranslationConstants.signInLocationOrApp.tr,
+                      style: ThemeText.bodyMedium.grey600Color,
+                    ),
                   ),
-                ),
+                  Obx(
+                    () => AppTouchable(
+                      alignment: Alignment.centerLeft,
+                      onPressed: () async =>
+                          await controller.onPressPickLocationOrApp(),
+                      backgroundColor: AppColors.white,
+                      width: Get.width,
+                      padding: EdgeInsets.all(AppDimens.space_16),
+                      child: Row(
+                        children: _getSignInLocation(),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: AppDimens.space_16,
+                      bottom: AppDimens.space_12,
+                    ),
+                    child: Text(
+                      TranslationConstants.accountInformation.tr,
+                      style: ThemeText.bodyMedium.grey600Color,
+                    ),
+                  ),
+                  _buildAccount()
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: AppDimens.space_16,
-                  bottom: AppDimens.space_12,
-                ),
-                child: Text(
-                  TranslationConstants.accountInformation.tr,
-                  style: ThemeText.bodyMedium.grey600Color,
-                ),
-              ),
-              _buildAccount()
-            ],
+            ),
           ),
         ),
-      ),
+        Obx(() => controller.rxLoadedButton.value == LoadedType.start
+            ? const AppLoadingPage()
+            : const SizedBox.shrink()),
+      ],
     );
   }
 

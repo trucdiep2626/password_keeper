@@ -29,4 +29,19 @@ class PasswordHelper {
         return PasswordType.password;
     }
   }
+
+  static PasswordStrengthLevel getPasswordStrengthFromId(int id) {
+    switch (id) {
+      case 0:
+        return PasswordStrengthLevel.veryWeak;
+      case 1:
+        return PasswordStrengthLevel.weak;
+      case 2:
+        return PasswordStrengthLevel.good;
+      case 3:
+        return PasswordStrengthLevel.strong;
+      default:
+        return PasswordStrengthLevel.weak;
+    }
+  }
 }
