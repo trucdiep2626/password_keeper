@@ -131,10 +131,10 @@ class AddEditPasswordController extends GetxController with MixinController {
 
       final passwordItem = PasswordItem(
         passwordStrengthLevel: passwordStrength.value,
-        url: selectedUrl.value,
+        isApp: !isNullEmpty(selectedApp.value?.name),
         appIcon: selectedApp.value?.icon,
-        appName: selectedApp.value?.name,
-        password: encPassword,
+        signInLocation: selectedApp.value?.name ?? selectedUrl.value,
+        password: encPassword.encryptedString,
         userId: userIdController.text,
         note: noteController.text,
         createdAt: DateTime.now().millisecondsSinceEpoch,

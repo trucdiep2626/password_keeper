@@ -14,6 +14,7 @@ const enString = {
   "search": "Search",
   "try_again": "Try again",
   "continue_anyway": "Continue anyway",
+  "edit": "Edit",
 
   //account
   "contact_information": "Contact Information",
@@ -58,7 +59,7 @@ const enString = {
       "Master Password must be at least 12 characters long.",
   "get_master_password_hint": "Get master password hint",
   "not_you": "Not you?",
-  "enter_master_password": "Enter your Master Password to Log in",
+  "enter_master_password": "Enter your Master Password to sign in",
   "unlock_biometric": "Unlock with Face ID/Touch ID",
   "wrong_master_password": "Invalid master password. Try again.",
 
@@ -135,5 +136,18 @@ const enString = {
       "You have not added any password to your list yet.\nClick on 'Add' button to get started.",
   "weak_password_warning": "Weak password warning",
   "weak_password_warning_message":
-      "Sorry, but the password you've entered is a bit too weak. For better security, consider using a mix of uppercase, lowercase, letters, numbers, and special characters. Would you like to give it another shot?",
+      "We noticed your password could be stronger. Would you like to try again with a mix of uppercase, lowercase, numbers, and special characters for added security?",
+
+  //setting
+  "settings": "Settings",
+  "auto_fill_service": "Auto-fill service",
+  "unlock_with_biometrics": "Unlock with Biometrics",
+  "lock": "Lock",
+  "change_master_password": "Change master password",
+
+  //password detail
+  "password_detail":"Password detail",
+  "delete_item":"Detele item",
+  "delete_confirm_message": "Are you sure you want to delete this item?",
+
 };

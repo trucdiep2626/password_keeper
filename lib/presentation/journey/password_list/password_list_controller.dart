@@ -59,7 +59,7 @@ class PasswordListController extends GetxController with MixinController {
           (totalItems - displayedItems) < 10 ? totalItems - displayedItems : 10;
 
       passwords.addAll(result);
-      _handleList();
+    //  _handleList();
     } catch (e) {
       logger(e.toString());
       showTopSnackBarError(context, e.toString());
@@ -68,36 +68,36 @@ class PasswordListController extends GetxController with MixinController {
     }
   }
 
-  void _handleList() {
-    if (passwords.isEmpty) return;
-    for (int i = 0, length = passwords.length; i < length; i++) {
-      String name = passwords[i].appName ?? passwords[i].url ?? '';
-      String tag = name.substring(0, 1).toUpperCase();
-
-      if (RegExp("[A-Z]").hasMatch(tag)) {
-        passwords[i].tagIndex = tag;
-      } else {
-        passwords[i].tagIndex = "#";
-      }
-    }
-
-    passwords.sort((a, b) {
-      String aName = a.appName ?? a.url ?? '';
-      String bName = b.appName ?? b.url ?? '';
-      return aName.toUpperCase().compareTo(bName.toUpperCase());
-    });
-
-    // // A-Z sort.
-    // SuspensionUtil.sortListBySuspensionTag(_contacts);
-    //
-    // // show sus tag.
-    // SuspensionUtil.setShowSuspensionStatus(_contacts);
-    //
-    // // add header.
-    // _contacts.insert(0, ContactInfo(name: 'header', tagIndex: '↑'));
-    //
-    // setState(() {});
-  }
+  // void _handleList() {
+  //   if (passwords.isEmpty) return;
+  //   for (int i = 0, length = passwords.length; i < length; i++) {
+  //     String name = passwords[i].signInLocation ?? passwords[i].url ?? '';
+  //     String tag = name.substring(0, 1).toUpperCase();
+  //
+  //     if (RegExp("[A-Z]").hasMatch(tag)) {
+  //       passwords[i].tagIndex = tag;
+  //     } else {
+  //       passwords[i].tagIndex = "#";
+  //     }
+  //   }
+  //
+  //   passwords.sort((a, b) {
+  //     String aName = a.signInLocation ?? a.url ?? '';
+  //     String bName = b.signInLocation ?? b.url ?? '';
+  //     return aName.toUpperCase().compareTo(bName.toUpperCase());
+  //   });
+  //
+  //   // // A-Z sort.
+  //   // SuspensionUtil.sortListBySuspensionTag(_contacts);
+  //   //
+  //   // // show sus tag.
+  //   // SuspensionUtil.setShowSuspensionStatus(_contacts);
+  //   //
+  //   // // add header.
+  //   // _contacts.insert(0, ContactInfo(name: 'header', tagIndex: '↑'));
+  //   //
+  //   // setState(() {});
+  // }
 
   Future<void> getPasswordListLength() async {
     try {
@@ -117,6 +117,7 @@ class PasswordListController extends GetxController with MixinController {
     pageSize = 10;
     lastItem = null;
     passwords.clear();
+    await getPasswordListLength();
     await getPasswordList();
     await onSearch(searchController.text);
     passwordListController.refreshCompleted();
@@ -128,7 +129,9 @@ class PasswordListController extends GetxController with MixinController {
     if (value.isNotEmpty) {
       List<PasswordItem> resultPassworrdList = [];
       for (PasswordItem passwordItem in passwords) {
-        if ((passwordItem.appName ?? passwordItem.url ?? '')
+        if ((passwordItem.signInLocation  ?? '')
+            .toUpperCase()
+            .contains(value.toUpperCase()) || (passwordItem.userId  ?? '')
             .toUpperCase()
             .contains(value.toUpperCase())) {
           resultPassworrdList.add(passwordItem);

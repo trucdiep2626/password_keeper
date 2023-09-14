@@ -183,14 +183,14 @@ class PasswordRepository {
             .collection(AppConfig.userCollection)
             .doc(userId)
             .collection(AppConfig.passwordsCollection)
-            //  .orderBy('app_name', descending: false)
+              .orderBy('sign_in_location', descending: false)
             .limit(pageSize)
             .get()
         : await db
             .collection(AppConfig.userCollection)
             .doc(userId)
             .collection(AppConfig.passwordsCollection)
-            //  .orderBy('app_name', descending: false)
+              .orderBy('sign_in_location', descending: false)
             .startAfter([lastItem.createdAt])
             .limit(pageSize)
             .get();

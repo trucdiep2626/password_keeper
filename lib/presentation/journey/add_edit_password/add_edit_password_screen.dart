@@ -17,8 +17,9 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Stack(
-      children: [
+    return
+      // Stack(
+      // children: [
         Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: AppColors.grey50,
@@ -82,11 +83,11 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
               ),
             ),
           ),
-        ),
-        Obx(() => controller.rxLoadedButton.value == LoadedType.start
-            ? const AppLoadingPage()
-            : const SizedBox.shrink()),
-      ],
+     //   ),
+      //   Obx(() => controller.rxLoadedButton.value == LoadedType.start
+      //       ? const AppLoadingPage()
+      //       : const SizedBox.shrink()),
+      // ],
     );
   }
 

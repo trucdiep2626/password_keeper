@@ -50,7 +50,7 @@ class AccountRepository {
         .put(HiveKey.userCredentialKey, authCredential?.asMap());
   }
 
-  Future<AuthCredential?> signUpWithEmail({
+  Future<void> signUpWithEmail({
     required String fullname,
     required String email,
     required String password,
@@ -60,25 +60,23 @@ class AccountRepository {
       password: password,
     );
     await user?.updateDisplayName(fullname);
-    return newUser.credential;
   }
 
-  Future<AuthCredential?> loginWithEmail({
+  Future<void> loginWithEmail({
     required String email,
     required String password,
   }) async {
-    final result = await auth.signInWithEmailAndPassword(
+    await auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
-    return result.credential;
   }
 
-  Future<AuthCredential?> loginWithAuthCredential(
-      {required AuthCredential authCredential}) async {
-    final result = await auth.signInWithCredential(authCredential);
-    return result.credential;
-  }
+  // Future<AuthCredential?> loginWithAuthCredential(
+  //     {required AuthCredential authCredential}) async {
+  //   final result = await auth.signInWithCredential(authCredential);
+  //   return result.credential;
+  // }
 
   Future<void> sendEmailVerification() async {
     await auth.currentUser!.sendEmailVerification();

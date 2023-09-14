@@ -143,7 +143,7 @@ class PasswordListScreen extends GetView<PasswordListController> {
           child: ListTile(
             leading: _buildAppIcon(item),
             title: Text(
-              item.appName ?? item.url ?? '',
+              item.signInLocation   ?? '',
               style: ThemeText.bodyMedium,
             ),
             subtitle: Text(
@@ -168,9 +168,9 @@ class PasswordListScreen extends GetView<PasswordListController> {
       );
     }
 
-    final firstLetter = (item.url ?? '').isURL
-        ? (item.url ?? '').split('.').first[0]
-        : (item.url ?? '')[0];
+    final firstLetter = (item.signInLocation ?? '').isURL
+        ? (item.signInLocation ?? '').split('.').first[0]
+        : (item.signInLocation ?? '')[0];
 
     return Container(
       decoration: BoxDecoration(

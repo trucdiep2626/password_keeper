@@ -33,7 +33,7 @@ class AccountUseCase {
     return await accountRepo.setUserCredential(authCredential: authCredential);
   }
 
-  Future<AuthCredential?> signUpWithEmail({
+  Future<void> signUpWithEmail({
     required String fullname,
     required String email,
     required String password,
@@ -45,21 +45,21 @@ class AccountUseCase {
     );
   }
 
-  Future<AuthCredential?> loginWithEmail({
+  Future<void> loginWithEmail({
     required String email,
     required String password,
   }) async {
-    return await accountRepo.loginWithEmail(
+      await accountRepo.loginWithEmail(
       email: email,
       password: password,
     );
   }
 
-  Future<AuthCredential?> loginWithAuthCredential(
-      {required AuthCredential authCredential}) async {
-    return await accountRepo.loginWithAuthCredential(
-        authCredential: authCredential);
-  }
+  // Future<AuthCredential?> loginWithAuthCredential(
+  //     {required AuthCredential authCredential}) async {
+  //   return await accountRepo.loginWithAuthCredential(
+  //       authCredential: authCredential);
+  // }
 
   Future<void> sendEmailVerification() async {
     await accountRepo.sendEmailVerification();

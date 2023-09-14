@@ -131,18 +131,18 @@ class RegisterController extends GetxController with MixinController {
         confirmPasswordValidate.value.isEmpty) {
       rxLoadedButton.value = LoadedType.start;
       try {
-        final result = await accountUsecase.signUpWithEmail(
+      await accountUsecase.signUpWithEmail(
           fullname: fullNameController.text.trim(),
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
 
-        if (result != null) {
-          await accountUsecase.setUserCredential(authCredential: result);
+       // if (result != null) {
+      //    await accountUsecase.setUserCredential(authCredential: result);
           debugPrint('đăng ký thành công');
 
           Get.toNamed(AppRoutes.verifyEmail);
-        }
+    //    }
         // else {
         //   showTopSnackBarError(context, TranslationConstants.unknownError.tr);
         //   //

@@ -71,9 +71,9 @@ class LoginController extends GetxController with MixinController {
           email: emailController.text.trim(),
           password: passwordController.text.trim());
 
-      if (result != null) {
+    //  if (result != null) {
         debugPrint('đăng nhập thành công');
-        await accountUsecase.setUserCredential(authCredential: result);
+     //   await accountUsecase.setUserCredential(authCredential: result);
 
         if (user?.emailVerified ?? false) {
           final profile =
@@ -87,7 +87,7 @@ class LoginController extends GetxController with MixinController {
         } else {
           Get.toNamed(AppRoutes.verifyEmail);
         }
-      }
+    //  }
       // } on FirebaseAuthException catch (e) {
       //   handleFirebaseException(
       //     code: e.code,

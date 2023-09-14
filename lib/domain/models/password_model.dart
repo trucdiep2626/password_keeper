@@ -8,11 +8,11 @@ import 'package:password_keeper/domain/models/encrypted_string.dart';
 
 class PasswordItem extends ISuspensionBean {
   String? id;
-  String? url;
-  String? appName;
+  bool? isApp;
+  String? signInLocation;
   Uint8List? appIcon;
   String? userId;
-  EncryptedString? password;
+  String? password;
   String? note;
   int? createdAt;
   int? updatedAt;
@@ -21,12 +21,12 @@ class PasswordItem extends ISuspensionBean {
 
   PasswordItem({
     this.id,
-    this.url,
+    this.isApp = false,
     this.userId,
     this.password,
     this.note,
     this.appIcon,
-    this.appName,
+    this.signInLocation,
     this.createdAt,
     this.updatedAt,
     this.passwordStrengthLevel,
@@ -37,15 +37,16 @@ class PasswordItem extends ISuspensionBean {
     id = json['id'];
     //  password = json['password'];
 
-    password = json['password'] == null
-        ? null
-        : EncryptedString.fromString(encryptedString: json['password']);
+    password = json['password'];
+    // == null
+    // ? null
+    // : EncryptedString.fromString(encryptedString: json['password']);
 
-    url = json['url'];
+    isApp = json['is_app'];
 
     userId = json['user_id'];
     note = json['note'];
-    appName = json['app_name'];
+    signInLocation = json['sign_in_location'];
     appIcon = json['app_icon'] == null ? null : base64.decode(json['app_icon']);
 
     createdAt = json['created_at'];
@@ -57,13 +58,14 @@ class PasswordItem extends ISuspensionBean {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
 
-    if (password != null) {
-      data['password'] = password!.encryptedString;
-    }
-    data['url'] = url;
+    //if (password != null) {
+    data['password'] = password;
+    //!.encryptedString;
+    //   }
+    data['is_app'] = isApp;
     data['user_id'] = userId;
     data['note'] = note;
-    data['app_name'] = appName;
+    data['sign_in_location'] = signInLocation;
     if (appIcon != null) {
       data['app_icon'] = base64.encode(appIcon!.toList());
     }
@@ -75,4 +77,27 @@ class PasswordItem extends ISuspensionBean {
 
   @override
   String getSuspensionTag() => tagIndex ?? '';
+
+  PasswordItem copyWith({
+    String? id,
+    bool? isApp,
+    String? signInLocation,
+    Uint8List? appIcon,
+    String? userId,
+    String? password,
+    String? note,
+    int? createdAt,
+    int? updatedAt,
+    PasswordStrengthLevel? passwordStrengthLevel,
+}) => PasswordItem(
+    id: id ?? this.id,
+    isApp: isApp ?? this.isApp,
+    signInLocation: signInLocation ?? this.signInLocation,
+    appIcon:  appIcon ?? this.appIcon,
+    userId:  userId ?? this.userId,
+    password: password ?? this.password,
+    note: note ?? this.note,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
 }
