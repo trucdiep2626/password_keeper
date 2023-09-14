@@ -123,6 +123,7 @@ class AccountRepository {
   Future<void> signOut() async {
     await GoogleSignIn().signOut();
     await auth.signOut();
+    await hiveServices.hiveBox.clear();
   }
 
   Future<void> deleteAccount() async {

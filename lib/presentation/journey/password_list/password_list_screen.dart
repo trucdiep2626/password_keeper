@@ -7,6 +7,7 @@ import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
+import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/app_refresh_widget.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -18,12 +19,8 @@ class PasswordListScreen extends GetView<PasswordListController> {
     controller.context = context;
     return Scaffold(
       backgroundColor: AppColors.grey100,
-      appBar: AppBar(
-        backgroundColor: AppColors.blue400,
-        title: Text(
-          TranslationConstants.passwords.tr,
-          style: ThemeText.bodySemibold.colorWhite.s16,
-        ),
+      appBar: AppBarWidget(
+        title: TranslationConstants.passwords.tr,
       ),
       body: Padding(
         padding: EdgeInsets.all(AppDimens.space_16),
@@ -143,7 +140,7 @@ class PasswordListScreen extends GetView<PasswordListController> {
           child: ListTile(
             leading: _buildAppIcon(item),
             title: Text(
-              item.signInLocation   ?? '',
+              item.signInLocation ?? '',
               style: ThemeText.bodyMedium,
             ),
             subtitle: Text(

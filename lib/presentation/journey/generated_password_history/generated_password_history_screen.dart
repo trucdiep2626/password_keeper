@@ -9,6 +9,7 @@ import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
+import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/app_refresh_widget.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -21,12 +22,9 @@ class GeneratedPasswordHistoryScreen
     controller.context = context;
     return Scaffold(
       backgroundColor: AppColors.grey100,
-      appBar: AppBar(
-        backgroundColor: AppColors.blue400,
-        title: Text(
-          TranslationConstants.history.tr,
-          style: ThemeText.bodySemibold.colorWhite.s16,
-        ),
+      appBar: AppBarWidget(
+        showBackButton: true,
+        title: TranslationConstants.history.tr,
       ),
       body: Obx(
         () => AppRefreshWidget(
@@ -44,24 +42,27 @@ class GeneratedPasswordHistoryScreen
           },
           onRefresh: controller.onRefresh,
           controller: controller.historyController,
-          child: CustomScrollView(
-            controller: controller.scrollController,
-            shrinkWrap: true,
-            slivers: [
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    controller.rxLoadedHistory.value == LoadedType.start
-                        ? _buildShimmerList()
-                        : Column(
-                            children: controller.history.value
-                                .map((e) => _buildItem(e))
-                                .toList(),
-                          )
-                  ],
-                ),
-              )
-            ],
+          child: Padding(
+            padding: EdgeInsets.all(AppDimens.space_16),
+            child: CustomScrollView(
+              controller: controller.scrollController,
+              shrinkWrap: true,
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      controller.rxLoadedHistory.value == LoadedType.start
+                          ? _buildShimmerList()
+                          : Column(
+                              children: controller.history.value
+                                  .map((e) => _buildItem(e))
+                                  .toList(),
+                            )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -69,33 +70,86 @@ class GeneratedPasswordHistoryScreen
   }
 
   Widget _buildItem(GeneratedPasswordItem item) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: AppDimens.space_4),
-      child: ListTile(
-        title: Text(
-          item.password ?? '',
-          style: ThemeText.bodyMedium,
+    return Container(
+        padding: EdgeInsets.symmetric(
+          vertical: AppDimens.space_12,
+          horizontal: AppDimens.space_16,
         ),
-        subtitle: Text(
-          millisecondToDateTimeString(millisecond: item.createdAt ?? 0),
-          style: ThemeText.bodyRegular.s12.grey600Color,
+        margin: EdgeInsets.symmetric(
+          vertical: AppDimens.space_4,
         ),
-        trailing: AppTouchable(
-          onPressed: () async {
-            await Clipboard.setData(ClipboardData(text: item.password ?? ''));
-            // copied successfully
-            showTopSnackBar(
-              Get.context!,
-              message: TranslationConstants.copiedSuccessfully.tr,
-              type: SnackBarType.done,
-            );
-          },
-          child: AppImageWidget(
-            asset: Assets.images.svg.icCopy,
-          ),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(AppDimens.radius_12),
         ),
-      ),
-    );
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.password ?? '',
+                    style: ThemeText.bodyMedium,
+                  ),
+                  SizedBox(
+                    height: AppDimens.space_8,
+                  ),
+                  Text(
+                    millisecondToDateTimeString(
+                        millisecond: item.createdAt ?? 0),
+                    style: ThemeText.bodyRegular.s12.grey600Color,
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              width: AppDimens.space_16,
+            ),
+            AppTouchable(
+              onPressed: () async {
+                await Clipboard.setData(
+                    ClipboardData(text: item.password ?? ''));
+                // copied successfully
+                showTopSnackBar(
+                  Get.context!,
+                  message: TranslationConstants.copiedSuccessfully.tr,
+                  type: SnackBarType.done,
+                );
+              },
+              child: AppImageWidget(
+                asset: Assets.images.svg.icCopy,
+                size: AppDimens.space_30,
+              ),
+            ),
+          ],
+        )
+
+        // ListTile(
+        //   title: Text(
+        //     item.password ?? '',
+        //     style: ThemeText.bodyMedium,
+        //   ),
+        //   subtitle: Text(
+        //     millisecondToDateTimeString(millisecond: item.createdAt ?? 0),
+        //     style: ThemeText.bodyRegular.s12.grey600Color,
+        //   ),
+        //   trailing: AppTouchable(
+        //     onPressed: () async {
+        //       await Clipboard.setData(ClipboardData(text: item.password ?? ''));
+        //       // copied successfully
+        //       showTopSnackBar(
+        //         Get.context!,
+        //         message: TranslationConstants.copiedSuccessfully.tr,
+        //         type: SnackBarType.done,
+        //       );
+        //     },
+        //     child: AppImageWidget(
+        //       asset: Assets.images.svg.icCopy,
+        //     ),
+        //   ),
+        // ),
+        );
   }
 
   Widget _buildShimmerItem() {

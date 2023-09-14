@@ -6,6 +6,7 @@ import 'package:password_keeper/common/injector/bindings/generated_password_hist
 import 'package:password_keeper/common/injector/bindings/home_binding.dart';
 import 'package:password_keeper/common/injector/bindings/login_binding.dart';
 import 'package:password_keeper/common/injector/bindings/main_binding.dart';
+import 'package:password_keeper/common/injector/bindings/password_detail_binding.dart';
 import 'package:password_keeper/common/injector/bindings/password_generator_binding.dart';
 import 'package:password_keeper/common/injector/bindings/password_list_binding.dart';
 import 'package:password_keeper/common/injector/bindings/register_binding.dart';
@@ -18,6 +19,7 @@ import 'package:password_keeper/presentation/journey/create_master_password/crea
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_screen.dart';
 import 'package:password_keeper/presentation/journey/login/login_screen.dart';
 import 'package:password_keeper/presentation/journey/main/main_screen.dart';
+import 'package:password_keeper/presentation/journey/password_detail/password_detail_screen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
 import 'package:password_keeper/presentation/journey/register/register_screen.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_screen.dart';
@@ -83,9 +85,9 @@ List<GetPage> myPages = [
     page: () => const PasswordGeneratorScreen(),
     binding: PasswordGeneratorBinding(),
   ),
-  // GetPage(
-  //   name: AppRoutes.passwordList,
-  //   page: () => const PasswordListScreen(),
-  //   binding: PasswordListBinding(),
-  // ),
+  GetPage(
+    name: AppRoutes.passwordDetail,
+    page: () => const PasswordDetailScreen(),
+    binding: PasswordDetailBinding(),
+  ),
 ];

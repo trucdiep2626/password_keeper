@@ -41,6 +41,7 @@ class AppTextField extends StatefulWidget {
     this.isUnderline = false,
     this.contentPadding,
     this.borderRadius,
+    this.numSuffixIcon = 1,
   }) : super(key: key);
 
   final String? labelText;
@@ -77,6 +78,7 @@ class AppTextField extends StatefulWidget {
   final bool isUnderline;
   final EdgeInsets? contentPadding;
   final double? borderRadius;
+  final num numSuffixIcon;
 
   @override
   AppTextFieldState createState() => AppTextFieldState();
@@ -205,7 +207,11 @@ class AppTextFieldState extends State<AppTextField> {
                         right: AppDimens.space_12,
                       ),
                       child: SizedBox(
-                        width: AppDimens.space_20,
+                        width: AppDimens.space_20 * widget.numSuffixIcon +
+                            (widget.numSuffixIcon > 1
+                                ? (widget.numSuffixIcon - 1) *
+                                    AppDimens.space_16
+                                : 0),
                         height: AppDimens.space_20,
                         child: widget.suffixIcon,
                       ),

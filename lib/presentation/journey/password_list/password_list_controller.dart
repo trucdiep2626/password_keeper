@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/injector/locators/app_locator.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
@@ -59,7 +60,7 @@ class PasswordListController extends GetxController with MixinController {
           (totalItems - displayedItems) < 10 ? totalItems - displayedItems : 10;
 
       passwords.addAll(result);
-    //  _handleList();
+      //  _handleList();
     } catch (e) {
       logger(e.toString());
       showTopSnackBarError(context, e.toString());
@@ -129,11 +130,12 @@ class PasswordListController extends GetxController with MixinController {
     if (value.isNotEmpty) {
       List<PasswordItem> resultPassworrdList = [];
       for (PasswordItem passwordItem in passwords) {
-        if ((passwordItem.signInLocation  ?? '')
-            .toUpperCase()
-            .contains(value.toUpperCase()) || (passwordItem.userId  ?? '')
-            .toUpperCase()
-            .contains(value.toUpperCase())) {
+        if ((passwordItem.signInLocation ?? '')
+                .toUpperCase()
+                .contains(value.toUpperCase()) ||
+            (passwordItem.userId ?? '')
+                .toUpperCase()
+                .contains(value.toUpperCase())) {
           resultPassworrdList.add(passwordItem);
         }
       }
@@ -156,11 +158,8 @@ class PasswordListController extends GetxController with MixinController {
   }
 
   goToDetail(PasswordItem passwordItem) async {
-    // final result = await Get.toNamed(AppRoute.purchaseOrderDetail, arguments: {
-    //   'id': purchaseOrderEntity.id,
-    //   'order_number': purchaseOrderEntity.orderNumber,
-    //   'status_id': purchaseOrderEntity.status
-    // });
+    final result =
+        await Get.toNamed(AppRoutes.passwordDetail, arguments: passwordItem);
     // if (result['is_canceled'] || result['is_deposited']) {
     //   if (result['is_deposited']) {
     //     shouldRefresh.value = true;

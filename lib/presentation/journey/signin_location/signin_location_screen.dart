@@ -7,6 +7,7 @@ import 'package:password_keeper/common/utils/translations/app_translations.dart'
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_controller.dart';
 import 'package:password_keeper/presentation/theme/theme_color.dart';
 import 'package:password_keeper/presentation/theme/theme_text.dart';
+import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 class SignInLocationScreen extends GetView<SignInLocationController> {
@@ -17,13 +18,9 @@ class SignInLocationScreen extends GetView<SignInLocationController> {
     controller.context = context;
     return Scaffold(
       backgroundColor: AppColors.grey100,
-      appBar: AppBar(
-        automaticallyImplyLeading: true,
-        backgroundColor: AppColors.blue400,
-        title: Text(
-          TranslationConstants.signInLocationOrApp.tr,
-          style: ThemeText.bodySemibold.colorWhite.s16,
-        ),
+      appBar: AppBarWidget(
+        showBackButton: true,
+        title: TranslationConstants.signInLocationOrApp.tr,
       ),
       body: SizedBox(
         height: Get.height,
