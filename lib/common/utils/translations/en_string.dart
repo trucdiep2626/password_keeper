@@ -146,8 +146,10 @@ const enString = {
   "change_master_password": "Change master password",
 
   //password detail
-  "password_detail":"Password detail",
-  "delete_item":"Detele item",
+  "password_detail": "Password detail",
+  "delete_item": "Detele item",
   "delete_confirm_message": "Are you sure you want to delete this item?",
-
+  "password_security": "Password security",
+  "deleted_password_successfully": "Password has been deleted successfully.",
+  "updated_password_successfully": "Password has been updated successfully.",
 };

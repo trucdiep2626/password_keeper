@@ -40,7 +40,7 @@ class TranslationConstants {
   static const String ok = "ok";
   static const String cancel = "cancel";
   static const String delete = "delete";
-  static const String welcomBack = "welcome_back";
+  static const String welcomeBack = "welcome_back";
   static const String unlock = "unlock";
   static const String continueButton = "continue";
   static const String search = "search";
@@ -169,4 +169,9 @@ class TranslationConstants {
   static const String passwordDetail = "password_detail";
   static const String deleteItem = "delete_item";
   static const String deleteConfirmMessage = "delete_confirm_message";
+  static const String passwordSecurity = "password_security";
+  static const String deletedPasswordSuccessfully =
+      "deleted_password_successfully";
+  static const String updatedPasswordSuccessfully =
+      "updated_password_successfully";
 }

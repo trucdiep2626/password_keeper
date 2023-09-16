@@ -136,17 +136,20 @@ const viString = {
       "You have not added any password to your list yet.\nClick on 'Add' button to get started.",
   "weak_password_warning": "Weak password warning",
   "weak_password_warning_message":
-"We noticed your password could be stronger. Would you like to try again with a mix of uppercase, lowercase, numbers, and special characters for added security?",
+      "We noticed your password could be stronger. Would you like to try again with a mix of uppercase, lowercase, numbers, and special characters for added security?",
 
   //setting
-  "settings":"Settings",
+  "settings": "Settings",
   "auto_fill_service": "Auto-fill service",
   "unlock_with_biometrics": "Unlock with Biometrics",
   "lock": "Lock",
   "change_master_password": "Change master password",
 
   //password detail
-  "password_detail":"Password detail",
-  "delete_item":"Detele item",
+  "password_detail": "Password detail",
+  "delete_item": "Detele item",
   "delete_confirm_message": "Are you sure you want to delete this item?",
+  "password_security": "Password security",
+  "deleted_password_successfully": "Password has been deleted successfully.",
+  "updated_password_successfully": "Password has been updated successfully.",
 };

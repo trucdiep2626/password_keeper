@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
@@ -392,12 +392,7 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
           ),
           AppTouchable(
             onPressed: () async {
-              await Clipboard.setData(
-                  ClipboardData(text: controller.generatedPassword.value));
-              // copied successfully
-              showTopSnackBar(Get.context!,
-                  message: TranslationConstants.copiedSuccessfully.tr,
-                  type: SnackBarType.done);
+              await copyText(text: controller.generatedPassword.value);
             },
             child: AppImageWidget(
               size: AppDimens.space_24,

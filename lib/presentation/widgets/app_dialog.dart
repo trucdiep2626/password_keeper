@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
@@ -99,8 +97,6 @@ class _AppDialogState extends State<AppDialog> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    var dialogWidth = min<double>(width * 0.86, 400);
     return WillPopScope(
       onWillPop: () async => widget.dismissAble,
       child: Dialog(
@@ -168,7 +164,8 @@ class _AppDialogState extends State<AppDialog> {
                             //        .copyWith(color: AppColors.grey),
                             title: widget.cancelButtonText ?? '',
                             backgroundColor: AppColors.transparent,
-                            onPressed: widget.cancelButtonCallback,
+                            onPressed:
+                                widget.cancelButtonCallback ?? () => Get.back(),
                           ),
                         ),
                       Expanded(
@@ -194,6 +191,7 @@ class _AppDialogState extends State<AppDialog> {
 
   @override
   void initState() {
+    super.initState();
     if (!isNullEmpty(widget.delayConfirm)) {
       setState(() {
         enableConfirm = false;

@@ -34,7 +34,7 @@ class VerifyMasterPasswordScreen
                 height: AppDimens.space_8,
               ),
               Text(
-                TranslationConstants.welcomBack.tr,
+                TranslationConstants.welcomeBack.tr,
                 style: ThemeText.bodySemibold.s24.blue400,
               ),
               SizedBox(

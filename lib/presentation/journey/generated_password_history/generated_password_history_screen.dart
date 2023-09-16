@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/enums.dart';
@@ -54,7 +53,7 @@ class GeneratedPasswordHistoryScreen
                       controller.rxLoadedHistory.value == LoadedType.start
                           ? _buildShimmerList()
                           : Column(
-                              children: controller.history.value
+                              children: controller.history
                                   .map((e) => _buildItem(e))
                                   .toList(),
                             )
@@ -108,14 +107,7 @@ class GeneratedPasswordHistoryScreen
             ),
             AppTouchable(
               onPressed: () async {
-                await Clipboard.setData(
-                    ClipboardData(text: item.password ?? ''));
-                // copied successfully
-                showTopSnackBar(
-                  Get.context!,
-                  message: TranslationConstants.copiedSuccessfully.tr,
-                  type: SnackBarType.done,
-                );
+                await copyText(text: item.password ?? '');
               },
               child: AppImageWidget(
                 asset: Assets.images.svg.icCopy,
@@ -123,33 +115,7 @@ class GeneratedPasswordHistoryScreen
               ),
             ),
           ],
-        )
-
-        // ListTile(
-        //   title: Text(
-        //     item.password ?? '',
-        //     style: ThemeText.bodyMedium,
-        //   ),
-        //   subtitle: Text(
-        //     millisecondToDateTimeString(millisecond: item.createdAt ?? 0),
-        //     style: ThemeText.bodyRegular.s12.grey600Color,
-        //   ),
-        //   trailing: AppTouchable(
-        //     onPressed: () async {
-        //       await Clipboard.setData(ClipboardData(text: item.password ?? ''));
-        //       // copied successfully
-        //       showTopSnackBar(
-        //         Get.context!,
-        //         message: TranslationConstants.copiedSuccessfully.tr,
-        //         type: SnackBarType.done,
-        //       );
-        //     },
-        //     child: AppImageWidget(
-        //       asset: Assets.images.svg.icCopy,
-        //     ),
-        //   ),
-        // ),
-        );
+        ));
   }
 
   Widget _buildShimmerItem() {

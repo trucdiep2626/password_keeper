@@ -25,11 +25,13 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
           backgroundColor: AppColors.grey50,
           appBar: AppBarWidget(
             showBackButton: true,
-            title: TranslationConstants.addNewPassword.tr,
+            title: controller.oldPassword == null
+                ? TranslationConstants.addNewPassword.tr
+                : TranslationConstants.editPassword.tr,
           ),
           bottomNavigationBar: Obx(
             () => ConfirmWidget(
-              firstOnTap: () => controller.handleSave(),
+              firstOnTap: () async => await controller.handleSave(),
               firstText: TranslationConstants.save.tr,
               secondOnTap: () => Get.back(),
               secondText: TranslationConstants.cancel.tr,

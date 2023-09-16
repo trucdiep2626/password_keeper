@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
-import 'package:password_keeper/common/injector/locators/app_locator.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
-import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
 import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -35,10 +32,6 @@ class PasswordListController extends GetxController with MixinController {
 
   PasswordItem? lastItem;
 
-  final CryptoController _cryptoController = Get.find<CryptoController>();
-  final PasswordGenerationController _passwordGenerationController =
-      getIt<PasswordGenerationController>();
-
   PasswordListController({
     required this.accountUseCase,
     required this.passwordUseCase,
@@ -60,7 +53,8 @@ class PasswordListController extends GetxController with MixinController {
           (totalItems - displayedItems) < 10 ? totalItems - displayedItems : 10;
 
       passwords.addAll(result);
-      //  _handleList();
+
+      ///  _handleList();
     } catch (e) {
       logger(e.toString());
       showTopSnackBarError(context, e.toString());
@@ -72,7 +66,7 @@ class PasswordListController extends GetxController with MixinController {
   // void _handleList() {
   //   if (passwords.isEmpty) return;
   //   for (int i = 0, length = passwords.length; i < length; i++) {
-  //     String name = passwords[i].signInLocation ?? passwords[i].url ?? '';
+  //     String name = passwords[i].signInLocation ?? '';
   //     String tag = name.substring(0, 1).toUpperCase();
   //
   //     if (RegExp("[A-Z]").hasMatch(tag)) {
@@ -83,22 +77,22 @@ class PasswordListController extends GetxController with MixinController {
   //   }
   //
   //   passwords.sort((a, b) {
-  //     String aName = a.signInLocation ?? a.url ?? '';
-  //     String bName = b.signInLocation ?? b.url ?? '';
+  //     String aName = a.signInLocation ?? '';
+  //     String bName = b.signInLocation ?? '';
   //     return aName.toUpperCase().compareTo(bName.toUpperCase());
   //   });
+
+  // // A-Z sort.
+  // SuspensionUtil.sortListBySuspensionTag(_contacts);
   //
-  //   // // A-Z sort.
-  //   // SuspensionUtil.sortListBySuspensionTag(_contacts);
-  //   //
-  //   // // show sus tag.
-  //   // SuspensionUtil.setShowSuspensionStatus(_contacts);
-  //   //
-  //   // // add header.
-  //   // _contacts.insert(0, ContactInfo(name: 'header', tagIndex: '↑'));
-  //   //
-  //   // setState(() {});
-  // }
+  // // show sus tag.
+  // SuspensionUtil.setShowSuspensionStatus(_contacts);
+  //
+  // // add header.
+  // _contacts.insert(0, ContactInfo(name: 'header', tagIndex: '↑'));
+  //
+  // setState(() {});
+  //}
 
   Future<void> getPasswordListLength() async {
     try {
@@ -147,8 +141,6 @@ class PasswordListController extends GetxController with MixinController {
   }
 
   Future<void> onLoadMore() async {
-    await Future.delayed(Duration(seconds: 5));
-
     double oldPosition = scrollController.position.pixels;
     await getPasswordList();
     if (searchController.text.isNotEmpty) {
@@ -160,12 +152,9 @@ class PasswordListController extends GetxController with MixinController {
   goToDetail(PasswordItem passwordItem) async {
     final result =
         await Get.toNamed(AppRoutes.passwordDetail, arguments: passwordItem);
-    // if (result['is_canceled'] || result['is_deposited']) {
-    //   if (result['is_deposited']) {
-    //     shouldRefresh.value = true;
-    //   }
-    //   await getPurchaseOrderList();
-    // }
+    if (result is bool && result) {
+      await onRefresh();
+    }
   }
 
   @override

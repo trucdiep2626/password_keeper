@@ -80,6 +80,16 @@ class PasswordUseCase {
     );
   }
 
+  Future<void> editPasswordItem({
+    required String userId,
+    required PasswordItem passwordItem,
+  }) async {
+    return await passwordRepository.editPasswordItem(
+      userId: userId,
+      passwordItem: passwordItem,
+    );
+  }
+
   Future<List<PasswordItem>> getPasswordList({
     required String userId,
     PasswordItem? lastItem,
@@ -94,5 +104,15 @@ class PasswordUseCase {
 
   Future<int> getPasswordListLength({required String userId}) async {
     return await passwordRepository.getPasswordListLength(userId: userId);
+  }
+
+  Future<bool> deletePassword({
+    required String userId,
+    required String itemId,
+  }) async {
+    return await passwordRepository.deletePassword(
+      userId: userId,
+      itemId: itemId,
+    );
   }
 }

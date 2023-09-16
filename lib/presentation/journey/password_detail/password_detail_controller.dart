@@ -1,12 +1,19 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/models/encrypted_string.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/widgets/app_dialog.dart';
+import 'package:password_keeper/presentation/widgets/export.dart';
 
 class PasswordDetailController extends GetxController with MixinController {
   Rx<LoadedType> rxLoadedDetail = LoadedType.finish.obs;
@@ -19,6 +26,7 @@ class PasswordDetailController extends GetxController with MixinController {
   final userIdController = TextEditingController();
   final passwordController = TextEditingController();
   final noteController = TextEditingController();
+  RxBool needRefreshList = false.obs;
 
   final CryptoController _cryptoController = Get.find<CryptoController>();
 
@@ -27,13 +35,14 @@ class PasswordDetailController extends GetxController with MixinController {
     required this.passwordUseCase,
   });
 
+  User? get user => accountUseCase.user;
+
   void onChangedShowPassword() {
     showPassword.value = !showPassword.value;
   }
 
   Future<void> decryptPassword() async {
     rxLoadedDetail.value == LoadedType.start;
-    await Future.delayed(const Duration(seconds: 3));
     final decrypted = await _cryptoController.decryptToUtf8(
         encString: EncryptedString.fromString(
             encryptedString: password.value.password));
@@ -45,9 +54,72 @@ class PasswordDetailController extends GetxController with MixinController {
     rxLoadedDetail.value == LoadedType.finish;
   }
 
-  goToEdit() {}
+  Future<void> goToEdit() async {
+    final updatedPassword =
+        await Get.toNamed(AppRoutes.addEditPassword, arguments: password.value);
+    if (!isNullEmpty(updatedPassword) && updatedPassword is PasswordItem) {
+      password.value = updatedPassword;
+      needRefreshList.value = true;
+      await _handleDisplayItem();
+    }
+  }
 
-  Future<void> deleteItem() async {}
+  Future<void> deleteItem() async {
+    await showAppDialog(
+      context,
+      TranslationConstants.deleteItem.tr,
+      TranslationConstants.deleteConfirmMessage.tr,
+      confirmButtonText: TranslationConstants.delete.tr,
+      cancelButtonText: TranslationConstants.cancel.tr,
+      messageTextAlign: TextAlign.start,
+      confirmButtonCallback: () async => await handleDeleteItem(),
+    );
+  }
+
+  Future<void> handleDeleteItem() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+
+    if (connectivityResult == ConnectivityResult.none) {
+      if (Get.context != null) {
+        showTopSnackBarError(
+            Get.context!, TranslationConstants.noConnectionError.tr);
+      }
+      rxLoadedDetail.value = LoadedType.finish;
+      return;
+    }
+
+    rxLoadedDetail.value = LoadedType.start;
+
+    try {
+      final result = await passwordUseCase.deletePassword(
+        userId: user?.uid ?? '',
+        itemId: password.value.id ?? '',
+      );
+
+      if (result) {
+        showTopSnackBar(
+          Get.context!,
+          message: TranslationConstants.deletedPasswordSuccessfully.tr,
+          type: SnackBarType.done,
+        );
+        needRefreshList.value = true;
+        //close dialog
+        Get.back();
+        //back to password list screen
+        Get.back(result: needRefreshList.value);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      if (Get.context != null) {
+        showTopSnackBarError(
+          Get.context!,
+          TranslationConstants.unknownError.tr,
+        );
+      }
+    } finally {
+      rxLoadedDetail.value = LoadedType.finish;
+    }
+  }
 
   @override
   void onInit() async {
@@ -55,11 +127,15 @@ class PasswordDetailController extends GetxController with MixinController {
     final pwd = Get.arguments;
     if (pwd is PasswordItem) {
       password.value = pwd;
-      await decryptPassword();
-
-      userIdController.text = password.value.userId ?? '';
-      passwordController.text = password.value.password ?? '';
-      noteController.text = password.value.note ?? '';
+      await _handleDisplayItem();
     }
+  }
+
+  Future<void> _handleDisplayItem() async {
+    await decryptPassword();
+
+    userIdController.text = password.value.userId ?? '';
+    passwordController.text = password.value.password ?? '';
+    noteController.text = password.value.note ?? '';
   }
 }

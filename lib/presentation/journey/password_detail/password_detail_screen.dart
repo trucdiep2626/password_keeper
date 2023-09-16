@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
@@ -11,7 +11,6 @@ import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/confirm_widget.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
-import 'package:password_keeper/presentation/widgets/password_strength_checker_widget.dart';
 
 class PasswordDetailScreen extends GetView<PasswordDetailController> {
   const PasswordDetailScreen({super.key});
@@ -19,54 +18,83 @@ class PasswordDetailScreen extends GetView<PasswordDetailController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.grey50,
-      appBar: AppBarWidget(
-        showBackButton: true,
-        title: TranslationConstants.passwordDetail.tr,
-      ),
-      bottomNavigationBar: ConfirmWidget(
-        firstOnTap: () => controller.goToEdit(),
-        firstText: TranslationConstants.edit.tr,
-        secondOnTap: () async => await controller.deleteItem(),
-        secondText: TranslationConstants.delete.tr,
-        activeFirst: true,
-      ),
-      body: Obx(
-        () => controller.rxLoadedDetail.value == LoadedType.start
-            ? const AppLoadingPage()
-            : Padding(
-                padding: EdgeInsets.all(AppDimens.space_16),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          bottom: AppDimens.space_12,
+    return WillPopScope(
+      onWillPop: () async {
+        Get.back(result: controller.needRefreshList.value);
+        return true;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: AppColors.grey50,
+        appBar: AppBarWidget(
+          showBackButton: true,
+          onTapBack: () => Get.back(result: controller.needRefreshList.value),
+          title: TranslationConstants.passwordDetail.tr,
+        ),
+        bottomNavigationBar: ConfirmWidget(
+          firstOnTap: () => controller.goToEdit(),
+          firstText: TranslationConstants.edit.tr,
+          secondOnTap: () async => await controller.deleteItem(),
+          secondText: TranslationConstants.delete.tr,
+          activeFirst: true,
+        ),
+        body: Obx(
+          () => controller.rxLoadedDetail.value == LoadedType.start
+              ? const AppLoadingPage()
+              : Padding(
+                  padding: EdgeInsets.all(AppDimens.space_16),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: AppDimens.space_12,
+                          ),
+                          child: Text(
+                            TranslationConstants.signInLocationOrApp.tr,
+                            style: ThemeText.bodyMedium.grey600Color,
+                          ),
                         ),
-                        child: Text(
-                          TranslationConstants.signInLocationOrApp.tr,
-                          style: ThemeText.bodyMedium.grey600Color,
+                        _getSignInLocation(controller.password.value),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: AppDimens.space_12),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      '${TranslationConstants.passwordSecurity.tr}: ',
+                                  style: ThemeText.bodyMedium.grey600Color,
+                                ),
+                                TextSpan(
+                                  text: controller.password.value
+                                      .passwordStrengthLevel?.value,
+                                  style: ThemeText.bodySemibold.copyWith(
+                                      color: controller.password.value
+                                          .passwordStrengthLevel?.color),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                      _getSignInLocation(controller.password.value),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: AppDimens.space_16,
-                          bottom: AppDimens.space_12,
+                        Padding(
+                          padding: EdgeInsets.only(
+                            // top: AppDimens.space_16,
+                            bottom: AppDimens.space_12,
+                          ),
+                          child: Text(
+                            TranslationConstants.accountInformation.tr,
+                            style: ThemeText.bodyMedium.grey600Color,
+                          ),
                         ),
-                        child: Text(
-                          TranslationConstants.accountInformation.tr,
-                          style: ThemeText.bodyMedium.grey600Color,
-                        ),
-                      ),
-                      _buildAccount()
-                    ],
+                        _buildAccount()
+                      ],
+                    ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -104,14 +132,8 @@ class PasswordDetailScreen extends GetView<PasswordDetailController> {
                     ),
                     AppTouchable(
                       onPressed: () async {
-                        await Clipboard.setData(ClipboardData(
-                            text: controller.password.value.password ?? ''));
-                        // copied successfully
-                        showTopSnackBar(
-                          Get.context!,
-                          message: TranslationConstants.copiedSuccessfully.tr,
-                          type: SnackBarType.done,
-                        );
+                        await copyText(
+                            text: controller.password.value.password ?? '');
                       },
                       margin: EdgeInsets.only(left: AppDimens.space_8),
                       child: AppImageWidget(
@@ -132,14 +154,14 @@ class PasswordDetailScreen extends GetView<PasswordDetailController> {
             ),
           ],
         ),
-        PasswordStrengthChecker(
-            passwordStrength: controller.password.value.passwordStrengthLevel ??
-                PasswordStrengthLevel.weak),
+        // PasswordStrengthChecker(
+        //     passwordStrength: controller.password.value.passwordStrengthLevel ??
+        //         PasswordStrengthLevel.weak),
         SizedBox(
           height: AppDimens.space_12,
         ),
         controller.noteController.text.isEmpty
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : AppTextField(
                 labelText: TranslationConstants.note.tr,
                 controller: controller.noteController,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:password_keeper/common/config/app_config.dart';
 import 'package:password_keeper/common/config/database/hive_services.dart';
 import 'package:password_keeper/common/config/database/hive_type_constants.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
@@ -169,8 +170,19 @@ class PasswordRepository {
         .collection(AppConfig.userCollection)
         .doc(userId)
         .collection(AppConfig.passwordsCollection)
-        //    .doc(passwordItem.id)
         .add(passwordItem.toJson());
+  }
+
+  Future<void> editPasswordItem({
+    required String userId,
+    required PasswordItem passwordItem,
+  }) async {
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.passwordsCollection)
+        .doc(passwordItem.id)
+        .update(passwordItem.toJson());
   }
 
   Future<List<PasswordItem>> getPasswordList({
@@ -178,12 +190,28 @@ class PasswordRepository {
     PasswordItem? lastItem,
     required int pageSize,
   }) async {
-    final response = lastItem == null
+    DocumentSnapshot? startAfterDoc;
+    if (lastItem != null) {
+      // Get the document after which we want to start
+      startAfterDoc = await db
+          .collection(AppConfig.userCollection)
+          .doc(userId)
+          .collection(AppConfig.passwordsCollection)
+          .doc(lastItem.id)
+          .get();
+
+      if (!startAfterDoc.exists) {
+        throw Exception("Document doesn't exist");
+      }
+    }
+
+    final response = startAfterDoc == null
         ? await db
             .collection(AppConfig.userCollection)
             .doc(userId)
             .collection(AppConfig.passwordsCollection)
             .orderBy('sign_in_location', descending: false)
+            .orderBy('user_id', descending: false)
             .limit(pageSize)
             .get()
         : await db
@@ -191,7 +219,8 @@ class PasswordRepository {
             .doc(userId)
             .collection(AppConfig.passwordsCollection)
             .orderBy('sign_in_location', descending: false)
-            .startAfter([lastItem.signInLocation])
+            .orderBy('user_id', descending: false)
+            .startAfterDocument(startAfterDoc)
             .limit(pageSize)
             .get();
 
@@ -219,5 +248,22 @@ class PasswordRepository {
         .get();
 
     return response.docs.length;
+  }
+
+  Future<bool> deletePassword({
+    required String userId,
+    required String itemId,
+  }) async {
+    if (isNullEmpty(userId) || isNullEmpty(itemId)) {
+      return false;
+    }
+
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.passwordsCollection)
+        .doc(itemId)
+        .delete();
+    return true;
   }
 }

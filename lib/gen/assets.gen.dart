@@ -2,7 +2,12 @@
 /// *****************************************************
 ///  FlutterGen
 /// *****************************************************
+
 import 'package:flutter/services.dart';
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
@@ -84,6 +89,9 @@ class $AssetsImagesSvgGen {
   SvgGenImage get authenticationBackground =>
       const SvgGenImage('assets/images/svg/authentication_background.svg');
 
+  /// File path: assets/images/svg/ic_add.svg
+  SvgGenImage get icAdd => const SvgGenImage('assets/images/svg/ic_add.svg');
+
   /// File path: assets/images/svg/ic_arrow_down.svg
   SvgGenImage get icArrowDown =>
       const SvgGenImage('assets/images/svg/ic_arrow_down.svg');
@@ -111,11 +119,18 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icCircleClose =>
       const SvgGenImage('assets/images/svg/ic_circle_close.svg');
 
+  /// File path: assets/images/svg/ic_copy.svg
+  SvgGenImage get icCopy => const SvgGenImage('assets/images/svg/ic_copy.svg');
+
   /// File path: assets/images/svg/ic_desc.svg
   SvgGenImage get icDesc => const SvgGenImage('assets/images/svg/ic_desc.svg');
 
   /// File path: assets/images/svg/ic_done.svg
   SvgGenImage get icDone => const SvgGenImage('assets/images/svg/ic_done.svg');
+
+  /// File path: assets/images/svg/ic_empty.svg
+  SvgGenImage get icEmpty =>
+      const SvgGenImage('assets/images/svg/ic_empty.svg');
 
   /// File path: assets/images/svg/ic_envelop.svg
   SvgGenImage get icEnvelop =>
@@ -140,9 +155,17 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icFingerScan =>
       const SvgGenImage('assets/images/svg/ic_finger_scan.svg');
 
+  /// File path: assets/images/svg/ic_generator.svg
+  SvgGenImage get icGenerator =>
+      const SvgGenImage('assets/images/svg/ic_generator.svg');
+
   /// File path: assets/images/svg/ic_google.svg
   SvgGenImage get icGoogle =>
       const SvgGenImage('assets/images/svg/ic_google.svg');
+
+  /// File path: assets/images/svg/ic_history.svg
+  SvgGenImage get icHistory =>
+      const SvgGenImage('assets/images/svg/ic_history.svg');
 
   /// File path: assets/images/svg/ic_home.svg
   SvgGenImage get icHome => const SvgGenImage('assets/images/svg/ic_home.svg');
@@ -166,6 +189,10 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icMessage =>
       const SvgGenImage('assets/images/svg/ic_message.svg');
 
+  /// File path: assets/images/svg/ic_minus.svg
+  SvgGenImage get icMinus =>
+      const SvgGenImage('assets/images/svg/ic_minus.svg');
+
   /// File path: assets/images/svg/ic_nav_account.svg
   SvgGenImage get icNavAccount =>
       const SvgGenImage('assets/images/svg/ic_nav_account.svg');
@@ -188,6 +215,9 @@ class $AssetsImagesSvgGen {
 
   /// File path: assets/images/svg/ic_sort.svg
   SvgGenImage get icSort => const SvgGenImage('assets/images/svg/ic_sort.svg');
+
+  /// File path: assets/images/svg/ic_tick.svg
+  SvgGenImage get icTick => const SvgGenImage('assets/images/svg/ic_tick.svg');
 
   /// File path: assets/images/svg/ic_trash.svg
   SvgGenImage get icTrash =>
@@ -219,6 +249,7 @@ class $AssetsImagesSvgGen {
   /// List of all assets
   List<dynamic> get values => [
         authenticationBackground,
+        icAdd,
         icArrowDown,
         icArrowLeft,
         icArrowRight,
@@ -226,27 +257,33 @@ class $AssetsImagesSvgGen {
         icAsc,
         icCamera,
         icCircleClose,
+        icCopy,
         icDesc,
         icDone,
+        icEmpty,
         icEnvelop,
         icError,
         icEye,
         icEyeSlash,
         icFilter,
         icFingerScan,
+        icGenerator,
         icGoogle,
+        icHistory,
         icHome,
         icLocation,
         icLoginScreen,
         icLogout,
         icMenu,
         icMessage,
+        icMinus,
         icNavAccount,
         icNavHome,
         icPassword,
         icPasswordCheck,
         icSearch,
         icSort,
+        icTick,
         icTrash,
         icUser,
         icWallet,

@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:password_keeper/common/config/app_config.dart';
+import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -114,4 +116,23 @@ const String _dateYearFormat = 'dd/MM/yyyy - HH:mm';
 String millisecondToDateTimeString({required int millisecond}) {
   return DateFormat(_dateYearFormat)
       .format(DateTime.fromMillisecondsSinceEpoch(millisecond));
+}
+
+Future<void> copyText({required String text}) async {
+  try {
+    await Clipboard.setData(ClipboardData(text: text));
+    // copied successfully
+    showTopSnackBar(
+      Get.context!,
+      message: TranslationConstants.copiedSuccessfully.tr,
+      type: SnackBarType.done,
+    );
+  } catch (e) {
+    // copied fail
+    showTopSnackBar(
+      Get.context!,
+      message: TranslationConstants.unknownError.tr,
+      type: SnackBarType.error,
+    );
+  }
 }
