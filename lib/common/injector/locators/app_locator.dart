@@ -23,6 +23,7 @@ import 'package:password_keeper/presentation/journey/password_detail/password_de
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_controller.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_controller.dart';
 import 'package:password_keeper/presentation/journey/verify_email/verify_email_controller.dart';
@@ -56,7 +57,7 @@ void configLocator() {
       () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<VerifyMasterPasswordController>(
       () => VerifyMasterPasswordController(
-            accountUsecase: getIt<AccountUseCase>(),
+            accountUseCase: getIt<AccountUseCase>(),
             localUseCase: getIt<LocalUseCase>(),
           ));
   getIt.registerFactory<VerifyEmailController>(
@@ -82,6 +83,9 @@ void configLocator() {
             passwordUseCase: getIt<PasswordUseCase>(),
             accountUseCase: getIt<AccountUseCase>(),
           ));
+  getIt.registerFactory<SettingsController>(() => SettingsController(
+        accountUseCase: getIt<AccountUseCase>(),
+      ));
 
   ///helper
   getIt.registerLazySingleton<CryptoController>(() => CryptoController(

@@ -7,6 +7,7 @@ import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/home/home_screen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_screen.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_screen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -20,7 +21,7 @@ class MainScreen extends GetView<MainController> {
     TranslationConstants.passwords.tr,
     //  TranslationConstants.home.tr,
     TranslationConstants.generator.tr,
-    TranslationConstants.menu.tr,
+    TranslationConstants.settings.tr,
   ];
 
   final List<SvgGenImage> icons = [
@@ -28,7 +29,7 @@ class MainScreen extends GetView<MainController> {
     Assets.images.svg.icPassword,
     // Assets.images.svg.icAdd,
     Assets.images.svg.icGenerator,
-    Assets.images.svg.icMenu,
+    Assets.images.svg.icSetting,
   ];
 
   Widget _buildBottomNavigationItemWidget(
@@ -114,7 +115,7 @@ class MainScreen extends GetView<MainController> {
     const HomeScreen(),
     const PasswordListScreen(),
     const PasswordGeneratorScreen(),
-    const HomeScreen(),
+    const SettingsScreen(),
   ];
 
   @override
@@ -129,9 +130,9 @@ class MainScreen extends GetView<MainController> {
         child: _buildBottomNavigationBar(context),
       ),
       floatingActionButton: Obx(() => Visibility(
-            visible: Get.mediaQuery.viewInsets.bottom == 0 ||
-                controller.rxCurrentNavIndex.value == 0 ||
-                controller.rxCurrentNavIndex.value == 2,
+            visible: Get.mediaQuery.viewInsets.bottom == 0 &&
+                (controller.rxCurrentNavIndex.value == 0 ||
+                    controller.rxCurrentNavIndex.value == 1),
             child: Container(
               width: Get.width / 7,
               decoration: BoxDecoration(

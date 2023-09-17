@@ -13,25 +13,27 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return SafeArea(
-      child: WillPopScope(
-        onWillPop: () async {
-          return true;
-        },
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //welcom text
-                    _buildWelcome(),
-                    //password health
-                    _buildPasswordHealth(),
-                  ],
-                )),
-          ),
+    return WillPopScope(
+      onWillPop: () async {
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: Get.mediaQuery.viewPadding.top,
+                  ),
+                  //welcom text
+                  _buildWelcome(),
+                  //password health
+                  _buildPasswordHealth(),
+                ],
+              )),
         ),
       ),
     );
@@ -45,11 +47,11 @@ class HomeScreen extends GetView<HomeController> {
         children: [
           Text(
             '${TranslationConstants.hello.tr} ${controller.accountUsecase.user?.displayName ?? 'User'}!',
-            style: ThemeText.bodyStrong.s24.blue600Color,
+            style: ThemeText.bodySemibold.s20,
           ),
           Text(
             TranslationConstants.welcome.tr,
-            style: ThemeText.bodySemibold.grey500Color.s12,
+            style: ThemeText.bodySemibold.grey500Color,
           ),
         ],
       ),

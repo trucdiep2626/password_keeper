@@ -10,6 +10,7 @@ import 'package:password_keeper/common/injector/bindings/password_detail_binding
 import 'package:password_keeper/common/injector/bindings/password_generator_binding.dart';
 import 'package:password_keeper/common/injector/bindings/password_list_binding.dart';
 import 'package:password_keeper/common/injector/bindings/register_binding.dart';
+import 'package:password_keeper/common/injector/bindings/settings_binding.dart';
 import 'package:password_keeper/common/injector/bindings/signin_location_binding.dart';
 import 'package:password_keeper/common/injector/bindings/splash_binding.dart';
 import 'package:password_keeper/common/injector/bindings/verify_email.dart';
@@ -39,6 +40,7 @@ List<GetPage> myPages = [
     PasswordListBinding(),
     // AddEditPasswordBinding(),
     PasswordGeneratorBinding(),
+    SettingsBinding(),
   ]),
   GetPage(
     name: AppRoutes.register,

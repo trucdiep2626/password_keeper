@@ -18,7 +18,7 @@ class PasswordListScreen extends GetView<PasswordListController> {
   Widget build(BuildContext context) {
     controller.context = context;
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.background,
       appBar: AppBarWidget(
         title: TranslationConstants.passwords.tr,
       ),
@@ -135,8 +135,17 @@ class PasswordListScreen extends GetView<PasswordListController> {
         padding: EdgeInsets.symmetric(vertical: AppDimens.space_4),
         child: Container(
           decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(AppDimens.radius_12)),
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(AppDimens.radius_12),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withOpacity(0.02),
+                offset: const Offset(0, 2),
+                blurRadius: 1,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
           child: ListTile(
             leading: _buildAppIcon(item),
             title: Text(

@@ -164,6 +164,7 @@ class TranslationConstants {
   static const String unlockWithBiometrics = "unlock_with_biometrics";
   static const String lock = "lock";
   static const String changeMasterPassword = "change_master_password";
+  static const String logoutConfirmMessage = "logout_confirm_message";
 
   //password detail
   static const String passwordDetail = "password_detail";

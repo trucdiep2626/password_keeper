@@ -16,6 +16,19 @@ class VerifyMasterPasswordScreen
     controller.context = context;
     return Scaffold(
       backgroundColor: AppColors.blue100,
+      appBar: AppBar(
+        actions: [
+          AppTouchable(
+            margin: EdgeInsets.only(right: AppDimens.space_16),
+            padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
+            onPressed: () async => controller.onTapLogout(),
+            child: Text(
+              TranslationConstants.logout.tr,
+              style: ThemeText.bodyRegular.blue400,
+            ),
+          ),
+        ],
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
         child: SingleChildScrollView(
@@ -24,7 +37,7 @@ class VerifyMasterPasswordScreen
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: Get.mediaQuery.padding.top + AppDimens.space_36,
+                height: AppDimens.space_24,
               ),
               AppImageWidget(
                 asset: Assets.images.svg.authenticationBackground,

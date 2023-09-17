@@ -22,7 +22,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
       children: [
         Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: AppColors.grey50,
+          backgroundColor: AppColors.background,
           appBar: AppBarWidget(
             showBackButton: true,
             title: controller.oldPassword == null

@@ -144,6 +144,7 @@ const enString = {
   "unlock_with_biometrics": "Unlock with Biometrics",
   "lock": "Lock",
   "change_master_password": "Change master password",
+  "logout_confirm_message": "Are you sure you want to log out?",
 
   //password detail
   "password_detail": "Password detail",

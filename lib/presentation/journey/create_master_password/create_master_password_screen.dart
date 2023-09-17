@@ -16,7 +16,7 @@ class CreateMasterPasswordScreen
   Widget build(BuildContext context) {
     controller.context = context;
     return Scaffold(
-      backgroundColor: AppColors.blue100,
+      backgroundColor: AppColors.background,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
         child: SingleChildScrollView(

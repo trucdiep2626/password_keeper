@@ -25,7 +25,7 @@ class PasswordDetailScreen extends GetView<PasswordDetailController> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.grey50,
+        backgroundColor: AppColors.background,
         appBar: AppBarWidget(
           showBackButton: true,
           onTapBack: () => Get.back(result: controller.needRefreshList.value),

@@ -27,16 +27,16 @@ class VerifyMasterPasswordController extends GetxController
   RxBool buttonEnable = false.obs;
 
   Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
-  AccountUseCase accountUsecase;
+  AccountUseCase accountUseCase;
   LocalUseCase localUseCase;
 
-  CryptoController _cryptoController = Get.find<CryptoController>();
+  final CryptoController _cryptoController = Get.find<CryptoController>();
 
   RxBool showMasterPwd = false.obs;
   RxBool showConfirmMasterPwd = false.obs;
 
   VerifyMasterPasswordController({
-    required this.accountUsecase,
+    required this.accountUseCase,
     required this.localUseCase,
   });
 
@@ -48,7 +48,7 @@ class VerifyMasterPasswordController extends GetxController
     }
   }
 
-  User? get user => accountUsecase.user;
+  User? get user => accountUseCase.user;
 
   void onChangedShowMasterPwd() {
     showMasterPwd.value = !(showMasterPwd.value);
@@ -95,13 +95,13 @@ class VerifyMasterPasswordController extends GetxController
         );
 
         final profile =
-            await accountUsecase.getProfile(userId: user?.uid ?? '');
+            await accountUseCase.getProfile(userId: user?.uid ?? '');
 
         if (profile?.hashedMasterPassword != null &&
             profile?.hashedMasterPassword!.compareTo(keyHash) == 0) {
           passwordValid = true;
           await _cryptoController.setKeyHash(keyHash);
-          await accountUsecase.setAccount(
+          await accountUseCase.setAccount(
               account: Account(
             profile: profile,
           ));
@@ -160,7 +160,7 @@ class VerifyMasterPasswordController extends GetxController
   // }
 
   String? getUserId() {
-    return accountUsecase.getAccount?.profile?.userId;
+    return accountUseCase.getAccount?.profile?.userId;
   }
 
   void onTapPwdTextField() {
@@ -180,8 +180,20 @@ class VerifyMasterPasswordController extends GetxController
     }
   }
 
-  onPressLogin() {
-    Get.back();
+  Future<void> onTapLogout() async {
+    try {
+      //check internet connection
+      final isConnected = await checkConnectivity();
+      if (!isConnected) {
+        return;
+      }
+
+      await accountUseCase.signOut();
+      Get.offAllNamed(AppRoutes.login);
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    }
   }
 
   @override

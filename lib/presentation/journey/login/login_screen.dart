@@ -16,6 +16,7 @@ class LogInScreen extends GetView<LoginController> {
   Widget build(BuildContext context) {
     controller.context = context;
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           _buildBody(),

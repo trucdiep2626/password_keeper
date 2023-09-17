@@ -20,7 +20,7 @@ class GeneratedPasswordHistoryScreen
   Widget build(BuildContext context) {
     controller.context = context;
     return Scaffold(
-      backgroundColor: AppColors.grey100,
+      backgroundColor: AppColors.background,
       appBar: AppBarWidget(
         showBackButton: true,
         title: TranslationConstants.history.tr,
