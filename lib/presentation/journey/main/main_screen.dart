@@ -128,40 +128,42 @@ class MainScreen extends GetView<MainController> {
         notchMargin: 3,
         child: _buildBottomNavigationBar(context),
       ),
-      floatingActionButton: Visibility(
-        visible: Get.mediaQuery.viewInsets.bottom == 0,
-        child: Container(
-          width: Get.width / 5,
-          decoration: BoxDecoration(
-            color: AppColors.blue400,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                  color: AppColors.black.withOpacity(0.2),
-                  offset: const Offset(0.5, 0.5),
-                  blurRadius: 3,
-                  spreadRadius: 1)
-            ],
-          ),
-          child: AppTouchable(
-            width: Get.width / 5,
-            borderRadius:
-                BorderRadius.circular(Get.width / 5 - AppDimens.space_36),
-            onPressed: () => Get.toNamed(AppRoutes.addEditPassword),
-            child: AppImageWidget(
-              asset: Assets.images.svg.icAdd,
-              // height: AppDimens.space_20,
-              color: AppColors.white,
-              size: Get.width / 5 - AppDimens.space_36,
-              margin: EdgeInsets.only(
-                top: AppDimens.space_16,
-                bottom:
-                    MediaQuery.of(context).padding.bottom + AppDimens.space_16,
+      floatingActionButton: Obx(() => Visibility(
+            visible: Get.mediaQuery.viewInsets.bottom == 0 ||
+                controller.rxCurrentNavIndex.value == 0 ||
+                controller.rxCurrentNavIndex.value == 2,
+            child: Container(
+              width: Get.width / 7,
+              decoration: BoxDecoration(
+                color: AppColors.blue400,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                      color: AppColors.black.withOpacity(0.2),
+                      offset: const Offset(0.5, 0.5),
+                      blurRadius: 3,
+                      spreadRadius: 1)
+                ],
+              ),
+              child: AppTouchable(
+                width: Get.width / 5,
+                borderRadius:
+                    BorderRadius.circular(Get.width / 5 - AppDimens.space_36),
+                onPressed: () => Get.toNamed(AppRoutes.addEditPassword),
+                child: AppImageWidget(
+                  asset: Assets.images.svg.icAdd,
+                  // height: AppDimens.space_20,
+                  color: AppColors.white,
+                  size: Get.width / 5 - AppDimens.space_36,
+                  margin: EdgeInsets.only(
+                    top: AppDimens.space_16,
+                    bottom: MediaQuery.of(context).padding.bottom +
+                        AppDimens.space_16,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
+          )),
       //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

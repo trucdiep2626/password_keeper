@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -135,4 +136,23 @@ Future<void> copyText({required String text}) async {
       type: SnackBarType.error,
     );
   }
+}
+
+void showErrorMessage() {
+  if (Get.context != null) {
+    showTopSnackBarError(Get.context!, TranslationConstants.unknownError.tr);
+  }
+}
+
+Future<bool> checkConnectivity() async {
+  var connectivityResult = await Connectivity().checkConnectivity();
+  if (connectivityResult == ConnectivityResult.none) {
+    if (Get.context != null) {
+      showTopSnackBarError(
+          Get.context!, TranslationConstants.noConnectionError.tr);
+    }
+
+    return false;
+  }
+  return true;
 }

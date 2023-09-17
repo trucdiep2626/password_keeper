@@ -39,6 +39,12 @@ class PasswordListController extends GetxController with MixinController {
 
   Future<void> getPasswordList() async {
     try {
+      //check internet connection
+      final isConnected = await checkConnectivity();
+      if (!isConnected) {
+        return;
+      }
+
       final result = await passwordUseCase.getPasswordList(
         userId: accountUseCase.user?.uid ?? '',
         lastItem: lastItem,

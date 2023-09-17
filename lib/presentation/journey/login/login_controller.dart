@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,27 +52,23 @@ class LoginController extends GetxController with MixinController {
     hideKeyboard();
     errorText.value = '';
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedButton.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
 
     if (emailValidate.value.isEmpty && passwordValidate.value.isEmpty) {
       rxLoadedButton.value = LoadedType.start;
 
-      //   try {
-      final result = await accountUsecase.loginWithEmail(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
+      try {
+        final result = await accountUsecase.loginWithEmail(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim());
 
-    //  if (result != null) {
+        //  if (result != null) {
         debugPrint('đăng nhập thành công');
-     //   await accountUsecase.setUserCredential(authCredential: result);
+        //   await accountUsecase.setUserCredential(authCredential: result);
 
         if (user?.emailVerified ?? false) {
           final profile =
@@ -87,29 +82,25 @@ class LoginController extends GetxController with MixinController {
         } else {
           Get.toNamed(AppRoutes.verifyEmail);
         }
-    //  }
-      // } on FirebaseAuthException catch (e) {
-      //   handleFirebaseException(
-      //     code: e.code,
-      //     isSignIn: true,
-      //   );
-      // }
+        //  }
+      } on FirebaseAuthException catch (e) {
+        handleFirebaseException(
+          code: e.code,
+          isSignIn: true,
+        );
+      } finally {
+        rxLoadedButton.value = LoadedType.finish;
+      }
     }
-
-    rxLoadedButton.value = LoadedType.finish;
   }
 
   Future<void> onTapGoogleSignIn() async {
     hideKeyboard();
     errorText.value = '';
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedButton.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
 
@@ -148,32 +139,17 @@ class LoginController extends GetxController with MixinController {
 
   void onChangedEmail() {
     checkButtonEnable();
-    //  emailValidate.value = '';
-  }
-
-  void onTapEmailTextField() {
-    // pwdHasFocus.value = false;
-    // emailHasFocus.value = true;
   }
 
   void onEditingCompleteEmail() {
-    // emailHasFocus.value = false;
-    // pwdHasFocus.value = true;
     FocusScope.of(context).requestFocus(passwordFocusNode);
   }
 
   void onChangedPwd() {
     checkButtonEnable();
-    //  passwordValidate.value = '';
-  }
-
-  void onTapPwdTextField() {
-    // emailHasFocus.value = false;
-    // pwdHasFocus.value = true;
   }
 
   void onEditingCompletePwd() {
-    // pwdHasFocus.value = false;
     FocusScope.of(context).unfocus();
     if (buttonEnable.value) {
       postLogin();
@@ -181,8 +157,6 @@ class LoginController extends GetxController with MixinController {
   }
 
   void onPressedLogIn() {
-    // pwdHasFocus.value = false;
-    // emailHasFocus.value = false;
     if (buttonEnable.value) {
       postLogin();
     }

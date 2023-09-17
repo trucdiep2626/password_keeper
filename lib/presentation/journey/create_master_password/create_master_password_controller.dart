@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -12,7 +11,6 @@ import 'package:password_keeper/domain/models/account.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/widgets/export.dart';
 
 class CreateMasterPasswordController extends GetxController
     with MixinController {
@@ -68,21 +66,16 @@ class CreateMasterPasswordController extends GetxController
   }
 
   void postRegister() async {
-    rxLoadedButton.value = LoadedType.finish;
     hideKeyboard();
+
     masterPwdValidate.value =
         AppValidator.validatePassword(masterPwdController);
-
     confirmMasterPwdValidate.value = AppValidator.validateConfirmPassword(
         masterPwdController, confirmMasterPwdController);
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedButton.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
 
@@ -128,10 +121,7 @@ class CreateMasterPasswordController extends GetxController
         Get.offAllNamed(AppRoutes.verifyMasterPassword);
       } catch (e) {
         debugPrint(e.toString());
-        if (Get.context != null) {
-          showTopSnackBarError(
-              Get.context!, TranslationConstants.unknownError.tr);
-        }
+        showErrorMessage();
       } finally {
         rxLoadedButton.value = LoadedType.finish;
       }

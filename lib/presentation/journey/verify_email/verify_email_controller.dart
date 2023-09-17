@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
@@ -25,6 +26,12 @@ class VerifyEmailController extends GetxController with MixinController {
 
   Future<void> sendVerifyEmail() async {
     try {
+      //check internet connection
+      final isConnected = await checkConnectivity();
+      if (!isConnected) {
+        return;
+      }
+
       await accountUseCase.sendEmailVerification();
       if (Get.context != null) {
         showTopSnackBar(

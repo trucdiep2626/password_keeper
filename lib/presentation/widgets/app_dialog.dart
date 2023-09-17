@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_button.dart';
 
@@ -21,7 +22,7 @@ Future showAppDialog(BuildContext context, String titleText, String messageText,
     bool dismissAble = false,
     WidgetBuilder? builder,
     bool? delayConfirm,
-    required TextAlign messageTextAlign}) {
+    TextAlign? messageTextAlign}) {
   return showDialog(
     context: context,
     barrierDismissible: dismissAble,
@@ -42,7 +43,7 @@ Future showAppDialog(BuildContext context, String titleText, String messageText,
               cancelButtonText: cancelButtonText,
               cancelButtonCallback: cancelButtonCallback,
               //  firstBtnState: firstBtnState,
-              messageTextAlign: messageTextAlign,
+              messageTextAlign: TextAlign.start,
             ),
   );
 }
@@ -162,7 +163,8 @@ class _AppDialogState extends State<AppDialog> {
                             //   borderRadius: BorderRadius.circular(0),
                             //    textStyle: ThemeText.button
                             //        .copyWith(color: AppColors.grey),
-                            title: widget.cancelButtonText ?? '',
+                            title: widget.cancelButtonText ??
+                                TranslationConstants.cancel.tr,
                             backgroundColor: AppColors.transparent,
                             onPressed:
                                 widget.cancelButtonCallback ?? () => Get.back(),

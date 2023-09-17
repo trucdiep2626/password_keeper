@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -165,16 +164,12 @@ class AddEditPasswordController extends GetxController with MixinController {
     hideKeyboard();
     errorText.value = '';
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedButton.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
+
     //show weak password warning
     if ((passwordStrength.value == PasswordStrengthLevel.weak ||
         passwordStrength.value == PasswordStrengthLevel.veryWeak)) {
@@ -202,12 +197,7 @@ class AddEditPasswordController extends GetxController with MixinController {
       }
     } catch (e) {
       debugPrint(e.toString());
-      if (Get.context != null) {
-        showTopSnackBarError(
-          Get.context!,
-          TranslationConstants.unknownError.tr,
-        );
-      }
+      showErrorMessage();
     } finally {
       rxLoadedButton.value = LoadedType.finish;
     }

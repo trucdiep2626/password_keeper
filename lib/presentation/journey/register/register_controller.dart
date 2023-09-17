@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,10 +5,8 @@ import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
-import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/widgets/export.dart';
 
 class RegisterController extends GetxController with MixinController {
   final emailController = TextEditingController();
@@ -68,13 +65,9 @@ class RegisterController extends GetxController with MixinController {
     hideKeyboard();
     errorText.value = '';
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedButton.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
 
@@ -88,10 +81,7 @@ class RegisterController extends GetxController with MixinController {
 
         Get.toNamed(AppRoutes.createMasterPassword);
       } else {
-        if (Get.context != null) {
-          showTopSnackBarError(
-              Get.context!, TranslationConstants.unknownError.tr);
-        }
+        showErrorMessage();
       }
     } on FirebaseAuthException catch (e) {
       handleFirebaseException(
@@ -115,13 +105,9 @@ class RegisterController extends GetxController with MixinController {
       fullNameController,
     );
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedButton.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
 
@@ -131,18 +117,18 @@ class RegisterController extends GetxController with MixinController {
         confirmPasswordValidate.value.isEmpty) {
       rxLoadedButton.value = LoadedType.start;
       try {
-      await accountUsecase.signUpWithEmail(
+        await accountUsecase.signUpWithEmail(
           fullname: fullNameController.text.trim(),
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
 
-       // if (result != null) {
-      //    await accountUsecase.setUserCredential(authCredential: result);
-          debugPrint('đăng ký thành công');
+        // if (result != null) {
+        //    await accountUsecase.setUserCredential(authCredential: result);
+        debugPrint('đăng ký thành công');
 
-          Get.toNamed(AppRoutes.verifyEmail);
-    //    }
+        Get.toNamed(AppRoutes.verifyEmail);
+        //    }
         // else {
         //   showTopSnackBarError(context, TranslationConstants.unknownError.tr);
         //   //
@@ -150,7 +136,6 @@ class RegisterController extends GetxController with MixinController {
         //   //   debugPrint('đăng nhập thất bại');
         //   //   errorText.value = TranslationConstants.loginError.tr;
         // }
-
       } on FirebaseAuthException catch (e) {
         handleFirebaseException(
           code: e.code,
@@ -166,16 +151,7 @@ class RegisterController extends GetxController with MixinController {
     emailValidate.value = '';
   }
 
-  void onTapEmailTextField() {
-    // pwdHasFocus.value = false;
-    // fullNameHasFocus.value = false;
-    // emailHasFocus.value = true;
-    // confirmPwdHasFocus.value = false;
-  }
-
   void onEditingCompleteEmail() {
-    // pwdHasFocus.value = true;
-    // emailHasFocus.value = false;
     FocusScope.of(context).requestFocus(passwordFocusNode);
   }
 
@@ -184,16 +160,7 @@ class RegisterController extends GetxController with MixinController {
     confirmPasswordValidate.value = '';
   }
 
-  void onTapPwdTextField() {
-    // confirmPwdHasFocus.value = false;
-    // pwdHasFocus.value = true;
-    // fullNameHasFocus.value = false;
-    // emailHasFocus.value = false;
-  }
-
   void onEditingCompletePwd() {
-    // confirmPwdHasFocus.value = true;
-    // pwdHasFocus.value = false;
     FocusScope.of(context).requestFocus(confirmPasswordFocusNode);
   }
 
@@ -202,15 +169,7 @@ class RegisterController extends GetxController with MixinController {
     passwordValidate.value = '';
   }
 
-  void onTapConfirmPwdTextField() {
-    // pwdHasFocus.value = false;
-    // fullNameHasFocus.value = false;
-    // emailHasFocus.value = false;
-    // confirmPwdHasFocus.value = true;
-  }
-
   void onEditingCompleteConfirmPwd() {
-    // confirmPwdHasFocus.value = false;
     FocusScope.of(context).unfocus();
     if (buttonEnable.value) {
       postRegister();
@@ -222,23 +181,11 @@ class RegisterController extends GetxController with MixinController {
     fullNameValidate.value = '';
   }
 
-  void onTapFullNameTextField() {
-    // pwdHasFocus.value = false;
-    // fullNameHasFocus.value = true;
-    // emailHasFocus.value = false;
-    // confirmPwdHasFocus.value = false;
-  }
-
   void onEditingCompleteFullName() {
-    // fullNameHasFocus.value = false;
-    // emailHasFocus.value = true;
     FocusScope.of(context).requestFocus(emailFocusNode);
   }
 
   void onPressedRegister() {
-    // pwdHasFocus.value = false;
-    // fullNameHasFocus.value = false;
-    // emailHasFocus.value = false;
     if (buttonEnable.value) {
       postRegister();
     }

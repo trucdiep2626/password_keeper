@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +11,6 @@ import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/widgets/export.dart';
 
 class VerifyMasterPasswordController extends GetxController
     with MixinController {
@@ -61,22 +59,18 @@ class VerifyMasterPasswordController extends GetxController
   }
 
   void handleVerify() async {
-    rxLoadedButton.value = LoadedType.start;
     hideKeyboard();
     masterPwdValidate.value =
         AppValidator.validatePassword(masterPwdController);
 
-    var connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedButton.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
 
     if (masterPwdValidate.value.isEmpty) {
+      rxLoadedButton.value = LoadedType.start;
       final masterPassword = masterPwdController.text;
       final email = (user?.email ?? '').trim().toLowerCase();
       bool passwordValid = false;

@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -77,14 +76,9 @@ class PasswordDetailController extends GetxController with MixinController {
   }
 
   Future<void> handleDeleteItem() async {
-    var connectivityResult = await Connectivity().checkConnectivity();
-
-    if (connectivityResult == ConnectivityResult.none) {
-      if (Get.context != null) {
-        showTopSnackBarError(
-            Get.context!, TranslationConstants.noConnectionError.tr);
-      }
-      rxLoadedDetail.value = LoadedType.finish;
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
       return;
     }
 
@@ -110,12 +104,7 @@ class PasswordDetailController extends GetxController with MixinController {
       }
     } catch (e) {
       debugPrint(e.toString());
-      if (Get.context != null) {
-        showTopSnackBarError(
-          Get.context!,
-          TranslationConstants.unknownError.tr,
-        );
-      }
+      showErrorMessage();
     } finally {
       rxLoadedDetail.value = LoadedType.finish;
     }

@@ -38,6 +38,12 @@ class GeneratedPasswordHistoryController extends GetxController
 
   Future<void> getHistory() async {
     try {
+      //check internet connection
+      final isConnected = await checkConnectivity();
+      if (!isConnected) {
+        return;
+      }
+
       final result = await passwordUseCase.getGeneratedPasswordHistory(
         userId: accountUseCase.user?.uid ?? '',
         lastItem: lastItem,
@@ -65,6 +71,12 @@ class GeneratedPasswordHistoryController extends GetxController
 
   Future<void> getHistoryLength() async {
     try {
+      //check internet connection
+      final isConnected = await checkConnectivity();
+      if (!isConnected) {
+        return;
+      }
+
       final result = await passwordUseCase.getGeneratedPasswordHistoryLength(
         userId: accountUseCase.user?.uid ?? '',
       );
