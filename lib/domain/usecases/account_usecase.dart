@@ -49,7 +49,7 @@ class AccountUseCase {
     required String email,
     required String password,
   }) async {
-      await accountRepo.loginWithEmail(
+    await accountRepo.loginWithEmail(
       email: email,
       password: password,
     );
@@ -83,5 +83,13 @@ class AccountUseCase {
 
   Future<AccountProfile?> getProfile({required String userId}) async {
     return await accountRepo.getProfile(userId: userId);
+  }
+
+  Future<void> sendPasswordHint(
+      {required String email, required String userId}) async {
+    await accountRepo.sendPasswordHint(
+      email: email,
+      userId: userId,
+    );
   }
 }

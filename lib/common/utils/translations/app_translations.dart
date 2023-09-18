@@ -175,4 +175,8 @@ class TranslationConstants {
       "deleted_password_successfully";
   static const String updatedPasswordSuccessfully =
       "updated_password_successfully";
+
+  //password hint
+  static const String masterPwdSentSuccessfully =
+      "master_pwd_sent_successfully";
 }

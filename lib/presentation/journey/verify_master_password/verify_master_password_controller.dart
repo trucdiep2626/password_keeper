@@ -11,6 +11,7 @@ import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/widgets/export.dart';
 
 class VerifyMasterPasswordController extends GetxController
     with MixinController {
@@ -58,7 +59,7 @@ class VerifyMasterPasswordController extends GetxController
     showConfirmMasterPwd.value = !(showConfirmMasterPwd.value);
   }
 
-  void handleVerify() async {
+  Future<void> handleVerify() async {
     hideKeyboard();
     masterPwdValidate.value =
         AppValidator.validatePassword(masterPwdController);
@@ -163,20 +164,42 @@ class VerifyMasterPasswordController extends GetxController
     return accountUseCase.getAccount?.profile?.userId;
   }
 
-  void onTapPwdTextField() {
-    masterPwdHasFocus.value = true;
-  }
-
   void onChangedPwd() {
     checkButtonEnable();
     masterPwdValidate.value = '';
   }
 
-  void onPressedVerify() {
+  Future<void> onPressedVerify() async {
     masterPwdHasFocus.value = false;
     FocusScope.of(context).unfocus();
     if (buttonEnable.value) {
-      handleVerify();
+      await handleVerify();
+    }
+  }
+
+  Future<void> getMasterPasswordHint() async {
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+
+    try {
+      await accountUseCase.sendPasswordHint(
+          email: user?.email ?? '', userId: user?.uid ?? '');
+
+      if (Get.context != null) {
+        showTopSnackBar(
+          Get.context!,
+          message: TranslationConstants.masterPwdSentSuccessfully,
+          type: SnackBarType.done,
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      if (Get.context != null) {
+        showTopSnackBarError(Get.context!, e.toString());
+      }
     }
   }
 

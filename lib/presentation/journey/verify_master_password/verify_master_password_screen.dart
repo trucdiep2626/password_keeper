@@ -102,9 +102,10 @@ class VerifyMasterPasswordScreen
                   errorText: controller.masterPwdValidate.value,
                   obscureText: !(controller.showMasterPwd.value),
                   onChangedText: (value) => controller.onChangedPwd(),
-                  onTap: () => controller.onTapPwdTextField(),
+                  // onTap: () => controller.onTapPwdTextField(),
                   textInputAction: TextInputAction.next,
-                  onEditingComplete: () => controller.onPressedVerify(),
+                  onEditingComplete: () async =>
+                      await controller.onPressedVerify(),
                   focusNode: controller.masterPwdFocusNode,
                 ),
               ),
@@ -134,7 +135,7 @@ class VerifyMasterPasswordScreen
                 () => AppButton(
                   enable: controller.buttonEnable.value,
                   title: TranslationConstants.unlock.tr,
-                  onPressed: () => controller.onPressedVerify(),
+                  onPressed: () async => await controller.onPressedVerify(),
                   loaded: controller.rxLoadedButton.value,
                 ),
               ),
@@ -167,10 +168,13 @@ class VerifyMasterPasswordScreen
               SizedBox(
                 height: AppDimens.space_36,
               ),
-              Text(
-                TranslationConstants.getMasterPasswordHint.tr,
-                style: ThemeText.bodyMedium.blue300,
-                textAlign: TextAlign.center,
+              AppTouchable(
+                onPressed: () async => await controller.getMasterPasswordHint(),
+                child: Text(
+                  TranslationConstants.getMasterPasswordHint.tr,
+                  style: ThemeText.bodyMedium.blue300,
+                  textAlign: TextAlign.center,
+                ),
               ),
               SizedBox(
                 height: AppDimens.space_36,

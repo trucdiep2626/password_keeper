@@ -29,4 +29,21 @@ class Constants {
   static const String specialCharSet = "!@#\$%^&*";
 
   static const int maxGeneratedPasswordInHistory = 100;
+
+  static const String notSetHintMailTitle =
+      "Hint for Master Password is not set";
+  static const String masterPasswordHintMailTitle = "Hint for Master Password!";
+  static masterPasswordHintMailTemplate({required String masterPwd}) =>
+      "<p>You created a hint for your master password. Use this hint to remind yourself of your master password. Your hint:</p>"
+      "<p style=\"background-color:#e6e6e6;margin-bottom:20px;padding:10px;font-size:15px;color:#294661\">${masterPwd}</p>"
+      "<p><strong>Important notice:</strong> Your master password is only"
+      "yours. No one, even Password Keeper team, is able to see, access, or"
+      "reset your master password.</p>"
+      "<p>Stay secured! <br>Password Keeper team.</p>";
+
+  static const String notSetMasterPasswordHintMailTemplate =
+      "<p>You (or someone) recently requested your master password hint.</p>"
+      "<p>Unfortunately, your account does not have a master password hint.</p>"
+      "<p>If you did not request your master password hint you can safely ignore this email.</p>"
+      "<p>Stay secured! <br>Password Keeper team.</p>";
 }

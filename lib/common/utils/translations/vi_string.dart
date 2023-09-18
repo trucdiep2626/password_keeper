@@ -153,4 +153,8 @@ const viString = {
   "password_security": "Password security",
   "deleted_password_successfully": "Password has been deleted successfully.",
   "updated_password_successfully": "Password has been updated successfully.",
+
+  //password hint
+  "master_pwd_sent_successfully":
+      "Master password hint was sent. Please check your email for instructions.",
 };

@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_keeper/common/config/app_config.dart';
 import 'package:password_keeper/common/config/database/hive_services.dart';
 import 'package:password_keeper/common/config/database/hive_type_constants.dart';
+import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/domain/models/account.dart';
 
 class AccountRepository {
@@ -157,5 +158,34 @@ class AccountRepository {
     profileJson.addAll(response.docs.first.data());
 
     return AccountProfile.fromJson(profileJson);
+  }
+
+  Future<String?> getPasswordHint({required String userId}) async {
+    final profile = await getProfile(userId: userId);
+    return profile?.masterPasswordHint;
+  }
+
+  Future<void> sendPasswordHint(
+      {required String email, required String userId}) async {
+    final masterPasswordHint = await getPasswordHint(userId: userId);
+
+    if (masterPasswordHint == null) {
+      await db.collection(AppConfig.mailCollection).add({
+        "to": email,
+        "message": {
+          "subject": Constants.notSetHintMailTitle,
+          "html": Constants.notSetMasterPasswordHintMailTemplate,
+        },
+      });
+    } else {
+      await db.collection(AppConfig.mailCollection).add({
+        "to": email,
+        "message": {
+          "subject": Constants.masterPasswordHintMailTitle,
+          "html": Constants.masterPasswordHintMailTemplate(
+              masterPwd: masterPasswordHint),
+        },
+      });
+    }
   }
 }
