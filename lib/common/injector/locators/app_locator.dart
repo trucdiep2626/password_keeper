@@ -23,6 +23,7 @@ import 'package:password_keeper/presentation/journey/password_detail/password_de
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
 import 'package:password_keeper/presentation/journey/register/register_controller.dart';
+import 'package:password_keeper/presentation/journey/reset_password/reset_password_controller.dart';
 import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_controller.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_controller.dart';
@@ -84,6 +85,9 @@ void configLocator() {
             accountUseCase: getIt<AccountUseCase>(),
           ));
   getIt.registerFactory<SettingsController>(() => SettingsController(
+        accountUseCase: getIt<AccountUseCase>(),
+      ));
+  getIt.registerFactory<ResetPasswordController>(() => ResetPasswordController(
         accountUseCase: getIt<AccountUseCase>(),
       ));
 

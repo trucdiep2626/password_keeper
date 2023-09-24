@@ -8,7 +8,7 @@ import 'package:password_keeper/presentation/widgets/export.dart';
 import 'flash.dart';
 
 void showTopSnackBar(BuildContext context,
-    {SnackBarType type = SnackBarType.warning, required String message}) {
+    {SnackBarType type = SnackBarType.done, required String message}) {
   showFlash(
       context: context,
       duration: const Duration(seconds: 2),

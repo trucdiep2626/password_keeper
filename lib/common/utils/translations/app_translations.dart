@@ -179,4 +179,12 @@ class TranslationConstants {
   //password hint
   static const String masterPwdSentSuccessfully =
       "master_pwd_sent_successfully";
+
+  //reset password
+  static const String resetPassword = "reset_password";
+  static const String resetPasswordDetail = "reset_password_detail";
+  static const String rememberPassword = "remember_password";
+  static const String requestPasswordReset = "request_password_reset";
+  static const String resetPasswordSentSuccessfully =
+      "reset_password_sent_successfully";
 }

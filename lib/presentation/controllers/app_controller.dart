@@ -7,12 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
-import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
-import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/widgets/export.dart';
 
 class AppController extends SuperController with MixinController {
   late String uid;
@@ -41,7 +38,7 @@ class AppController extends SuperController with MixinController {
   void onReady() {
     firebaseUser = Rx<User?>(accountUseCase.user);
     firebaseUser.bindStream(accountUseCase.authState);
-    _navigateScreen(firebaseUser.value);
+    // _navigateScreen(firebaseUser.value);
     //ever(firebaseUser, _navigateScreen);
   }
 
@@ -66,14 +63,14 @@ class AppController extends SuperController with MixinController {
   }
 
   _updateState(ConnectivityResult result) {
-    if (result == ConnectivityResult.none) {
-      showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
-    } else {
-      showTopSnackBar(
-          type: SnackBarType.done,
-          Get.context!,
-          message: TranslationConstants.internetRestore.tr);
-    }
+    // if (result == ConnectivityResult.none) {
+    //   showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
+    // } else {
+    //   showTopSnackBar(
+    //       type: SnackBarType.done,
+    //       Get.context!,
+    //       message: TranslationConstants.internetRestore.tr);
+    // }
   }
 
   @override
@@ -99,8 +96,24 @@ class AppController extends SuperController with MixinController {
   }
 
   @override
-  void onResumed() {
-    Get.offAllNamed(AppRoutes.verifyMasterPassword);
+  void onResumed() async {
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+
+    accountUseCase.authState.listen((User? user) {
+      if (user != null) {
+        if (!user.emailVerified && Get.currentRoute != AppRoutes.verifyEmail) {
+          Get.offAndToNamed(AppRoutes.verifyEmail);
+        } else if (Get.currentRoute == AppRoutes.splash) {
+          Get.offAndToNamed(AppRoutes.verifyMasterPassword);
+        }
+      } else if (Get.currentRoute != AppRoutes.login) {
+        Get.offAndToNamed(AppRoutes.login);
+      }
+    });
     logger('---------App State onResumed');
   }
 }

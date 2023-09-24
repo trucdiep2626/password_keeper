@@ -141,7 +141,7 @@ class RegisterController extends GetxController with MixinController {
           code: e.code,
         );
       } finally {
-        rxLoadedGoogleButton.value = LoadedType.finish;
+        rxLoadedButton.value = LoadedType.finish;
       }
     }
   }

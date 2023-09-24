@@ -92,4 +92,8 @@ class AccountUseCase {
       userId: userId,
     );
   }
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    await accountRepo.sendPasswordResetEmail(email);
+  }
 }

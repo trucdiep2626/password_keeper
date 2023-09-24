@@ -208,7 +208,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
   }
 
   void setFromAddEditPwd() {
-    fromAddPassword.value = true;
+    fromAddPassword.value = !fromAddPassword.value;
   }
 
   @override

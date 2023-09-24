@@ -131,6 +131,10 @@ class AccountRepository {
     await auth.currentUser!.delete();
   }
 
+  Future<void> sendPasswordResetEmail(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
+  }
+
   Future createUser(AccountProfile profile) async {
     await db
             .collection(AppConfig.userCollection)

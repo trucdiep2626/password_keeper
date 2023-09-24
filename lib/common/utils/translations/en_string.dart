@@ -157,4 +157,13 @@ const enString = {
   //password hint
   "master_pwd_sent_successfully":
       "Master password hint was sent. Please check your email for instructions.",
+
+  //reset password
+  "reset_password": "Reset password",
+  "reset_password_detail":
+      "Enter the email address you used when you joined and we'll send you instructions to reset your password.",
+  "remember_password": "You remember your password",
+  "request_password_reset": "Request password reset",
+  "reset_password_sent_successfully":
+      "Reset password link was sent. Please check your email for instructions.",
 };

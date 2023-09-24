@@ -31,7 +31,7 @@ class HomeScreen extends GetView<HomeController> {
                   //welcom text
                   _buildWelcome(),
                   //password health
-                  _buildPasswordHealth(),
+                  //  _buildPasswordHealth(),
                 ],
               )),
         ),

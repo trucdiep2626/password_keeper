@@ -37,7 +37,8 @@ class SettingsScreen extends GetView<SettingsController> {
               //   title: TranslationConstants.unlockWithBiometrics.tr,
               // ),
               _buildItem(
-                onPressed: () => Get.offAllNamed(AppRoutes.verifyEmail),
+                onPressed: () =>
+                    Get.offAllNamed(AppRoutes.verifyMasterPassword),
                 icon: Assets.images.svg.icPassword,
                 title: TranslationConstants.lock.tr,
               ),

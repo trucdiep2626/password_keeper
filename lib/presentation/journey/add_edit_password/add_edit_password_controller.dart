@@ -252,6 +252,7 @@ class AddEditPasswordController extends GetxController with MixinController {
     if (result != null && result is String) {
       passwordController.text = result;
       checkButtonEnable();
+      checkPasswordStrength();
     }
   }
 

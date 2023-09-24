@@ -163,7 +163,7 @@ class LoginController extends GetxController with MixinController {
   }
 
   onPressForgotPassword() {
-    //  Get.toNamed(AppRoutes.forgotPassword);
+    Get.toNamed(AppRoutes.resetPassword);
   }
 
   onPressRegister() {

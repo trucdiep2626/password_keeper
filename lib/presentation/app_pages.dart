@@ -10,6 +10,7 @@ import 'package:password_keeper/common/injector/bindings/password_detail_binding
 import 'package:password_keeper/common/injector/bindings/password_generator_binding.dart';
 import 'package:password_keeper/common/injector/bindings/password_list_binding.dart';
 import 'package:password_keeper/common/injector/bindings/register_binding.dart';
+import 'package:password_keeper/common/injector/bindings/reset_password_binding.dart';
 import 'package:password_keeper/common/injector/bindings/settings_binding.dart';
 import 'package:password_keeper/common/injector/bindings/signin_location_binding.dart';
 import 'package:password_keeper/common/injector/bindings/splash_binding.dart';
@@ -23,6 +24,7 @@ import 'package:password_keeper/presentation/journey/main/main_screen.dart';
 import 'package:password_keeper/presentation/journey/password_detail/password_detail_screen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
 import 'package:password_keeper/presentation/journey/register/register_screen.dart';
+import 'package:password_keeper/presentation/journey/reset_password/reset_password_screen.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_screen.dart';
 import 'package:password_keeper/presentation/journey/splash/splash_screen.dart';
 import 'package:password_keeper/presentation/journey/verify_email/verify_email_screen.dart';
@@ -91,5 +93,10 @@ List<GetPage> myPages = [
     name: AppRoutes.passwordDetail,
     page: () => const PasswordDetailScreen(),
     binding: PasswordDetailBinding(),
+  ),
+  GetPage(
+    name: AppRoutes.resetPassword,
+    page: () => const ResetPasswordScreen(),
+    binding: ResetPasswordBinding(),
   ),
 ];
