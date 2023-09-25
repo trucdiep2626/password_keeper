@@ -13,12 +13,12 @@ import 'package:password_keeper/presentation/controllers/app_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
 import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_controller.dart';
+import 'package:password_keeper/presentation/journey/change_master_password/change_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/journey/login/login_controller.dart';
 import 'package:password_keeper/presentation/journey/main/main_controller.dart';
-import 'package:password_keeper/presentation/journey/master_password/master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/password_detail/password_detail_controller.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
@@ -54,8 +54,8 @@ void configLocator() {
       () => LoginController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<CreateMasterPasswordController>(() =>
       CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<MasterPasswordController>(
-      () => MasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<ChangeMasterPasswordController>(
+      () => ChangeMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<VerifyMasterPasswordController>(
       () => VerifyMasterPasswordController(
             accountUseCase: getIt<AccountUseCase>(),

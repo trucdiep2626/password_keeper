@@ -3,13 +3,13 @@
 ///  FlutterGen
 /// *****************************************************
 
-import 'package:flutter/services.dart';
 // coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 
 class $AssetsFontsGen {
@@ -213,6 +213,10 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icSearch =>
       const SvgGenImage('assets/images/svg/ic_search.svg');
 
+  /// File path: assets/images/svg/ic_setting.svg
+  SvgGenImage get icSetting =>
+      const SvgGenImage('assets/images/svg/ic_setting.svg');
+
   /// File path: assets/images/svg/ic_sort.svg
   SvgGenImage get icSort => const SvgGenImage('assets/images/svg/ic_sort.svg');
 
@@ -282,6 +286,7 @@ class $AssetsImagesSvgGen {
         icPassword,
         icPasswordCheck,
         icSearch,
+        icSetting,
         icSort,
         icTick,
         icTrash,

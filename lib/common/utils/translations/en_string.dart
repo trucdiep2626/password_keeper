@@ -62,6 +62,11 @@ const enString = {
   "enter_master_password": "Enter your Master Password to sign in",
   "unlock_biometric": "Unlock with Face ID/Touch ID",
   "wrong_master_password": "Invalid master password. Try again.",
+  "current_master_password": "Current Master Password",
+  "new_master_password": "New Master Password",
+  "confirm_new_master_password": "Confirm New Master Password",
+  "change_master_password_confirm":
+  "Are you sure you want to change your master password?",
 
   //verify email
   "verify_email": "Verify your email address",

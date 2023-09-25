@@ -88,6 +88,10 @@ class TranslationConstants {
   static const String enterMasterPassword = "enter_master_password";
   static const String unlockBiometric = "unlock_biometric";
   static const String wrongMasterPassword = "wrong_master_password";
+  static const String currentMasterPassword ="current_master_password";
+  static const String newMasterPassword ="new_master_password";
+  static const String confirmNewMasterPassword ="confirm_new_master_password";
+  static const String changeMasterPasswordConfirm = "change_master_password_confirm";
 
   //verify email
   static const String verifyEmail = "verify_email";

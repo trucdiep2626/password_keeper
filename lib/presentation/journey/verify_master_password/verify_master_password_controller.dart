@@ -85,7 +85,7 @@ class VerifyMasterPasswordController extends GetxController
       var storedHashedPassword = await _cryptoController.getKeyHash();
 
       if (!isNullEmpty(storedHashedPassword)) {
-        passwordValid = await _cryptoController.compareAndUpdateKeyHash(
+        passwordValid = await _cryptoController.compareKeyHash(
           masterPassword: masterPassword,
           key: key,
         );
@@ -129,7 +129,7 @@ class VerifyMasterPasswordController extends GetxController
         //
         // } else {
         //   debugPrint('đăng nhập thất bại');
-        errorText.value = TranslationConstants.loginError.tr;
+        errorText.value = TranslationConstants.wrongMasterPassword.tr;
       }
 
       //    }

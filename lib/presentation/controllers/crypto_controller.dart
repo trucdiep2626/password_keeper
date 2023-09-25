@@ -25,7 +25,7 @@ import 'package:pointycastle/pointycastle.dart';
 class CryptoController extends GetxController with MixinController {
   final sha256Digester = SHA256Digest();
 
-  String RANDOM_STRING_CHARSET = "abcdefghijklmnopqrstuvwxyz1234567890";
+  String randomStringCharset = "abcdefghijklmnopqrstuvwxyz1234567890";
 
   //final StateController _stateController = Get.find<StateController>();
 
@@ -1111,7 +1111,7 @@ class CryptoController extends GetxController with MixinController {
     );
   }
 
-  Future<bool> compareAndUpdateKeyHash({
+  Future<bool> compareKeyHash({
     String? masterPassword,
     SymmetricCryptoKey? key,
   }) async {

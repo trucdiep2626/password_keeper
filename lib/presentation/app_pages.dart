@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/injector/bindings/add_edit_password_binding.dart';
+import 'package:password_keeper/common/injector/bindings/change_master_password_binding.dart';
 import 'package:password_keeper/common/injector/bindings/create_master_password_binding.dart';
 import 'package:password_keeper/common/injector/bindings/generated_password_history_binding.dart';
 import 'package:password_keeper/common/injector/bindings/home_binding.dart';
@@ -17,6 +18,7 @@ import 'package:password_keeper/common/injector/bindings/splash_binding.dart';
 import 'package:password_keeper/common/injector/bindings/verify_email.dart';
 import 'package:password_keeper/common/injector/bindings/verify_master_password_binding.dart';
 import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_screen.dart';
+import 'package:password_keeper/presentation/journey/change_master_password/change_master_password_screen.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_screen.dart';
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_screen.dart';
 import 'package:password_keeper/presentation/journey/login/login_screen.dart';
@@ -98,5 +100,10 @@ List<GetPage> myPages = [
     name: AppRoutes.resetPassword,
     page: () => const ResetPasswordScreen(),
     binding: ResetPasswordBinding(),
+  ),
+  GetPage(
+    name: AppRoutes.changeMasterPassword,
+    page: () => const ChangeMasterPasswordScreen(),
+    binding: ChangeMasterPasswordBinding(),
   ),
 ];
