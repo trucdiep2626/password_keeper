@@ -91,7 +91,9 @@ void handleFirebaseException({
       message = TranslationConstants.existingEmail.tr;
       break;
     case 'invalid-email':
-      message = TranslationConstants.invalidEmail.tr;
+      message = isSignIn
+          ? TranslationConstants.loginError.tr
+          : TranslationConstants.invalidEmail.tr;
       break;
     case 'operation-not-allowed':
       message = TranslationConstants.unknownError.tr;
@@ -126,7 +128,6 @@ Future<void> copyText({required String text}) async {
     showTopSnackBar(
       Get.context!,
       message: TranslationConstants.copiedSuccessfully.tr,
-      type: SnackBarType.done,
     );
   } catch (e) {
     // copied fail

@@ -36,7 +36,6 @@ class VerifyEmailController extends GetxController with MixinController {
       if (Get.context != null) {
         showTopSnackBar(
           Get.context!,
-          type: SnackBarType.done,
           message: TranslationConstants.verificationSent.tr,
         );
       }

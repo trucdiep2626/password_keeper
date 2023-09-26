@@ -18,7 +18,9 @@ class ChangeMasterPasswordScreen
     controller.context = context;
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBarWidget(title: TranslationConstants.changeMasterPassword),
+      appBar: AppBarWidget(
+          showBackButton: true,
+          title: TranslationConstants.changeMasterPassword.tr),
       body: Padding(
         padding: EdgeInsets.all(AppDimens.space_16),
         child: SingleChildScrollView(
@@ -26,6 +28,11 @@ class ChangeMasterPasswordScreen
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              // Text(
+              //   TranslationConstants.masterPasswordDescription.tr,
+              //   style: ThemeText.bodyMedium.s12.grey500Color,
+              //   textAlign: TextAlign.start,
+              // ),
               Obx(
                 () => AppTextField(
                   prefixIcon: AppImageWidget(
@@ -59,11 +66,9 @@ class ChangeMasterPasswordScreen
                   focusNode: controller.currentMasterPwdFocusNode,
                 ),
               ),
-
               SizedBox(
                 height: AppDimens.space_8,
               ),
-
               Obx(
                 () => AppTextField(
                   prefixIcon: AppImageWidget(
@@ -153,13 +158,13 @@ class ChangeMasterPasswordScreen
               SizedBox(
                 height: AppDimens.space_4,
               ),
-              Text(
-                TranslationConstants.masterPasswordHintNote.tr,
-                style: ThemeText.bodyRegular.s10.grey600Color,
-              ),
-              SizedBox(
-                height: AppDimens.space_12,
-              ),
+              // Text(
+              //   TranslationConstants.masterPasswordHintNote.tr,
+              //   style: ThemeText.bodyRegular.s10.grey600Color,
+              // ),
+              // SizedBox(
+              //   height: AppDimens.space_12,
+              // ),
               Obx(
                 () => controller.errorText.value.isNotEmpty
                     ? Container(
@@ -179,7 +184,6 @@ class ChangeMasterPasswordScreen
               SizedBox(
                 height: AppDimens.space_20,
               ),
-
               // SizedBox(
               //   height: AppDimens.space_12,
               // ),
@@ -196,11 +200,14 @@ class ChangeMasterPasswordScreen
         ),
       ),
       bottomNavigationBar: Obx(
-        () => AppButton(
-          enable: controller.buttonEnable.value,
-          title: TranslationConstants.save.tr,
-          onPressed: () => controller.onPressedChange(),
-          loaded: controller.rxLoadedButton.value,
+        () => Padding(
+          padding: EdgeInsets.all(AppDimens.space_16),
+          child: AppButton(
+            enable: controller.buttonEnable.value,
+            title: TranslationConstants.save.tr,
+            onPressed: () => controller.onPressedChange(),
+            loaded: controller.rxLoadedButton.value,
+          ),
         ),
       ),
     );

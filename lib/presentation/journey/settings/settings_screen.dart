@@ -26,24 +26,23 @@ class SettingsScreen extends GetView<SettingsController> {
           padding: EdgeInsets.all(AppDimens.space_16),
           child: Column(
             children: [
-              // _buildItem(
-              //   onPressed: () {},
-              //   icon: Assets.images.svg.icPasswordCheck,
-              //   title: TranslationConstants.changeMasterPassword.tr,
-              // ),
+              _buildItem(
+                onPressed: () => Get.toNamed(AppRoutes.changeMasterPassword),
+                icon: Assets.images.svg.icPasswordCheck,
+                title: TranslationConstants.changeMasterPassword.tr,
+              ),
               // _buildItem(
               //   onPressed: () {},
               //   icon: Assets.images.svg.icFingerScan,
               //   title: TranslationConstants.unlockWithBiometrics.tr,
               // ),
               _buildItem(
-                onPressed: () =>
-                    Get.offAllNamed(AppRoutes.verifyMasterPassword),
+                onPressed: () async => await controller.onTapLock(),
                 icon: Assets.images.svg.icPassword,
                 title: TranslationConstants.lock.tr,
               ),
               _buildItem(
-                onPressed: () async => controller.onTapLogout(),
+                onPressed: () async => await controller.onTapLogout(),
                 icon: Assets.images.svg.icLogout,
                 title: TranslationConstants.logout.tr,
               ),

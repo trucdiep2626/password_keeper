@@ -121,7 +121,6 @@ class AddEditPasswordController extends GetxController with MixinController {
     showTopSnackBar(
       Get.context!,
       message: TranslationConstants.addPasswordSuccessful.tr,
-      type: SnackBarType.done,
     );
     clearData();
 
@@ -153,7 +152,6 @@ class AddEditPasswordController extends GetxController with MixinController {
     showTopSnackBar(
       Get.context!,
       message: TranslationConstants.updatedPasswordSuccessfully.tr,
-      type: SnackBarType.done,
     );
     clearData();
 

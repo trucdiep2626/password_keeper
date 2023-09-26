@@ -94,7 +94,6 @@ class PasswordDetailController extends GetxController with MixinController {
         showTopSnackBar(
           Get.context!,
           message: TranslationConstants.deletedPasswordSuccessfully.tr,
-          type: SnackBarType.done,
         );
         needRefreshList.value = true;
         //close dialog

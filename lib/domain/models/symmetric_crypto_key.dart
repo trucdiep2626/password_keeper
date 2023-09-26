@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/encryption_helper.dart';
 
 class SymmetricCryptoKey {
@@ -52,9 +53,19 @@ class SymmetricCryptoKey {
   }
 
   SymmetricCryptoKey.fromJson(Map<String, dynamic> json) {
-    key = json['key'];
-    encKey = json['enc_key'];
-    macKey = json['mac_key'];
+    logger(json['key'].toString());
+    logger(json['key'].cast<int>().toList().runtimeType.toString());
+
+    if (json['key'] != null) {
+      key = Uint8List.fromList((json['key'].cast<int>()));
+    }
+    if (json['enc_key'] != null) {
+      encKey = Uint8List.fromList((json['enc_key'].cast<int>()));
+    }
+    if (json['mac_key'] != null) {
+      macKey = Uint8List.fromList((json['mac_key'].cast<int>()));
+    }
+
     encType = json['enc_type'] != null
         ? EncryptionHelper.getEncryptionTypeFromId(json['enc_type'])
         : null;
@@ -65,7 +76,7 @@ class SymmetricCryptoKey {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['key'] = this.key;
+    data['key'] = key;
     data['enc_key'] = this.encKey;
     data['mac_key'] = this.macKey;
     data['enc_type'] = this.encType?.id;

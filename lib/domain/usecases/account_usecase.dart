@@ -73,12 +73,18 @@ class AccountUseCase {
     await accountRepo.signOut();
   }
 
+  Future<void> lock() async => await accountRepo.lock();
+
   Future<void> deleteAccount() async {
     await accountRepo.deleteAccount();
   }
 
   Future createUser(AccountProfile profile) async {
     return await accountRepo.createUser(profile);
+  }
+
+  Future<void> editProfile(AccountProfile profile) async {
+    await accountRepo.editProfile(profile);
   }
 
   Future<AccountProfile?> getProfile({required String userId}) async {

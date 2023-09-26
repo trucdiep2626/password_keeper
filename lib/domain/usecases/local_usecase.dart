@@ -9,6 +9,6 @@ class LocalUseCase {
       localRepository.getLocalValue(key: key);
 
   Future<void> setLocalValue({required String key, dynamic value}) async {
-    return await localRepository.setLocalValue(key: key);
+    return await localRepository.setLocalValue(key: key, value: value);
   }
 }

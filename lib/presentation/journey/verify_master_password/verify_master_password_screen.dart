@@ -170,6 +170,7 @@ class VerifyMasterPasswordScreen
               ),
               AppTouchable(
                 onPressed: () async => await controller.getMasterPasswordHint(),
+                padding: EdgeInsets.all(AppDimens.space_16),
                 child: Text(
                   TranslationConstants.getMasterPasswordHint.tr,
                   style: ThemeText.bodyMedium.blue300,

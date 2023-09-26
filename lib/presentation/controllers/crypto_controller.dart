@@ -1117,7 +1117,7 @@ class CryptoController extends GetxController with MixinController {
   }) async {
     var storedKeyHash = await getKeyHash();
 
-    if (!isNullEmpty(masterPassword) && !isNullEmpty(masterPassword)) {
+    if (!isNullEmpty(storedKeyHash) && !isNullEmpty(masterPassword)) {
       var keyHash = await hashPassword(password: masterPassword!, key: key);
       if (!isNullEmpty(keyHash) && storedKeyHash == keyHash) {
         return true;

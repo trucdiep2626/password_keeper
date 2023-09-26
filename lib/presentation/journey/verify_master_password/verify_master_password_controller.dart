@@ -191,8 +191,7 @@ class VerifyMasterPasswordController extends GetxController
       if (Get.context != null) {
         showTopSnackBar(
           Get.context!,
-          message: TranslationConstants.masterPwdSentSuccessfully,
-          type: SnackBarType.done,
+          message: TranslationConstants.masterPwdSentSuccessfully.tr,
         );
       }
     } catch (e) {

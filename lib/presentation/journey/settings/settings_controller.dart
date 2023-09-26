@@ -15,6 +15,11 @@ class SettingsController extends GetxController with MixinController {
 
   SettingsController({required this.accountUseCase});
 
+  Future<void> onTapLock() async {
+    // await accountUseCase.lock();
+    Get.offAllNamed(AppRoutes.verifyMasterPassword);
+  }
+
   Future<void> onTapLogout() async {
     showAppDialog(context, TranslationConstants.logout.tr,
         TranslationConstants.logoutConfirmMessage.tr,

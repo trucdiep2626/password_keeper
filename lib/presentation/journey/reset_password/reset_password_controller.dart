@@ -67,7 +67,6 @@ class ResetPasswordController extends GetxController with MixinController {
 
         if (Get.context != null) {
           showTopSnackBar(Get.context!,
-              type: SnackBarType.done,
               message: TranslationConstants.resetPasswordSentSuccessfully.tr);
           Get.back();
         }

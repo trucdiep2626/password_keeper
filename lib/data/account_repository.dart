@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -23,8 +25,8 @@ class AccountRepository {
 
   //Account
   Account? get getAccount => Account.fromJson(
-        (hiveServices.hiveBox.get(HiveKey.accountKey)
-                as Map<String, dynamic>?) ??
+        json.decode(json.encode(hiveServices.hiveBox.get(HiveKey.accountKey)))
+                as Map<String, dynamic> ??
             {},
       );
 
@@ -127,6 +129,8 @@ class AccountRepository {
     await hiveServices.hiveBox.clear();
   }
 
+  Future<void> lock() async => await hiveServices.hiveBox.clear();
+
   Future<void> deleteAccount() async {
     await auth.currentUser!.delete();
   }
@@ -137,13 +141,19 @@ class AccountRepository {
 
   Future createUser(AccountProfile profile) async {
     await db
-            .collection(AppConfig.userCollection)
-            .doc(profile.userId)
-            .collection(AppConfig.profileCollection)
-            .add(profile.toJson())
+        .collection(AppConfig.userCollection)
+        .doc(profile.userId)
+        .collection(AppConfig.profileCollection)
+        .add(profile.toJson());
+  }
 
-        //    .then((value) => value.snapshots().first.)
-        ;
+  Future<void> editProfile(AccountProfile profile) async {
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(profile.userId)
+        .collection(AppConfig.profileCollection)
+        .doc(profile.id)
+        .update(profile.toJson());
   }
 
   Future<AccountProfile?> getProfile({required String userId}) async {
@@ -158,7 +168,8 @@ class AccountRepository {
     }
 
     Map<String, dynamic> profileJson = {};
-    profileJson.addAll({'user_id': response.docs.first.id});
+    profileJson
+        .addAll({'id': response.docs.first.id, 'user_id': user?.uid ?? ''});
     profileJson.addAll(response.docs.first.data());
 
     return AccountProfile.fromJson(profileJson);

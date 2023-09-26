@@ -93,7 +93,7 @@ class PasswordUseCase {
   Future<List<PasswordItem>> getPasswordList({
     required String userId,
     PasswordItem? lastItem,
-    required int pageSize,
+    int? pageSize,
   }) async {
     return await passwordRepository.getPasswordList(
       userId: userId,
@@ -113,6 +113,16 @@ class PasswordUseCase {
     return await passwordRepository.deletePassword(
       userId: userId,
       itemId: itemId,
+    );
+  }
+
+  Future<void> updatePasswordList({
+    required String userId,
+    required List<PasswordItem> passwords,
+  }) async {
+    await passwordRepository.updatePasswordList(
+      userId: userId,
+      passwords: passwords,
     );
   }
 }

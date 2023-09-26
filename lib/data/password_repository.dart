@@ -188,7 +188,7 @@ class PasswordRepository {
   Future<List<PasswordItem>> getPasswordList({
     required String userId,
     PasswordItem? lastItem,
-    required int pageSize,
+    int? pageSize,
   }) async {
     DocumentSnapshot? startAfterDoc;
     if (lastItem != null) {
@@ -205,24 +205,34 @@ class PasswordRepository {
       }
     }
 
-    final response = startAfterDoc == null
-        ? await db
-            .collection(AppConfig.userCollection)
-            .doc(userId)
-            .collection(AppConfig.passwordsCollection)
-            .orderBy('sign_in_location', descending: false)
-            .orderBy('user_id', descending: false)
-            .limit(pageSize)
-            .get()
-        : await db
-            .collection(AppConfig.userCollection)
-            .doc(userId)
-            .collection(AppConfig.passwordsCollection)
-            .orderBy('sign_in_location', descending: false)
-            .orderBy('user_id', descending: false)
-            .startAfterDocument(startAfterDoc)
-            .limit(pageSize)
-            .get();
+    QuerySnapshot<Map<String, dynamic>> response;
+
+    if (pageSize == null) {
+      response = await db
+          .collection(AppConfig.userCollection)
+          .doc(userId)
+          .collection(AppConfig.passwordsCollection)
+          .get();
+    } else {
+      response = startAfterDoc == null
+          ? await db
+              .collection(AppConfig.userCollection)
+              .doc(userId)
+              .collection(AppConfig.passwordsCollection)
+              .orderBy('sign_in_location', descending: false)
+              .orderBy('user_id', descending: false)
+              .limit(pageSize)
+              .get()
+          : await db
+              .collection(AppConfig.userCollection)
+              .doc(userId)
+              .collection(AppConfig.passwordsCollection)
+              .orderBy('sign_in_location', descending: false)
+              .orderBy('user_id', descending: false)
+              .startAfterDocument(startAfterDoc)
+              .limit(pageSize)
+              .get();
+    }
 
     if (response.docs.isEmpty) {
       return <PasswordItem>[];
@@ -265,5 +275,37 @@ class PasswordRepository {
         .doc(itemId)
         .delete();
     return true;
+  }
+
+  Future<void> updatePasswordList({
+    required String userId,
+    required List<PasswordItem> passwords,
+  }) async {
+    final passwordsCollection = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.passwordsCollection)
+        .get();
+    final totalPwdDocs = passwordsCollection.docs.length;
+    final batches =
+        (totalPwdDocs / 500).ceil(); // Calculate how many batches needed
+
+    for (var i = 0; i < batches; i++) {
+      // Creating a new batch for each bunch of 500 documents
+      final batch = db.batch();
+      final docs = passwordsCollection.docs.skip(i * 500).take(500);
+
+      for (final doc in docs) {
+        final docRef = db
+            .collection(AppConfig.userCollection)
+            .doc(userId)
+            .collection(AppConfig.passwordsCollection)
+            .doc(doc.id);
+        batch.update(docRef,
+            passwords[i].toJson()); // Update the 'myField' of each document
+      }
+
+      await batch.commit(); // Committing after each 500 operations.
+    }
   }
 }

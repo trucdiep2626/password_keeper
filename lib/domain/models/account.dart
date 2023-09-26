@@ -15,11 +15,11 @@ class Account {
     volatileData = AccountVolatileData();
   }
 
-  Account.copy(Account account)
-      : profile = AccountProfile.copy(account.profile!),
-        // tokens = AccountTokens.copy(account.tokens!),
-        // settings = AccountSettings.copy(account.settings!),
-        volatileData = AccountVolatileData();
+  // Account.copy(Account account)
+  //     : profile = AccountProfile.copy(account.profile!),
+  //       // tokens = AccountTokens.copy(account.tokens!),
+  //       // settings = AccountSettings.copy(account.settings!),
+  //       volatileData = AccountVolatileData();
 
   Account.fromJson(Map<String, dynamic> json) {
     profile = json['profile'] != null
@@ -31,7 +31,7 @@ class Account {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (profile != null) {
       data['profile'] = profile!.toJson();
     }
@@ -44,6 +44,7 @@ class Account {
 }
 
 class AccountProfile {
+  String? id;
   String? userId;
   String? email;
   String? hashedMasterPassword;
@@ -54,16 +55,17 @@ class AccountProfile {
   int? kdfParallelism;
 
   String? name;
-  String? stamp;
-  String? orgIdentifier;
-  String? avatarColor;
+//  String? stamp;
+//  String? orgIdentifier;
+//  String? avatarColor;
   // KdfType? kdfType;
 
-  bool? emailVerified;
-  bool? hasPremiumPersonally;
-  ForcePasswordResetReason? forcePasswordResetReason;
+  // bool? emailVerified;
+  // bool? hasPremiumPersonally;
+  // ForcePasswordResetReason? forcePasswordResetReason;
 
   AccountProfile({
+    this.id,
     this.userId,
     this.email,
     this.masterPasswordHint,
@@ -81,23 +83,32 @@ class AccountProfile {
     // this.forcePasswordResetReason
   });
 
-  AccountProfile.copy(AccountProfile copy) {
-    userId = copy.userId;
-    email = copy.email;
-    name = copy.name;
-    stamp = copy.stamp;
-    orgIdentifier = copy.orgIdentifier;
-    avatarColor = copy.avatarColor;
-    // kdfType = copy.kdfType;
-    kdfIterations = copy.kdfIterations;
-    kdfMemory = copy.kdfMemory;
-    kdfParallelism = copy.kdfParallelism;
-    emailVerified = copy.emailVerified;
-    hasPremiumPersonally = copy.hasPremiumPersonally;
-    forcePasswordResetReason = copy.forcePasswordResetReason;
-  }
+  AccountProfile copyWith({
+    String? id,
+    String? userId,
+    String? email,
+    String? hashedMasterPassword,
+    String? masterPasswordHint,
+    String? key,
+    int? kdfIterations,
+    int? kdfMemory,
+    int? kdfParallelism,
+    String? name,
+  }) =>
+      AccountProfile(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        email: email ?? this.email,
+        hashedMasterPassword: hashedMasterPassword ?? this.hashedMasterPassword,
+        masterPasswordHint: masterPasswordHint ?? this.masterPasswordHint,
+        key: key ?? this.key,
+        kdfIterations: kdfIterations ?? this.kdfIterations,
+        kdfMemory: kdfMemory ?? this.kdfMemory,
+        kdfParallelism: kdfParallelism ?? this.kdfParallelism,
+      );
 
   AccountProfile.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     email = json['email'];
     hashedMasterPassword = json['hashed_master_password'];
     masterPasswordHint = json['master_password_hint'];
@@ -110,15 +121,15 @@ class AccountProfile {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['email'] = this.email;
-    data['hashed_master_password'] = this.hashedMasterPassword;
-    data['master_password_hint'] = this.masterPasswordHint;
-    data['key'] = this.key;
-    data['kdf_iterations'] = this.kdfIterations;
-    data['kdf_memory'] = this.kdfMemory;
-    data['kdf_parallelism'] = this.kdfParallelism;
-    data['name'] = this.name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['email'] = email;
+    data['hashed_master_password'] = hashedMasterPassword;
+    data['master_password_hint'] = masterPasswordHint;
+    data['key'] = key;
+    data['kdf_iterations'] = kdfIterations;
+    data['kdf_memory'] = kdfMemory;
+    data['kdf_parallelism'] = kdfParallelism;
+    data['name'] = name;
     return data;
   }
 }
@@ -171,7 +182,7 @@ class AccountVolatileData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (key != null) {
       data['key'] = key!.toJson();
     }
@@ -179,7 +190,7 @@ class AccountVolatileData {
       data['pin_protected_key'] = pinProtectedKey!.toJson();
     }
 
-    data['biometric_locked'] = this.biometricLocked;
+    data['biometric_locked'] = biometricLocked;
     return data;
   }
 }
