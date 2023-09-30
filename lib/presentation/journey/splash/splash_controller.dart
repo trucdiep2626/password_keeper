@@ -33,12 +33,19 @@ class SplashController extends GetxController with MixinController {
       return;
     }
 
-    accountUseCase.authState.listen((User? user) {
+    accountUseCase.authState.listen((User? user) async {
       if (user != null) {
         if (!user.emailVerified) {
           Get.offAndToNamed(AppRoutes.verifyEmail);
-        } else if (Get.currentRoute == AppRoutes.splash) {
-          Get.offAndToNamed(AppRoutes.verifyMasterPassword);
+        } else {
+          final profile = await accountUseCase.getProfile(userId: user.uid);
+          if (profile != null) {
+            if (Get.currentRoute == AppRoutes.splash) {
+              Get.offAndToNamed(AppRoutes.verifyMasterPassword);
+            }
+          } else {
+            Get.offAndToNamed(AppRoutes.createMasterPassword);
+          }
         }
       } else {
         Get.offAndToNamed(AppRoutes.login);

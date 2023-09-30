@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:password_keeper/common/config/database/hive_services.dart';
 import 'package:password_keeper/common/constants/shared_preferences_constants.dart';
@@ -116,9 +117,8 @@ void configLocator() {
 
   /// Repositories
   getIt.registerFactory<AccountRepository>(() => AccountRepository(
-        auth: FirebaseAuth.instance,
+        auth: getIt<FirebaseAuth>(),
         db: getIt<FirebaseFirestore>(),
-        hiveServices: getIt<HiveServices>(),
       ));
   getIt.registerFactory<PasswordRepository>(() => PasswordRepository(
         hiveServices: getIt<HiveServices>(),
@@ -126,6 +126,7 @@ void configLocator() {
       ));
   getIt.registerFactory<LocalRepository>(() => LocalRepository(
         hiveServices: getIt<HiveServices>(),
+        prefs: getIt<FlutterSecureStorage>(),
       ));
 
   //db
@@ -134,4 +135,7 @@ void configLocator() {
   getIt.registerLazySingleton<HiveServices>(() => HiveServices());
   getIt.registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance);
+  getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+  getIt.registerLazySingleton<FlutterSecureStorage>(
+      () => const FlutterSecureStorage());
 }

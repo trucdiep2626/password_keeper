@@ -160,9 +160,9 @@ class VerifyMasterPasswordController extends GetxController
   //   );
   // }
 
-  String? getUserId() {
-    return accountUseCase.getAccount?.profile?.userId;
-  }
+  // String? getUserId() {
+  //   return accountUseCase.getAccount?.profile?.userId;
+  // }
 
   void onChangedPwd() {
     checkButtonEnable();

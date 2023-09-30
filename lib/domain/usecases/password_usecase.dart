@@ -8,15 +8,6 @@ class PasswordUseCase {
 
   PasswordUseCase({required this.passwordRepository});
 
-  //Password Generation Option
-  PasswordGenerationOptions? get getPasswordGenerationOptionsLocal =>
-      passwordRepository.getPasswordGenerationOptionsLocal;
-
-  Future<void> setPasswordGenerationOptionsLocal(
-      {PasswordGenerationOptions? option}) async {
-    await passwordRepository.setPasswordGenerationOptionsLocal(option: option);
-  }
-
   Future setPasswordGenerationOption({
     required String userId,
     required PasswordGenerationOptions option,

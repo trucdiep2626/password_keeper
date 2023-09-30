@@ -93,11 +93,15 @@ class CreateMasterPasswordController extends GetxController
       // Email = Email.Trim().ToLower();
       // var kdfConfig =   KdfConfig(
       //     KdfType.PBKDF2_SHA256, Constants.Pbkdf2Iterations, null, null);
+
+      //make master key
       var key = await _cryptoController.makeKey(
         password: masterPassword,
         salt: email,
       );
+      //encrypt user key with master key
       var encKey = await _cryptoController.makeEncKey(key);
+      //hash master key
       var hashedPassword = await _cryptoController.hashPassword(
           password: masterPassword, key: key);
       //  var keys = await _cryptoController.makeKeyPair(encKey.Item1);

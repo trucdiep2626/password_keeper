@@ -6,7 +6,7 @@ import 'dart:typed_data';
 //import 'package:argon2/argon2.dart' as argon2;
 import 'package:dargon2_flutter/dargon2_flutter.dart' as dargon2;
 import 'package:get/get.dart';
-import 'package:password_keeper/common/config/database/hive_type_constants.dart';
+import 'package:password_keeper/common/config/database/local_key.dart';
 import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
@@ -937,10 +937,11 @@ class CryptoController extends GetxController with MixinController {
     return constantTimeBytesEqual(mac1, mac2);
   }
 
-  Uint8List aesEncrypt(
-      {required Uint8List data,
-      required Uint8List iv,
-      required Uint8List key}) {
+  Uint8List aesEncrypt({
+    required Uint8List data,
+    required Uint8List iv,
+    required Uint8List key,
+  }) {
     // var provider = SymmetricKeyAlgorithmProvider.OpenAlgorithm(SymmetricAlgorithm.AesCbcPkcs7);
     // var cryptoKey = provider.CreateSymmetricKey(key);
     // return Task.FromResult(CryptographicEngine.Encrypt(cryptoKey, data, iv));
@@ -1058,27 +1059,27 @@ class CryptoController extends GetxController with MixinController {
   }
 
   Future<String?> getEncKeyEncrypted() async {
-    return await localUseCase.getLocalValue(
-      key: HiveKey.encKeyKey,
+    return await localUseCase.getSecureData(
+      key: LocalKey.encKeyKey,
     );
   }
 
   Future<void> setEncKeyEncrypted(String value) async {
-    await localUseCase.setLocalValue(
-      key: HiveKey.encKeyKey,
+    await localUseCase.saveSecureData(
+      key: LocalKey.encKeyKey,
       value: value,
     );
   }
 
   Future<String?> getKeyEncrypted() async {
-    return await localUseCase.getLocalValue(
-      key: HiveKey.keyKey,
+    return await localUseCase.getSecureData(
+      key: LocalKey.keyKey,
     );
   }
 
   Future<void> setKeyEncrypted(String value) async {
-    await localUseCase.setLocalValue(
-      key: HiveKey.keyKey,
+    await localUseCase.saveSecureData(
+      key: LocalKey.keyKey,
       value: value,
     );
   }
@@ -1091,7 +1092,7 @@ class CryptoController extends GetxController with MixinController {
   Future<void> setKeyDecrypted(
     SymmetricCryptoKey value,
   ) async {
-    var account = accountUseCase.getAccount;
+    var account = await accountUseCase.getAccount;
     account?.volatileData?.key = value;
     await accountUseCase.setAccount(
       account: account,
@@ -1099,14 +1100,14 @@ class CryptoController extends GetxController with MixinController {
   }
 
   Future<String?> getKeyHash() async {
-    return await localUseCase.getLocalValue(
-      key: HiveKey.keyHashKey,
+    return await localUseCase.getSecureData(
+      key: LocalKey.keyHashKey,
     );
   }
 
   Future<void> setKeyHash(String value) async {
-    await localUseCase.setLocalValue(
-      key: HiveKey.keyHashKey,
+    await localUseCase.saveSecureData(
+      key: LocalKey.keyHashKey,
       value: value,
     );
   }

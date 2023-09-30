@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:password_keeper/common/config/database/local_key.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/data/account_repository.dart';
 import 'package:password_keeper/data/local_repository.dart';
 import 'package:password_keeper/domain/models/account.dart';
-import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 
 class AccountUseCase {
   final AccountRepository accountRepo;
@@ -14,24 +17,32 @@ class AccountUseCase {
 
   Stream<User?> get authState => accountRepo.authState;
 
-  SymmetricCryptoKey? get getUserKey => getAccount?.volatileData?.key;
-
-  bool get hasUserKey => getUserKey != null;
+  // SymmetricCryptoKey? get getUserKey => getAccount?.volatileData?.key;
+  //
+  // bool get hasUserKey => getUserKey != null;
 
   //Account
-  Account? get getAccount => accountRepo.getAccount;
+  Future<Account?> get getAccount async {
+    final account = await localRepo.getLocalValue(key: LocalKey.accountKey);
+    if (isNullEmpty(account)) {
+      return null;
+    }
+
+    return Account.fromJson(jsonDecode(account));
+  }
 
   Future<void> setAccount({Account? account}) async {
-    return await accountRepo.setAccount(account: account);
+    return await localRepo.setLocalValue(
+        key: LocalKey.accountKey, value: jsonEncode(account?.toJson()));
   }
 
-  AuthCredential? getUserCredential() {
-    return accountRepo.getUserCredential();
-  }
+  // AuthCredential? getUserCredential() {
+  //   return accountRepo.getUserCredential();
+  // }
 
-  Future<void> setUserCredential({AuthCredential? authCredential}) async {
-    return await accountRepo.setUserCredential(authCredential: authCredential);
-  }
+  // Future<void> setUserCredential({AuthCredential? authCredential}) async {
+  //   return await accountRepo.setUserCredential(authCredential: authCredential);
+  // }
 
   Future<void> signUpWithEmail({
     required String fullname,
@@ -71,9 +82,16 @@ class AccountUseCase {
 
   Future<void> signOut() async {
     await accountRepo.signOut();
+    await localRepo.clearLocalData();
+    await localRepo.deleteAllSecureData();
   }
 
-  Future<void> lock() async => await accountRepo.lock();
+  Future<void> lock() async {
+    await localRepo.clearLocalData();
+    await localRepo.deleteSecureData(key: LocalKey.encKeyKey);
+    await localRepo.deleteSecureData(key: LocalKey.accountKey);
+    await localRepo.deleteSecureData(key: LocalKey.keyKey);
+  }
 
   Future<void> deleteAccount() async {
     await accountRepo.deleteAccount();

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:password_keeper/common/config/app_config.dart';
 import 'package:password_keeper/common/config/database/hive_services.dart';
-import 'package:password_keeper/common/config/database/hive_type_constants.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
@@ -15,19 +14,6 @@ class PasswordRepository {
     required this.hiveServices,
     required this.db,
   });
-
-  //Password Generation Option
-  PasswordGenerationOptions? get getPasswordGenerationOptionsLocal =>
-      PasswordGenerationOptions.fromJson(
-        Map<String, dynamic>.from(hiveServices.hiveBox
-            .get(HiveKey.passwordGenerationOptionKey) as Map),
-      );
-
-  Future<void> setPasswordGenerationOptionsLocal(
-      {PasswordGenerationOptions? option}) async {
-    return await hiveServices.hiveBox
-        .put(HiveKey.passwordGenerationOptionKey, option?.toJson());
-  }
 
   Future setPasswordGenerationOption({
     required String userId,

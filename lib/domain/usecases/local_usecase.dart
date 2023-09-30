@@ -11,4 +11,12 @@ class LocalUseCase {
   Future<void> setLocalValue({required String key, dynamic value}) async {
     return await localRepository.setLocalValue(key: key, value: value);
   }
+
+  Future saveSecureData({required String key, dynamic value}) async {
+    await localRepository.saveSecureData(key: key);
+  }
+
+  Future<String?> getSecureData({required String key}) async {
+    return await localRepository.getSecureData(key: key);
+  }
 }

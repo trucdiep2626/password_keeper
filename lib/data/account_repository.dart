@@ -1,57 +1,52 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_keeper/common/config/app_config.dart';
-import 'package:password_keeper/common/config/database/hive_services.dart';
-import 'package:password_keeper/common/config/database/hive_type_constants.dart';
 import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/domain/models/account.dart';
 
 class AccountRepository {
   final FirebaseAuth auth;
   final FirebaseFirestore db;
-  final HiveServices hiveServices;
+
   AccountRepository({
     required this.auth,
     required this.db,
-    required this.hiveServices,
   });
 
   User? get user => auth.currentUser;
 
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
 
-  //Account
-  Account? get getAccount => Account.fromJson(
-        json.decode(json.encode(hiveServices.hiveBox.get(HiveKey.accountKey)))
-                as Map<String, dynamic> ??
-            {},
-      );
+  // //Account
+  // Account? get getAccount => Account.fromJson(
+  //       json.decode(json.encode(hiveServices.hiveBox.get(HiveKey.accountKey)))
+  //               as Map<String, dynamic> ??
+  //           {},
+  //     );
+  //
+  // Future<void> setAccount({Account? account}) async {
+  //   return await hiveServices.hiveBox
+  //       .put(HiveKey.accountKey, account?.toJson());
+  // }
 
-  Future<void> setAccount({Account? account}) async {
-    return await hiveServices.hiveBox
-        .put(HiveKey.accountKey, account?.toJson());
-  }
-
-  //AuthCredential
-  AuthCredential? getUserCredential() {
-    final mapCredential =
-        hiveServices.hiveBox.get(HiveKey.userCredentialKey) as Map?;
-    return mapCredential == null
-        ? null
-        : AuthCredential(
-            providerId: mapCredential['providerId'],
-            signInMethod: mapCredential['signInMethod'],
-            token: mapCredential['token'],
-            accessToken: mapCredential['accessToken']);
-  }
-
-  Future<void> setUserCredential({AuthCredential? authCredential}) async {
-    return await hiveServices.hiveBox
-        .put(HiveKey.userCredentialKey, authCredential?.asMap());
-  }
+  // //AuthCredential
+  // AuthCredential? getUserCredential() {
+  //   final mapCredential =
+  //       hiveServices.hiveBox.get(HiveKey.userCredentialKey) as Map?;
+  //   return mapCredential == null
+  //       ? null
+  //       : AuthCredential(
+  //           providerId: mapCredential['providerId'],
+  //           signInMethod: mapCredential['signInMethod'],
+  //           token: mapCredential['token'],
+  //           accessToken: mapCredential['accessToken']);
+  // }
+  //
+  // Future<void> setUserCredential({AuthCredential? authCredential}) async {
+  //   return await hiveServices.hiveBox
+  //       .put(HiveKey.userCredentialKey, authCredential?.asMap());
+  // }
 
   Future<void> signUpWithEmail({
     required String fullname,
@@ -126,10 +121,7 @@ class AccountRepository {
   Future<void> signOut() async {
     await GoogleSignIn().signOut();
     await auth.signOut();
-    await hiveServices.hiveBox.clear();
   }
-
-  Future<void> lock() async => await hiveServices.hiveBox.clear();
 
   Future<void> deleteAccount() async {
     await auth.currentUser!.delete();

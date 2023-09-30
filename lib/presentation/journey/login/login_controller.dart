@@ -109,7 +109,7 @@ class LoginController extends GetxController with MixinController {
       final result = await accountUsecase.signInWithGoogle();
 
       if (result != null) {
-        await accountUsecase.setUserCredential(authCredential: result);
+        //  await accountUsecase.setUserCredential(authCredential: result);
 
         debugPrint('đăng ký thành công');
 
