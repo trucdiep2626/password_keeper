@@ -1,8 +1,8 @@
+import 'package:biometric_storage/biometric_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:password_keeper/common/config/database/hive_services.dart';
 import 'package:password_keeper/common/constants/shared_preferences_constants.dart';
 import 'package:password_keeper/data/account_repository.dart';
 import 'package:password_keeper/data/local_repository.dart';
@@ -89,6 +89,7 @@ void configLocator() {
           ));
   getIt.registerFactory<SettingsController>(() => SettingsController(
         accountUseCase: getIt<AccountUseCase>(),
+        localUseCase: getIt<LocalUseCase>(),
       ));
   getIt.registerFactory<ResetPasswordController>(() => ResetPasswordController(
         accountUseCase: getIt<AccountUseCase>(),
@@ -121,21 +122,23 @@ void configLocator() {
         db: getIt<FirebaseFirestore>(),
       ));
   getIt.registerFactory<PasswordRepository>(() => PasswordRepository(
-        hiveServices: getIt<HiveServices>(),
+        //hiveServices: getIt<HiveServices>(),
         db: getIt<FirebaseFirestore>(),
       ));
   getIt.registerFactory<LocalRepository>(() => LocalRepository(
-        hiveServices: getIt<HiveServices>(),
+        // hiveServices: getIt<HiveServices>(),
         prefs: getIt<FlutterSecureStorage>(),
+        biometricStorage: getIt<BiometricStorage>(),
       ));
 
   //db
   getIt.registerFactory<SharePreferencesConstants>(
       () => SharePreferencesConstants());
-  getIt.registerLazySingleton<HiveServices>(() => HiveServices());
+  // getIt.registerLazySingleton<HiveServices>(() => HiveServices());
   getIt.registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance);
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton<FlutterSecureStorage>(
       () => const FlutterSecureStorage());
+  getIt.registerLazySingleton<BiometricStorage>(() => BiometricStorage());
 }

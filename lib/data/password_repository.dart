@@ -1,17 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:password_keeper/common/config/app_config.dart';
-import 'package:password_keeper/common/config/database/hive_services.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 
 class PasswordRepository {
-  final HiveServices hiveServices;
+//  final HiveServices hiveServices;
   final FirebaseFirestore db;
 
   PasswordRepository({
-    required this.hiveServices,
+    //  required this.hiveServices,
     required this.db,
   });
 

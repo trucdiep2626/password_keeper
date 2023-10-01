@@ -171,4 +171,10 @@ const viString = {
   "request_password_reset": "Request password reset",
   "reset_password_sent_successfully":
       "Reset password link was sent. Please check your email for instructions.",
+
+  //biometric
+  "unsupported_biometric":
+      "This device is unable to support the biometric features required for this action.",
+  "enable_unlock_biometric": "Unlock with your biometric is now enabled",
+  "disable_unlock_biometric": "Unlock with your biometric is now disabled",
 };

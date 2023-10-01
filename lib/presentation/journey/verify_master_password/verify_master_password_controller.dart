@@ -1,12 +1,16 @@
+import 'dart:convert';
+
+import 'package:biometric_storage/biometric_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:password_keeper/common/config/database/local_key.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
-import 'package:password_keeper/domain/models/account.dart';
+import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
@@ -26,6 +30,8 @@ class VerifyMasterPasswordController extends GetxController
   RxBool masterPwdHasFocus = false.obs;
 
   RxBool buttonEnable = false.obs;
+
+  RxBool showBiometricUnlock = false.obs;
 
   Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
   AccountUseCase accountUseCase;
@@ -77,49 +83,49 @@ class VerifyMasterPasswordController extends GetxController
       bool passwordValid = false;
 
       //make master key
-      var key = await _cryptoController.makeKey(
+      var masterKey = await _cryptoController.makeMasterKey(
         password: masterPassword,
         salt: email,
       );
 
-      var storedHashedPassword = await _cryptoController.getKeyHash();
+      var storedHashedPassword = await _cryptoController.getHashedMasterKey();
+      final profile = await accountUseCase.getProfile(userId: user?.uid ?? '');
 
       if (!isNullEmpty(storedHashedPassword)) {
         passwordValid = await _cryptoController.compareKeyHash(
           masterPassword: masterPassword,
-          key: key,
+          key: masterKey,
         );
       } else {
-        var keyHash = await _cryptoController.hashPassword(
+        var hashedMasterKey = await _cryptoController.hashPassword(
           password: masterPassword,
-          key: key,
+          key: masterKey,
         );
 
-        final profile =
-            await accountUseCase.getProfile(userId: user?.uid ?? '');
-
         if (profile?.hashedMasterPassword != null &&
-            profile?.hashedMasterPassword!.compareTo(keyHash) == 0) {
+            profile?.hashedMasterPassword!.compareTo(hashedMasterKey) == 0) {
           passwordValid = true;
-          await _cryptoController.setKeyHash(keyHash);
-          await accountUseCase.setAccount(
-              account: Account(
-            profile: profile,
-          ));
+          await _cryptoController.setHashedMasterKey(hashedMasterKey);
         }
       }
 
       if (passwordValid) {
-        var hasKey = await _cryptoController.haskey();
-        if (!hasKey) {
-          await _cryptoController.setKey(key);
+        var hasMasterKey = await _cryptoController.hasMasterKey();
+        if (!hasMasterKey) {
+          await _cryptoController.setMasterKey(masterKey);
         }
+        if (profile?.key != null) {
+          await _cryptoController.setEncKeyEncrypted(profile!.key!);
+        }
+
         //    _cryptoController.setBiometricLocked();
 
         debugPrint('đăng ký thành công');
         // showTopSnackBar(context,
         //     message: TranslationConstants..tr,
         //     type: SnackBarType.done);
+        // Read all values
+
         Get.offAllNamed(AppRoutes.main);
       } else {
         // if (Get.context != null) {
@@ -140,7 +146,7 @@ class VerifyMasterPasswordController extends GetxController
       //
       // } else {
       //   debugPrint('đăng nhập thất bại');
-      errorText.value = TranslationConstants.loginError.tr;
+      errorText.value = TranslationConstants.wrongMasterPassword.tr;
     }
 
     rxLoadedButton.value = LoadedType.finish;
@@ -218,9 +224,55 @@ class VerifyMasterPasswordController extends GetxController
     }
   }
 
+  Future<void> handleBiometricUnlock() async {
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+
+    rxLoadedButton.value = LoadedType.start;
+
+    final masterKeyString = await localUseCase.getDataInBiometricStorage();
+
+    if (masterKeyString != null) {
+      final masterKey =
+          SymmetricCryptoKey.fromJson(jsonDecode(masterKeyString));
+      final profile = await accountUseCase.getProfile(userId: user?.uid ?? '');
+      await _cryptoController.setMasterKey(masterKey);
+      if (profile?.key != null) {
+        await _cryptoController.setEncKeyEncrypted(profile!.key!);
+      }
+
+      Get.offAllNamed(AppRoutes.main);
+    } else {
+      errorText.value = TranslationConstants.loginError.tr;
+    }
+
+    rxLoadedButton.value = LoadedType.finish;
+  }
+
+  Future<bool> isBiometricLocked() async {
+    final isLocked =
+        await localUseCase.getSecureData(key: LocalStorageKey.biometricLocked);
+    return isLocked == 'true';
+  }
+
+  Future<void> _initBiometricStorageStatus() async {
+    final enabled = (await BiometricStorage().canAuthenticate()) ==
+        CanAuthenticateResponse.success;
+    if (enabled) {
+      final isLocked = await isBiometricLocked();
+      showBiometricUnlock.value = isLocked;
+    } else {
+      showBiometricUnlock.value = false;
+    }
+  }
+
   @override
   void onReady() async {
     super.onReady();
+    await _initBiometricStorageStatus();
     masterPwdFocusNode.addListener(() {
       masterPwdHasFocus.value = masterPwdFocusNode.hasFocus;
     });

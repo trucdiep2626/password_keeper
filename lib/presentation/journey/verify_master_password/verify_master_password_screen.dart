@@ -15,7 +15,7 @@ class VerifyMasterPasswordScreen
   Widget build(BuildContext context) {
     controller.context = context;
     return Scaffold(
-      backgroundColor: AppColors.blue100,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         actions: [
           AppTouchable(
@@ -142,28 +142,9 @@ class VerifyMasterPasswordScreen
               SizedBox(
                 height: AppDimens.space_24,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppDimens.space_4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppImageWidget(
-                      asset: Assets.images.svg.icFingerScan,
-                      size: AppDimens.space_24,
-                    ),
-                    SizedBox(
-                      width: AppDimens.space_4,
-                    ),
-                    Flexible(
-                      child: Text(
-                        TranslationConstants.unlockBiometric.tr,
-                        style: ThemeText.bodyRegular.s16,
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              Obx(() => controller.showBiometricUnlock.value
+                  ? _buildBiometricUnlock()
+                  : const SizedBox.shrink()),
               //  Spacer(),
               SizedBox(
                 height: AppDimens.space_36,
@@ -182,6 +163,34 @@ class VerifyMasterPasswordScreen
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBiometricUnlock() {
+    return AppTouchable(
+      onPressed: () async => await controller.handleBiometricUnlock(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppDimens.space_4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AppImageWidget(
+              asset: Assets.images.svg.icFingerScan,
+              size: AppDimens.space_24,
+            ),
+            SizedBox(
+              width: AppDimens.space_4,
+            ),
+            Flexible(
+              child: Text(
+                TranslationConstants.unlockBiometric.tr,
+                style: ThemeText.bodyRegular.s16,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
         ),
       ),
     );

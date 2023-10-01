@@ -1,49 +1,46 @@
-import 'package:password_keeper/domain/models/encrypted_string.dart';
-import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
+// class Account {
+//   AccountProfile? profile;
+//   // AccountTokens? tokens;
+//   // AccountSettings? settings;
+//   AccountVolatileData? volatileData;
+//
+//   Account({
+//     required this.profile,
+//     //  required this.tokens
+//   }) {
+//     //  settings = AccountSettings();
+//     volatileData = AccountVolatileData();
+//   }
+//
+//   // Account.copy(Account account)
+//   //     : profile = AccountProfile.copy(account.profile!),
+//   //       // tokens = AccountTokens.copy(account.tokens!),
+//   //       // settings = AccountSettings.copy(account.settings!),
+//   //       volatileData = AccountVolatileData();
+//
+//   Account.fromJson(Map<String, dynamic> json) {
+//     profile = json['profile'] != null
+//         ? AccountProfile.fromJson(json['profile'])
+//         : null;
+//     volatileData = json['volatile_data'] != null
+//         ? AccountVolatileData.fromJson(json['volatile_data'])
+//         : null;
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     if (profile != null) {
+//       data['profile'] = profile!.toJson();
+//     }
+//     if (volatileData != null) {
+//       data['volatile_data'] = volatileData!.toJson();
+//     }
+//
+//     return data;
+//   }
+// }
 
 class Account {
-  AccountProfile? profile;
-  // AccountTokens? tokens;
-  // AccountSettings? settings;
-  AccountVolatileData? volatileData;
-
-  Account({
-    required this.profile,
-    //  required this.tokens
-  }) {
-    //  settings = AccountSettings();
-    volatileData = AccountVolatileData();
-  }
-
-  // Account.copy(Account account)
-  //     : profile = AccountProfile.copy(account.profile!),
-  //       // tokens = AccountTokens.copy(account.tokens!),
-  //       // settings = AccountSettings.copy(account.settings!),
-  //       volatileData = AccountVolatileData();
-
-  Account.fromJson(Map<String, dynamic> json) {
-    profile = json['profile'] != null
-        ? AccountProfile.fromJson(json['profile'])
-        : null;
-    volatileData = json['volatile_data'] != null
-        ? AccountVolatileData.fromJson(json['volatile_data'])
-        : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (profile != null) {
-      data['profile'] = profile!.toJson();
-    }
-    if (volatileData != null) {
-      data['volatile_data'] = volatileData!.toJson();
-    }
-
-    return data;
-  }
-}
-
-class AccountProfile {
   String? id;
   String? userId;
   String? email;
@@ -53,6 +50,7 @@ class AccountProfile {
   int? kdfIterations;
   int? kdfMemory;
   int? kdfParallelism;
+  // bool? biometricUnlockEnabled;
 
   String? name;
 //  String? stamp;
@@ -64,7 +62,7 @@ class AccountProfile {
   // bool? hasPremiumPersonally;
   // ForcePasswordResetReason? forcePasswordResetReason;
 
-  AccountProfile({
+  Account({
     this.id,
     this.userId,
     this.email,
@@ -78,12 +76,13 @@ class AccountProfile {
     this.kdfIterations,
     this.kdfMemory,
     this.kdfParallelism,
+    // this.biometricUnlockEnabled = false,
     // this.emailVerified,
     // this.hasPremiumPersonally,
     // this.forcePasswordResetReason
   });
 
-  AccountProfile copyWith({
+  Account copyWith({
     String? id,
     String? userId,
     String? email,
@@ -94,8 +93,11 @@ class AccountProfile {
     int? kdfMemory,
     int? kdfParallelism,
     String? name,
+    //  bool? biometricUnlockEnabled,
   }) =>
-      AccountProfile(
+      Account(
+        // biometricUnlockEnabled:
+        //     biometricUnlockEnabled ?? this.biometricUnlockEnabled,
         id: id ?? this.id,
         userId: userId ?? this.userId,
         email: email ?? this.email,
@@ -107,7 +109,8 @@ class AccountProfile {
         kdfParallelism: kdfParallelism ?? this.kdfParallelism,
       );
 
-  AccountProfile.fromJson(Map<String, dynamic> json) {
+  Account.fromJson(Map<String, dynamic> json) {
+    //  biometricUnlockEnabled = json['biometric_unlock_enabled'] ?? false;
     id = json['id'];
     email = json['email'];
     hashedMasterPassword = json['hashed_master_password'];
@@ -130,6 +133,7 @@ class AccountProfile {
     data['kdf_memory'] = kdfMemory;
     data['kdf_parallelism'] = kdfParallelism;
     data['name'] = name;
+    // data['biometric_unlock_enabled'] = biometricUnlockEnabled;
     return data;
   }
 }
@@ -162,43 +166,43 @@ class AccountProfile {
 //   }
 // }
 
-class AccountVolatileData {
-  SymmetricCryptoKey? key;
-  EncryptedString? pinProtectedKey;
-  bool? biometricLocked;
-
-  AccountVolatileData({
-    this.key,
-    this.biometricLocked,
-    this.pinProtectedKey,
-  });
-
-  AccountVolatileData.fromJson(Map<String, dynamic> json) {
-    key = json['key'] != null ? SymmetricCryptoKey.fromJson(json['key']) : null;
-    pinProtectedKey = json['pin_protected_key'] != null
-        ? EncryptedString.fromJson(json['pin_protected_key'])
-        : null;
-    biometricLocked = json['biometric_locked'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (key != null) {
-      data['key'] = key!.toJson();
-    }
-    if (pinProtectedKey != null) {
-      data['pin_protected_key'] = pinProtectedKey!.toJson();
-    }
-
-    data['biometric_locked'] = biometricLocked;
-    return data;
-  }
-}
-
-class EnvironmentUrlData {
-  // Implement EnvironmentUrlData if needed
-  // ...
-}
+// class AccountVolatileData {
+//   SymmetricCryptoKey? key;
+//   EncryptedString? pinProtectedKey;
+//   bool? biometricLocked;
+//
+//   AccountVolatileData({
+//     this.key,
+//     this.biometricLocked,
+//     this.pinProtectedKey,
+//   });
+//
+//   AccountVolatileData.fromJson(Map<String, dynamic> json) {
+//     key = json['key'] != null ? SymmetricCryptoKey.fromJson(json['key']) : null;
+//     pinProtectedKey = json['pin_protected_key'] != null
+//         ? EncryptedString.fromJson(json['pin_protected_key'])
+//         : null;
+//     biometricLocked = json['biometric_locked'];
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     if (key != null) {
+//       data['key'] = key!.toJson();
+//     }
+//     if (pinProtectedKey != null) {
+//       data['pin_protected_key'] = pinProtectedKey!.toJson();
+//     }
+//
+//     data['biometric_locked'] = biometricLocked;
+//     return data;
+//   }
+// }
+//
+// class EnvironmentUrlData {
+//   // Implement EnvironmentUrlData if needed
+//   // ...
+// }
 
 // enum KdfType {
 //   // Implement KdfType enum if needed

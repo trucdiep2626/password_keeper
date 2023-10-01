@@ -88,10 +88,11 @@ class TranslationConstants {
   static const String enterMasterPassword = "enter_master_password";
   static const String unlockBiometric = "unlock_biometric";
   static const String wrongMasterPassword = "wrong_master_password";
-  static const String currentMasterPassword ="current_master_password";
-  static const String newMasterPassword ="new_master_password";
-  static const String confirmNewMasterPassword ="confirm_new_master_password";
-  static const String changeMasterPasswordConfirm = "change_master_password_confirm";
+  static const String currentMasterPassword = "current_master_password";
+  static const String newMasterPassword = "new_master_password";
+  static const String confirmNewMasterPassword = "confirm_new_master_password";
+  static const String changeMasterPasswordConfirm =
+      "change_master_password_confirm";
 
   //verify email
   static const String verifyEmail = "verify_email";
@@ -191,4 +192,9 @@ class TranslationConstants {
   static const String requestPasswordReset = "request_password_reset";
   static const String resetPasswordSentSuccessfully =
       "reset_password_sent_successfully";
+
+  //biometric
+  static const String unsupportedBiometric = "unsupported_biometric";
+  static const String enableUnlockBiometric = "enable_unlock_biometric";
+  static const String disableUnlockBiometric = "disable_unlock_biometric";
 }

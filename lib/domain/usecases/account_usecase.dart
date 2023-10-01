@@ -23,17 +23,18 @@ class AccountUseCase {
 
   //Account
   Future<Account?> get getAccount async {
-    final account = await localRepo.getLocalValue(key: LocalKey.accountKey);
+    final account =
+        await localRepo.getSecureData(key: LocalStorageKey.accountKey);
     if (isNullEmpty(account)) {
       return null;
     }
 
-    return Account.fromJson(jsonDecode(account));
+    return account == null ? null : Account.fromJson(jsonDecode(account));
   }
 
   Future<void> setAccount({Account? account}) async {
-    return await localRepo.setLocalValue(
-        key: LocalKey.accountKey, value: jsonEncode(account?.toJson()));
+    await localRepo.saveSecureData(
+        key: LocalStorageKey.accountKey, value: jsonEncode(account?.toJson()));
   }
 
   // AuthCredential? getUserCredential() {
@@ -82,30 +83,43 @@ class AccountUseCase {
 
   Future<void> signOut() async {
     await accountRepo.signOut();
-    await localRepo.clearLocalData();
     await localRepo.deleteAllSecureData();
+    await localRepo.clearBiometricStorage();
   }
 
   Future<void> lock() async {
-    await localRepo.clearLocalData();
-    await localRepo.deleteSecureData(key: LocalKey.encKeyKey);
-    await localRepo.deleteSecureData(key: LocalKey.accountKey);
-    await localRepo.deleteSecureData(key: LocalKey.keyKey);
+    //  await localRepo.clearLocalData();
+    await localRepo.deleteSecureData(key: LocalStorageKey.encKeyKey);
+    await localRepo.deleteSecureData(key: LocalStorageKey.accountKey);
+    await localRepo.deleteSecureData(
+        key: LocalStorageKey.masterKeyDecryptedKey);
+    await localRepo.deleteSecureData(
+        key: LocalStorageKey.masterKeyEncryptedKey);
   }
 
   Future<void> deleteAccount() async {
     await accountRepo.deleteAccount();
   }
 
-  Future createUser(AccountProfile profile) async {
-    return await accountRepo.createUser(profile);
+  Future createUser(Account account) async {
+    return await accountRepo.createUser(account);
   }
 
-  Future<void> editProfile(AccountProfile profile) async {
-    await accountRepo.editProfile(profile);
+  Future<void> editProfile(Account account) async {
+    await accountRepo.editProfile(account);
   }
 
-  Future<AccountProfile?> getProfile({required String userId}) async {
+  // Future<void> updateBiometricUnlockEnabled({
+  //   required String userId,
+  //   required bool enabled,
+  // }) async {
+  //   await accountRepo.updateBiometricUnlockEnabled(
+  //     userId: userId,
+  //     enabled: enabled,
+  //   );
+  // }
+
+  Future<Account?> getProfile({required String userId}) async {
     return await accountRepo.getProfile(userId: userId);
   }
 

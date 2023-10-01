@@ -95,7 +95,7 @@ class CreateMasterPasswordController extends GetxController
       //     KdfType.PBKDF2_SHA256, Constants.Pbkdf2Iterations, null, null);
 
       //make master key
-      var key = await _cryptoController.makeKey(
+      var key = await _cryptoController.makeMasterKey(
         password: masterPassword,
         salt: email,
       );
@@ -106,7 +106,7 @@ class CreateMasterPasswordController extends GetxController
           password: masterPassword, key: key);
       //  var keys = await _cryptoController.makeKeyPair(encKey.Item1);
 
-      final profile = AccountProfile(
+      final account = Account(
         email: accountUsecase.user?.email,
         name: accountUsecase.user?.displayName,
         userId: accountUsecase.user?.uid,
@@ -119,7 +119,7 @@ class CreateMasterPasswordController extends GetxController
       );
 
       try {
-        await accountUsecase.createUser(profile);
+        await accountUsecase.createUser(account);
 
         debugPrint('đăng ký thành công');
         Get.offAllNamed(AppRoutes.verifyMasterPassword);

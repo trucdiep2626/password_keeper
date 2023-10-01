@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
+import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/app_image_widget.dart';
+import 'package:password_keeper/presentation/widgets/app_loading_widget.dart';
 import 'package:password_keeper/presentation/widgets/app_touchable.dart';
 
 class SettingsScreen extends GetView<SettingsController> {
@@ -16,40 +18,53 @@ class SettingsScreen extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBarWidget(
-        title: TranslationConstants.settings.tr,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(AppDimens.space_16),
-          child: Column(
-            children: [
-              _buildItem(
-                onPressed: () => Get.toNamed(AppRoutes.changeMasterPassword),
-                icon: Assets.images.svg.icPasswordCheck,
-                title: TranslationConstants.changeMasterPassword.tr,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBarWidget(
+            title: TranslationConstants.settings.tr,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(AppDimens.space_16),
+              child: Column(
+                children: [
+                  _buildItem(
+                    onPressed: () =>
+                        Get.toNamed(AppRoutes.changeMasterPassword),
+                    icon: Assets.images.svg.icPasswordCheck,
+                    title: TranslationConstants.changeMasterPassword.tr,
+                  ),
+                  Obx(
+                    () => _buildItem(
+                      onPressed: () =>
+                          controller.onChangedBiometricStorageStatus(),
+                      icon: Assets.images.svg.icFingerScan,
+                      title: TranslationConstants.unlockWithBiometrics.tr,
+                      showSwitch: true,
+                      switchValue: controller.isDeviceQuickUnlockEnabled.value,
+                    ),
+                  ),
+                  _buildItem(
+                    onPressed: () async => await controller.onTapLock(),
+                    icon: Assets.images.svg.icPassword,
+                    title: TranslationConstants.lock.tr,
+                  ),
+                  _buildItem(
+                    onPressed: () async => await controller.onTapLogout(),
+                    icon: Assets.images.svg.icLogout,
+                    title: TranslationConstants.logout.tr,
+                  ),
+                ],
               ),
-              // _buildItem(
-              //   onPressed: () {},
-              //   icon: Assets.images.svg.icFingerScan,
-              //   title: TranslationConstants.unlockWithBiometrics.tr,
-              // ),
-              _buildItem(
-                onPressed: () async => await controller.onTapLock(),
-                icon: Assets.images.svg.icPassword,
-                title: TranslationConstants.lock.tr,
-              ),
-              _buildItem(
-                onPressed: () async => await controller.onTapLogout(),
-                icon: Assets.images.svg.icLogout,
-                title: TranslationConstants.logout.tr,
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+        Obx(() => controller.rxLoadedSettings.value == LoadedType.start
+            ? const AppLoadingPage()
+            : const SizedBox.shrink()),
+      ],
     );
   }
 
@@ -57,12 +72,16 @@ class SettingsScreen extends GetView<SettingsController> {
     required Function() onPressed,
     required SvgGenImage icon,
     required String title,
+    bool showSwitch = false,
+    bool switchValue = false,
   }) {
     return AppTouchable(
       onPressed: onPressed,
       child: Container(
         margin: EdgeInsets.only(bottom: AppDimens.space_8),
-        padding: EdgeInsets.all(AppDimens.space_16),
+        padding: EdgeInsets.symmetric(
+            horizontal: AppDimens.space_16,
+            vertical: showSwitch ? AppDimens.space_4 : AppDimens.space_16),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -87,7 +106,15 @@ class SettingsScreen extends GetView<SettingsController> {
             Text(
               title,
               style: ThemeText.bodyMedium.grey600Color,
-            )
+            ),
+            const Spacer(),
+            showSwitch
+                ? Switch(
+                    value: switchValue,
+                    onChanged: (value) => onPressed(),
+                    activeColor: AppColors.blue400,
+                  )
+                : const SizedBox.shrink()
           ],
         ),
       ),

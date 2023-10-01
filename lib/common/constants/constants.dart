@@ -46,4 +46,6 @@ class Constants {
       "<p>Unfortunately, your account does not have a master password hint.</p>"
       "<p>If you did not request your master password hint you can safely ignore this email.</p>"
       "<p>Stay secured! <br>Password Keeper team.</p>";
+
+  static const String storageFileName = "password_keeper";
 }

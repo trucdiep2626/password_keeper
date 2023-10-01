@@ -2,13 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
-import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
-import 'package:password_keeper/domain/models/account.dart';
 import 'package:password_keeper/domain/models/encrypted_string.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
@@ -153,7 +151,7 @@ class ChangeMasterPasswordController extends GetxController
           await decryptPasswordList(allPasswordItems);
 
       //create new key from new master password
-      var newKey = await _cryptoController.makeKey(
+      var newKey = await _cryptoController.makeMasterKey(
         password: newMasterPassword,
         salt: email,
       );
@@ -196,7 +194,7 @@ class ChangeMasterPasswordController extends GetxController
   Future<bool> checkCurrentMasterPassword() async {
     final email = (user?.email ?? '').trim().toLowerCase();
     //make master key
-    var key = await _cryptoController.makeKey(
+    var key = await _cryptoController.makeMasterKey(
       password: currentMasterPwdController.text,
       salt: email,
     );
@@ -271,51 +269,6 @@ class ChangeMasterPasswordController extends GetxController
     }
 
     return encryptedList;
-  }
-
-  void postRegister() async {
-    if (masterPwdValidate.value.isEmpty &&
-        confirmMasterPwdValidate.value.isEmpty) {
-      rxLoadedButton.value = LoadedType.start;
-      final masterPassword = masterPwdController.text;
-      final email = (accountUsecase.user?.email ?? '').trim().toLowerCase();
-
-      // Email = Email.Trim().ToLower();
-      // var kdfConfig =   KdfConfig(
-      //     KdfType.PBKDF2_SHA256, Constants.Pbkdf2Iterations, null, null);
-      var key = await _cryptoController.makeKey(
-        password: masterPassword,
-        salt: email,
-      );
-      var encKey = await _cryptoController.makeEncKey(key);
-      var hashedPassword = await _cryptoController.hashPassword(
-          password: masterPassword, key: key);
-      //  var keys = await _cryptoController.makeKeyPair(encKey.Item1);
-
-      final profile = AccountProfile(
-        email: accountUsecase.user?.email,
-        name: accountUsecase.user?.displayName,
-        userId: accountUsecase.user?.uid,
-        hashedMasterPassword: hashedPassword,
-        masterPasswordHint: masterPwdHintController.text.trim(),
-        kdfIterations: Constants.argon2Iterations,
-        kdfMemory: Constants.argon2MemoryInMB,
-        kdfParallelism: Constants.argon2Parallelism,
-        key: encKey?.encKey?.encryptedString,
-      );
-
-      try {
-        await accountUsecase.createUser(profile);
-
-        debugPrint('đăng ký thành công');
-        Get.offAllNamed(AppRoutes.verifyMasterPassword);
-      } catch (e) {
-        debugPrint(e.toString());
-        showErrorMessage();
-      } finally {
-        rxLoadedButton.value = LoadedType.finish;
-      }
-    }
   }
 
   void onChangedMasterPwd() {

@@ -88,32 +88,34 @@ class AppController extends SuperController with MixinController {
   @override
   void onInactive() {
     logger('---------App State onInactive');
+    Get.offAllNamed(AppRoutes.splash);
   }
 
   @override
   void onPaused() {
     logger('---------App State onPaused');
+    Get.offAllNamed(AppRoutes.splash);
   }
 
   @override
   void onResumed() async {
-    //check internet connection
-    final isConnected = await checkConnectivity();
-    if (!isConnected) {
-      return;
-    }
-
-    accountUseCase.authState.listen((User? user) {
-      if (user != null) {
-        if (!user.emailVerified && Get.currentRoute != AppRoutes.verifyEmail) {
-          Get.offAndToNamed(AppRoutes.verifyEmail);
-        } else if (Get.currentRoute == AppRoutes.splash) {
-          Get.offAndToNamed(AppRoutes.verifyMasterPassword);
-        }
-      } else if (Get.currentRoute != AppRoutes.login) {
-        Get.offAndToNamed(AppRoutes.login);
-      }
-    });
+    // //check internet connection
+    // final isConnected = await checkConnectivity();
+    // if (!isConnected) {
+    //   return;
+    // }
+    //
+    // accountUseCase.authState.listen((User? user) {
+    //   if (user != null) {
+    //     if (!user.emailVerified && Get.currentRoute != AppRoutes.verifyEmail) {
+    //       Get.offAndToNamed(AppRoutes.verifyEmail);
+    //     } else if (Get.currentRoute == AppRoutes.splash) {
+    //       Get.offAndToNamed(AppRoutes.verifyMasterPassword);
+    //     }
+    //   } else if (Get.currentRoute != AppRoutes.login) {
+    //     Get.offAndToNamed(AppRoutes.login);
+    //   }
+    // });
     logger('---------App State onResumed');
   }
 }

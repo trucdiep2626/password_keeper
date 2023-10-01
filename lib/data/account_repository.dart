@@ -131,24 +131,36 @@ class AccountRepository {
     await auth.sendPasswordResetEmail(email: email);
   }
 
-  Future createUser(AccountProfile profile) async {
+  Future createUser(Account account) async {
     await db
         .collection(AppConfig.userCollection)
-        .doc(profile.userId)
+        .doc(account.userId)
         .collection(AppConfig.profileCollection)
-        .add(profile.toJson());
+        .add(account.toJson());
   }
 
-  Future<void> editProfile(AccountProfile profile) async {
+  Future<void> editProfile(Account account) async {
     await db
         .collection(AppConfig.userCollection)
-        .doc(profile.userId)
+        .doc(account.userId)
         .collection(AppConfig.profileCollection)
-        .doc(profile.id)
-        .update(profile.toJson());
+        .doc(account.id)
+        .update(account.toJson());
   }
 
-  Future<AccountProfile?> getProfile({required String userId}) async {
+  // Future<void> updateBiometricUnlockEnabled({
+  //   required String userId,
+  //   required bool enabled,
+  // }) async {
+  //   await db
+  //       .collection(AppConfig.userCollection)
+  //       .doc(userId)
+  //       .collection(AppConfig.profileCollection)
+  //       .doc(user?.uid)
+  //       .update({'biometric_unlock_enabled': enabled});
+  // }
+
+  Future<Account?> getProfile({required String userId}) async {
     final response = await db
         .collection(AppConfig.userCollection)
         .doc(userId)
@@ -164,7 +176,7 @@ class AccountRepository {
         .addAll({'id': response.docs.first.id, 'user_id': user?.uid ?? ''});
     profileJson.addAll(response.docs.first.data());
 
-    return AccountProfile.fromJson(profileJson);
+    return Account.fromJson(profileJson);
   }
 
   Future<String?> getPasswordHint({required String userId}) async {

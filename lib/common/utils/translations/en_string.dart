@@ -66,7 +66,7 @@ const enString = {
   "new_master_password": "New Master Password",
   "confirm_new_master_password": "Confirm New Master Password",
   "change_master_password_confirm":
-  "Are you sure you want to change your master password?",
+      "Are you sure you want to change your master password?",
 
   //verify email
   "verify_email": "Verify your email address",
@@ -171,4 +171,10 @@ const enString = {
   "request_password_reset": "Request password reset",
   "reset_password_sent_successfully":
       "Reset password link was sent. Please check your email for instructions.",
+
+  //biometric
+  "unsupported_biometric":
+      "This device is unable to support the biometric features required for this action.",
+  "enable_unlock_biometric": "Unlock with your biometric is now enabled",
+  "disable_unlock_biometric": "Unlock with your biometric is now disabled",
 };

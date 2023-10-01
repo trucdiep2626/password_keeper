@@ -1,4 +1,4 @@
-class LocalKey {
+class LocalStorageKey {
   static const boxKey = 'hive_key';
   // static const passwordGenerationOptionKey = 'password_generation_option_key';
   // static const accountKey = 'account_key';
@@ -7,12 +7,14 @@ class LocalKey {
   // static const userCredentialKey = 'user_credential_key';
 
   static const accountKey = "account";
-  static const keyKey = "key";
+  static const masterKeyEncryptedKey = "master_key_encrypted";
+  static const masterKeyDecryptedKey = "master_key_decrypted";
 
   // static const encOrgKeysKey = "encOrgKeys";
   // static const encPrivateKeyKey = "encPrivateKey";
-  static const encKeyKey = "encKey";
-  static const keyHashKey = "keyHash";
+  static const encKeyKey = "enc_key";
+  static const hashedMaterKeyKey = "hashed_master_key";
+  static const biometricLocked = "biometric_locked";
 
   static const vaultTimeoutKey = "vaultTimeout";
   static const vaultTimeoutActionKey = "vaultTimeoutAction";

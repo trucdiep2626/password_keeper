@@ -27,8 +27,6 @@ class CryptoController extends GetxController with MixinController {
 
   String randomStringCharset = "abcdefghijklmnopqrstuvwxyz1234567890";
 
-  //final StateController _stateController = Get.find<StateController>();
-
   LocalUseCase localUseCase;
   AccountUseCase accountUseCase;
 
@@ -44,14 +42,14 @@ class CryptoController extends GetxController with MixinController {
   // private Task<SymmetricCryptoKey> _getEncKeysTask;
   // private Task<Dictionary<string, SymmetricCryptoKey>> _getOrgKeysTask;
 
-  SymmetricCryptoKey? _encKey;
+//  SymmetricCryptoKey? _encKey;
   SymmetricCryptoKey? _legacyEtmKey;
-  String? _keyHash;
-  Uint8List? _publicKey;
-  Uint8List? _privateKey;
-  Map<String, SymmetricCryptoKey>? _orgKeys;
-  Future<SymmetricCryptoKey?>? _getEncKeysFunction;
-  Future<Map<String, SymmetricCryptoKey>?>? _getOrgKeysFunction;
+  // String? _keyHash;
+  // Uint8List? _publicKey;
+  // Uint8List? _privateKey;
+  // Map<String, SymmetricCryptoKey>? _orgKeys;
+  // Future<SymmetricCryptoKey?>? _getEncKeysFunction;
+  // Future<Map<String, SymmetricCryptoKey>?>? _getOrgKeysFunction;
 
   // Future<String> hashString(String text, [String salt = '']) async {
   //   final msgBuffer = utf8.encode(salt + text);
@@ -108,11 +106,11 @@ class CryptoController extends GetxController with MixinController {
     var maxOutputByteSize = 255 * hashLen;
     if (outputByteSize > maxOutputByteSize) {
       throw ArgumentError(
-          "${(outputByteSize)} is too large. Max is ${maxOutputByteSize}, received ${outputByteSize}");
+          "${(outputByteSize)} is too large. Max is $maxOutputByteSize, received $outputByteSize");
     }
     if (prk.length < hashLen) {
       throw ArgumentError(
-          "${(prk)} length is too small. Must be at least ${hashLen} for ${algorithm}");
+          "${(prk)} length is too small. Must be at least $hashLen for $algorithm");
     }
 
     var cryptoHashAlgorithm = hkdfAlgorithmToCryptoHashAlgorithm(algorithm);
@@ -131,8 +129,7 @@ class CryptoController extends GetxController with MixinController {
       final t = Uint8List.fromList([...previousT, ...info, i + 1]);
       t.setAll(0, [...previousT, ...info]);
       t[t.length - 1] = (i + 1);
-      previousT =
-          await hmac(value: t, key: prk, algorithm: cryptoHashAlgorithm);
+      previousT = hmac(value: t, key: prk, algorithm: cryptoHashAlgorithm);
       okm.setAll(runningOkmLength, previousT);
       runningOkmLength = previousT.length;
       if (runningOkmLength >= outputByteSize) {
@@ -150,7 +147,7 @@ class CryptoController extends GetxController with MixinController {
       case HkdfAlgorithm.sha512:
         return CryptoHashAlgorithm.sha512;
       default:
-        throw ArgumentError("Invalid hkdf algorithm type, ${hkdfAlgorithm}");
+        throw ArgumentError("Invalid hkdf algorithm type, $hkdfAlgorithm");
     }
   }
 
@@ -163,7 +160,7 @@ class CryptoController extends GetxController with MixinController {
   //   return stretchByteArray([...emailHash, ...passHash], STRETCH_SALT);
   // }
 
-  Future<SymmetricCryptoKey> makeKey(
+  Future<SymmetricCryptoKey> makeMasterKey(
       {required String password,
       required String salt,
       Argon2Params? argon2Param}) async {
@@ -242,7 +239,7 @@ class CryptoController extends GetxController with MixinController {
     } else if (key.key?.length == 64) {
       encKeyEnc = await encrypt(plainValue: encKey, key: key);
     } else {
-      throw new Exception("Invalid key size.");
+      throw Exception("Invalid key size.");
     }
 
     return EncKeyResult(
@@ -292,7 +289,7 @@ class CryptoController extends GetxController with MixinController {
       {required String password,
       SymmetricCryptoKey? key,
       HashPurpose hashPurpose = HashPurpose.serverAuthorization}) async {
-    key ??= await getKey();
+    key ??= await getMasterKey();
     if (key == null) {
       throw Exception("Invalid parameters.");
     }
@@ -360,7 +357,7 @@ class CryptoController extends GetxController with MixinController {
   }) {
     if (algorithm != CryptoHashAlgorithm.sha256 &&
         algorithm != CryptoHashAlgorithm.sha512) {
-      throw new ArgumentError("Unsupported PBKDF2 algorithm.");
+      throw ArgumentError("Unsupported PBKDF2 algorithm.");
     }
     // return Task.FromResult(
     //     _cryptoPrimitiveService.Pbkdf2(password, salt, algorithm, iterations));
@@ -462,14 +459,14 @@ class CryptoController extends GetxController with MixinController {
         version: dargon2.Argon2Version.V13);
 
     //Raw hash values available as int list, base 64 string, and hex string
-    var bytesRaw = result.rawBytes;
-    var base64Hash = result.base64String;
-    var hexHash = result.encodedBytes;
+    //  var bytesRaw = result.rawBytes;
+    // var base64Hash = result.base64String;
+    //  var hexHash = result.encodedBytes;
     //Encoded hash values available as int list and encoded string
     var bytesEncoded = result.encodedBytes; // type: List<int>
-    print('Raw Encoded Bytes Array: $bytesEncoded');
+    logger('Raw Encoded Bytes Array: $bytesEncoded');
     var stringEncoded = result.encodedString; // type: String
-    print('Encoded UTF-8 String: $stringEncoded');
+    logger('Encoded UTF-8 String: $stringEncoded');
     //size = 32
     // var parameters = argon2.Argon2Parameters(Argon2Parameters.ARGON2_i, salt,
     //     //    version: Argon2Parameters.ARGON2_i,
@@ -477,7 +474,7 @@ class CryptoController extends GetxController with MixinController {
     //     lanes: 4,
     //     memory: 64);
     // //922bf05a64fc0c3d3be8589a126551768628568c4f61038e59f8d13daf547ef2
-    // print('Parameters: $parameters');
+    // logger('Parameters: $parameters');
     // //
     // var argon2BG = argon2.Argon2BytesGenerator();
     //
@@ -485,14 +482,14 @@ class CryptoController extends GetxController with MixinController {
     //
     // var passwordBytes = parameters.converter.convert('Abc@12345');
     //
-    // print('Generating key from password...');
+    // logger('Generating key from password...');
     //
     // var result = Uint8List(32);
     // argon2BG.generateBytes(password, result, 0, result.length);
     //
     // var resultHex = result.toHexString();
     //
-    // print('Result: $resultHex');
+    // logger('Result: $resultHex');
 
     // var parameters = Argon2Parameters(
     //   Argon2Parameters.ARGON2_i,
@@ -520,7 +517,7 @@ class CryptoController extends GetxController with MixinController {
     // var result = Uint8List(keySize);
     // argon2.deriveKey(password, 0, result, result.length);
     //
-    var resultHex = uint8ListToHexString(Uint8List.fromList(result.rawBytes));
+    // var resultHex = uint8ListToHexString(Uint8List.fromList(result.rawBytes));
     //
     logger('Result: ${result.hexString}');
 
@@ -541,13 +538,13 @@ class CryptoController extends GetxController with MixinController {
       return null;
     }
 
-    key ??= await getKey();
+    key ??= await getMasterKey();
     if (key == null) {
       return null;
     }
 
     Uint8List? decEncKey;
-    var encKeyCipher = EncryptedString(data: encKey);
+    var encKeyCipher = EncryptedString.fromString(encryptedString: encKey);
     if (encKeyCipher.encryptionType == EncryptionType.aesCbc256B64) {
       decEncKey = await decryptToBytes(encString: encKeyCipher, key: key);
     } else if (encKeyCipher.encryptionType ==
@@ -573,15 +570,15 @@ class CryptoController extends GetxController with MixinController {
     // return _getEncKeysFunction;
   }
 
-  Future<SymmetricCryptoKey?> getKey() async {
-    var inMemoryKey = await getKeyDecrypted();
+  Future<SymmetricCryptoKey?> getMasterKey() async {
+    var inMemoryKey = await getMasterKeyDecrypted();
     if (inMemoryKey != null) {
       return inMemoryKey;
     }
-    var key = await getKeyEncrypted();
+    var key = await getMasterKeyEncrypted();
     if (key != null) {
       inMemoryKey = SymmetricCryptoKey(key: base64Decode(key));
-      await setKeyDecrypted(
+      await setMasterKeyDecrypted(
         inMemoryKey,
       );
     }
@@ -659,7 +656,7 @@ class CryptoController extends GetxController with MixinController {
     // Compute MAC if needed
     if (theKey?.macKey != null && macBytes != null) {
       var macDataBytes = Uint8List.fromList([...ivBytes, ...dataBytes]);
-      var computedMac = await hmac(
+      var computedMac = hmac(
           value: macDataBytes,
           key: theKey!.macKey!,
           algorithm: CryptoHashAlgorithm.sha256);
@@ -669,8 +666,7 @@ class CryptoController extends GetxController with MixinController {
       }
     }
 
-    var decryptedBytes =
-        await aesDecrypt(data: dataBytes, iv: ivBytes, key: encKey!);
+    var decryptedBytes = aesDecrypt(data: dataBytes, iv: ivBytes, key: encKey!);
     return utf8.decode(decryptedBytes);
   }
 
@@ -701,21 +697,21 @@ class CryptoController extends GetxController with MixinController {
       macData.setAll(0, iv);
       macData.setAll(iv.length, data);
 
-      var computedMac = await hmac(
+      var computedMac = hmac(
           value: macData,
           key: theKey!.macKey!,
           algorithm: CryptoHashAlgorithm.sha256);
-      if (computedMac == null) {
-        return null;
-      }
-      var macsMatch = await compare(mac, computedMac);
+      // if (computedMac == null) {
+      //   return null;
+      // }
+      var macsMatch = compare(mac, computedMac);
       if (!macsMatch) {
         // Mac failed
         return null;
       }
     }
 
-    return await aesDecrypt(data: data!, iv: iv!, key: theKey!.encKey!);
+    return aesDecrypt(data: data!, iv: iv!, key: theKey!.encKey!);
   }
 
   Future<SymmetricCryptoKey?> getKeyForEncryption(
@@ -727,7 +723,7 @@ class CryptoController extends GetxController with MixinController {
     if (encKey != null) {
       return encKey;
     }
-    return await getKey();
+    return await getMasterKey();
   }
 
   SymmetricCryptoKey? resolveLegacyKey({
@@ -817,9 +813,9 @@ class CryptoController extends GetxController with MixinController {
     final privateExponent = rsaSeq.elements![3] as ASN1Integer;
     final prime1 = rsaSeq.elements![4] as ASN1Integer;
     final prime2 = rsaSeq.elements![5] as ASN1Integer;
-    final exponent1 = rsaSeq.elements![6] as ASN1Integer;
-    final exponent2 = rsaSeq.elements![7] as ASN1Integer;
-    final coefficient = rsaSeq.elements![8] as ASN1Integer;
+    // final exponent1 = rsaSeq.elements![6] as ASN1Integer;
+    // final exponent2 = rsaSeq.elements![7] as ASN1Integer;
+    // final coefficient = rsaSeq.elements![8] as ASN1Integer;
 
     final RSAPrivateKey rsaPrivateKey = RSAPrivateKey(
       modulus.integer!,
@@ -950,8 +946,8 @@ class CryptoController extends GetxController with MixinController {
     // paddedCipher.init(true, ParametersWithIV(KeyParameter(key), iv));
     // return paddedCipher.process(data);
 
-    final padding = PKCS7Padding();
-    final cbcBlockCipher = CBCBlockCipher(AESEngine());
+    // final padding = PKCS7Padding();
+    // final cbcBlockCipher = CBCBlockCipher(AESEngine());
     final parameters = ParametersWithIV<KeyParameter>(KeyParameter(key), iv);
     final cbcParameters = PaddedBlockCipherParameters(parameters, null);
 
@@ -971,8 +967,8 @@ class CryptoController extends GetxController with MixinController {
       {required Uint8List data,
       required Uint8List iv,
       required Uint8List key}) {
-    final padding = PKCS7Padding();
-    final cbcBlockCipher = CBCBlockCipher(AESEngine());
+    //  final padding = PKCS7Padding();
+    // final cbcBlockCipher = CBCBlockCipher(AESEngine());
     final parameters = ParametersWithIV<KeyParameter>(KeyParameter(key), iv);
     final cbcParameters = PaddedBlockCipherParameters(parameters, null);
 
@@ -987,12 +983,12 @@ class CryptoController extends GetxController with MixinController {
     var obj = EncryptedObject(
         key: await getKeyForEncryption(key: key), iv: randomBytes(16));
 
-    obj.data = await aesEncrypt(data: data, iv: obj.iv!, key: obj.key!.encKey!);
+    obj.data = aesEncrypt(data: data, iv: obj.iv!, key: obj.key!.encKey!);
     if (obj.key?.macKey != null) {
       var macData = Uint8List((obj.iv?.length ?? 0) + (obj.data?.length ?? 0));
       macData.setRange(0, obj.iv?.length ?? 0, obj.iv ?? []);
       macData.setRange(obj.iv?.length ?? 0, macData.length, obj.data ?? []);
-      obj.mac = await hmac(
+      obj.mac = hmac(
           value: macData,
           key: obj.key!.macKey!,
           algorithm: CryptoHashAlgorithm.sha256);
@@ -1060,54 +1056,59 @@ class CryptoController extends GetxController with MixinController {
 
   Future<String?> getEncKeyEncrypted() async {
     return await localUseCase.getSecureData(
-      key: LocalKey.encKeyKey,
+      key: LocalStorageKey.encKeyKey,
     );
   }
 
   Future<void> setEncKeyEncrypted(String value) async {
     await localUseCase.saveSecureData(
-      key: LocalKey.encKeyKey,
+      key: LocalStorageKey.encKeyKey,
       value: value,
     );
   }
 
-  Future<String?> getKeyEncrypted() async {
+  Future<String?> getMasterKeyEncrypted() async {
     return await localUseCase.getSecureData(
-      key: LocalKey.keyKey,
+      key: LocalStorageKey.masterKeyEncryptedKey,
     );
   }
 
-  Future<void> setKeyEncrypted(String value) async {
+  Future<void> setMasterKeyEncrypted(String value) async {
     await localUseCase.saveSecureData(
-      key: LocalKey.keyKey,
+      key: LocalStorageKey.masterKeyEncryptedKey,
       value: value,
     );
   }
 
-  Future<SymmetricCryptoKey?> getKeyDecrypted() async {
-    var account = await accountUseCase.getAccount;
-    return account?.volatileData?.key;
+  Future<SymmetricCryptoKey?> getMasterKeyDecrypted() async {
+    final masterKeyDecrypted = await localUseCase.getSecureData(
+        key: LocalStorageKey.masterKeyDecryptedKey);
+    if (isNullEmpty(masterKeyDecrypted)) {
+      return null;
+    }
+
+    return masterKeyDecrypted == null
+        ? null
+        : SymmetricCryptoKey.fromJson(jsonDecode(masterKeyDecrypted));
   }
 
-  Future<void> setKeyDecrypted(
+  Future<void> setMasterKeyDecrypted(
     SymmetricCryptoKey value,
   ) async {
-    var account = await accountUseCase.getAccount;
-    account?.volatileData?.key = value;
-    await accountUseCase.setAccount(
-      account: account,
-    );
+    return await localUseCase.saveSecureData(
+        key: LocalStorageKey.masterKeyDecryptedKey,
+        value: jsonEncode(value.toJson()));
   }
 
-  Future<String?> getKeyHash() async {
+  Future<String?> getHashedMasterKey() async {
     return await localUseCase.getSecureData(
-      key: LocalKey.keyHashKey,
+      key: LocalStorageKey.hashedMaterKeyKey,
     );
   }
 
-  Future<void> setKeyHash(String value) async {
+  Future<void> setHashedMasterKey(String value) async {
     await localUseCase.saveSecureData(
-      key: LocalKey.keyHashKey,
+      key: LocalStorageKey.hashedMaterKeyKey,
       value: value,
     );
   }
@@ -1116,29 +1117,21 @@ class CryptoController extends GetxController with MixinController {
     String? masterPassword,
     SymmetricCryptoKey? key,
   }) async {
-    var storedKeyHash = await getKeyHash();
+    var storedHashedMasterKey = await getHashedMasterKey();
 
-    if (!isNullEmpty(storedKeyHash) && !isNullEmpty(masterPassword)) {
-      var keyHash = await hashPassword(password: masterPassword!, key: key);
-      if (!isNullEmpty(keyHash) && storedKeyHash == keyHash) {
+    if (!isNullEmpty(storedHashedMasterKey) && !isNullEmpty(masterPassword)) {
+      var hashedMasterKey =
+          await hashPassword(password: masterPassword!, key: key);
+      if (!isNullEmpty(hashedMasterKey) &&
+          storedHashedMasterKey == hashedMasterKey) {
         return true;
       }
     }
     return false;
   }
 
-  Future<void> setBiometricLocked({
-    bool value = false,
-  }) async {
-    var account = await accountUseCase.getAccount;
-    account?.volatileData?.biometricLocked = value;
-    await accountUseCase.setAccount(
-      account: account,
-    );
-  }
-
-  Future<bool> haskey() async {
-    var key = await getKey();
+  Future<bool> hasMasterKey() async {
+    var key = await getMasterKey();
     return key != null;
   }
 
@@ -1147,8 +1140,8 @@ class CryptoController extends GetxController with MixinController {
     return encKey != null;
   }
 
-  Future<void> setKey(SymmetricCryptoKey key) async {
-    await setKeyDecrypted(key);
-    await setKeyEncrypted(key.keyB64 ?? '');
+  Future<void> setMasterKey(SymmetricCryptoKey key) async {
+    await setMasterKeyDecrypted(key);
+    await setMasterKeyEncrypted(key.keyB64 ?? '');
   }
 }
