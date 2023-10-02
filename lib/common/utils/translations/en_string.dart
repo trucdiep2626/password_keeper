@@ -177,4 +177,8 @@ const enString = {
       "This device is unable to support the biometric features required for this action.",
   "enable_unlock_biometric": "Unlock with your biometric is now enabled",
   "disable_unlock_biometric": "Unlock with your biometric is now disabled",
+  "biometric_data_updated": "Biometric Data Updated",
+  "biometric_updated_message": "We've detected changes in your biometric data. "
+      "For security, biometric unlock is temporarily disabled. "
+      "Please use your master password to verify your identity and reactivate biometric unlock in settings.",
 };

@@ -13,13 +13,15 @@ class LocalRepository {
     required this.biometricStorage,
   });
 
-  Future<BiometricStorageFile>? _storageFileCached;
+//  Future<BiometricStorageFile>? _storageFileCached;
 
   Future<BiometricStorageFile> get _storageFile =>
-      _storageFileCached ??= biometricStorage.getStorage(
+      //_storageFileCached ??=
+      BiometricStorage().getStorage(
         Constants.storageFileName,
         options: StorageFileInitOptions(
-          authenticationValidityDurationSeconds: 60,
+          authenticationValidityDurationSeconds: -1,
+          authenticationRequired: true,
         ),
       );
 
@@ -67,6 +69,6 @@ class LocalRepository {
 
   Future<void> clearBiometricStorage() async {
     await _storageFile.then((value) => value.delete());
-    _storageFileCached = null;
+    //  _storageFileCached = null;
   }
 }

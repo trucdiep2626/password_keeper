@@ -16,8 +16,8 @@ class MainActivity: FlutterFragmentActivity() {
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
-        GeneratedPluginRegistrant.registerWith(flutterEngine)
+        //super.configureFlutterEngine(flutterEngine)
+       GeneratedPluginRegistrant.registerWith(flutterEngine)
     }
 }
 

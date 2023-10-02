@@ -197,4 +197,6 @@ class TranslationConstants {
   static const String unsupportedBiometric = "unsupported_biometric";
   static const String enableUnlockBiometric = "enable_unlock_biometric";
   static const String disableUnlockBiometric = "disable_unlock_biometric";
+  static const String biometricDataUpdated = "biometric_data_updated";
+  static const String biometricUpdatedMessage = "biometric_updated_message";
 }
