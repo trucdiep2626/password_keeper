@@ -108,7 +108,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
                 .requestFocus(controller.passwordFocusNode),
             focusNode: controller.userIdFocusNode,
             borderColor: AppColors.white,
-            borderRadius: AppDimens.space_12,
+            borderRadius: AppDimens.radius_12,
           ),
         ),
         SizedBox(
@@ -152,7 +152,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
                 FocusScope.of(controller.context).unfocus(),
             focusNode: controller.passwordFocusNode,
             borderColor: AppColors.white,
-            borderRadius: AppDimens.space_12,
+            borderRadius: AppDimens.radius_12,
           ),
         ),
         Obx(
@@ -173,7 +173,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
           onEditingComplete: () => FocusScope.of(controller.context).unfocus(),
           focusNode: controller.noteFocusNode,
           borderColor: AppColors.white,
-          borderRadius: AppDimens.space_12,
+          borderRadius: AppDimens.radius_12,
         ),
       ],
     );
@@ -190,7 +190,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
             backgroundColor: AppColors.white,
             size: AppDimens.space_36,
             margin: EdgeInsets.all(AppDimens.space_4),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppDimens.radius_4),
           ),
           SizedBox(
             width: AppDimens.space_16,

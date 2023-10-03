@@ -130,7 +130,7 @@ class SignInLocationScreen extends GetView<SignInLocationController> {
             size: AppDimens.space_36,
             //  border: Border.all(color: AppColors.blue200),
             margin: EdgeInsets.all(AppDimens.space_4),
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppDimens.radius_4),
           ),
           SizedBox(
             width: AppDimens.space_16,
@@ -165,7 +165,7 @@ class SignInLocationScreen extends GetView<SignInLocationController> {
           child: AppShimmer(
             height: AppDimens.space_36,
             width: AppDimens.space_36,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppDimens.radius_4),
           ),
         ),
         SizedBox(

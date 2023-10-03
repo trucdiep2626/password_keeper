@@ -50,8 +50,8 @@ class AppTouchable extends StatelessWidget {
           shape: MaterialStateProperty.all(
             outlinedBorder ??
                 RoundedRectangleBorder(
-                  borderRadius:
-                      borderRadius ?? BorderRadius.circular(AppDimens.space_12),
+                  borderRadius: borderRadius ??
+                      BorderRadius.circular(AppDimens.radius_12),
                 ),
           ),
           padding: MaterialStateProperty.all(padding ?? EdgeInsets.zero),

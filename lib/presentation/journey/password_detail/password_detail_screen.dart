@@ -9,6 +9,7 @@ import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/password_detail/password_detail_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
+import 'package:password_keeper/presentation/widgets/app_icon_widget.dart';
 import 'package:password_keeper/presentation/widgets/confirm_widget.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -107,53 +108,49 @@ class PasswordDetailScreen extends GetView<PasswordDetailController> {
           labelText: TranslationConstants.userId.tr,
           controller: controller.userIdController,
           borderColor: AppColors.white,
-          borderRadius: AppDimens.space_12,
+          borderRadius: AppDimens.radius_12,
         ),
         SizedBox(
           height: AppDimens.space_12,
         ),
-        Row(
-          children: [
-            Expanded(
-              child: AppTextField(
-                readOnly: true,
-                suffixIcon: Row(
-                  children: [
-                    AppTouchable(
-                      onPressed: controller.onChangedShowPassword,
-                      child: AppImageWidget(
-                        fit: BoxFit.scaleDown,
-                        size: AppDimens.space_24,
-                        asset: controller.showPassword.value
-                            ? Assets.images.svg.icEyeSlash
-                            : Assets.images.svg.icEye,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    AppTouchable(
-                      onPressed: () async {
-                        await copyText(
-                            text: controller.password.value.password ?? '');
-                      },
-                      margin: EdgeInsets.only(left: AppDimens.space_8),
-                      child: AppImageWidget(
-                        size: AppDimens.space_24,
-                        asset: Assets.images.svg.icCopy,
-                        color: AppColors.grey,
-                      ),
-                    ),
-                  ],
+
+        AppTextField(
+          readOnly: true,
+          suffixIcon: Row(
+            children: [
+              AppTouchable(
+                onPressed: controller.onChangedShowPassword,
+                child: AppImageWidget(
+                  fit: BoxFit.scaleDown,
+                  size: AppDimens.space_24,
+                  asset: controller.showPassword.value
+                      ? Assets.images.svg.icEyeSlash
+                      : Assets.images.svg.icEye,
+                  color: AppColors.grey,
                 ),
-                numSuffixIcon: 2,
-                labelText: TranslationConstants.password.tr,
-                controller: controller.passwordController,
-                obscureText: !(controller.showPassword.value),
-                borderColor: AppColors.white,
-                borderRadius: AppDimens.space_12,
               ),
-            ),
-          ],
+              AppTouchable(
+                onPressed: () async {
+                  await copyText(
+                      text: controller.password.value.password ?? '');
+                },
+                margin: EdgeInsets.only(left: AppDimens.space_8),
+                child: AppImageWidget(
+                  size: AppDimens.space_24,
+                  asset: Assets.images.svg.icCopy,
+                  color: AppColors.grey,
+                ),
+              ),
+            ],
+          ),
+          numSuffixIcon: 2,
+          labelText: TranslationConstants.password.tr,
+          controller: controller.passwordController,
+          obscureText: !(controller.showPassword.value),
+          borderColor: AppColors.white,
+          borderRadius: AppDimens.radius_12,
         ),
+
         // PasswordStrengthChecker(
         //     passwordStrength: controller.password.value.passwordStrengthLevel ??
         //         PasswordStrengthLevel.weak),
@@ -166,7 +163,7 @@ class PasswordDetailScreen extends GetView<PasswordDetailController> {
                 labelText: TranslationConstants.note.tr,
                 controller: controller.noteController,
                 borderColor: AppColors.white,
-                borderRadius: AppDimens.space_12,
+                borderRadius: AppDimens.radius_12,
               ),
       ],
     );
@@ -180,49 +177,14 @@ class PasswordDetailScreen extends GetView<PasswordDetailController> {
             color: AppColors.white,
             borderRadius: BorderRadius.circular(AppDimens.radius_12)),
         child: ListTile(
-          leading: _buildAppIcon(item),
+          leading: AppIconWidget(
+            item: item,
+          ),
           title: Text(
             item.signInLocation ?? '',
             style: ThemeText.bodyMedium,
           ),
-          subtitle: Text(
-            item.userId ?? '',
-            style: ThemeText.bodyRegular.s12.grey600Color,
-          ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAppIcon(PasswordItem item) {
-    if (item.appIcon != null) {
-      return AppImageWidget(
-        bytes: item.appIcon!,
-        padding: EdgeInsets.all(AppDimens.space_2),
-        backgroundColor: AppColors.white,
-        size: AppDimens.space_36,
-        margin: EdgeInsets.all(AppDimens.space_4),
-        borderRadius: BorderRadius.circular(4),
-      );
-    }
-
-    final firstLetter = (item.signInLocation ?? '').isURL
-        ? (item.signInLocation ?? '').split('.').first[0]
-        : (item.signInLocation ?? '')[0];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.blue50,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      padding: EdgeInsets.all(AppDimens.space_2),
-      margin: EdgeInsets.all(AppDimens.space_4),
-      width: AppDimens.space_36,
-      height: AppDimens.space_36,
-      alignment: Alignment.center,
-      child: Text(
-        firstLetter,
-        style: ThemeText.bodyStrong.s24.blue400,
       ),
     );
   }

@@ -7,6 +7,7 @@ import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -160,6 +161,7 @@ class PasswordListController extends GetxController with MixinController {
         await Get.toNamed(AppRoutes.passwordDetail, arguments: passwordItem);
     if (result is bool && result) {
       await onRefresh();
+      await Get.find<HomeController>().initData();
     }
   }
 

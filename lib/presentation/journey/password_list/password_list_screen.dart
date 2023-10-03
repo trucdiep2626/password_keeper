@@ -8,6 +8,7 @@ import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
+import 'package:password_keeper/presentation/widgets/app_icon_widget.dart';
 import 'package:password_keeper/presentation/widgets/app_refresh_widget.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -139,15 +140,15 @@ class PasswordListScreen extends GetView<PasswordListController> {
             borderRadius: BorderRadius.circular(AppDimens.radius_12),
             boxShadow: [
               BoxShadow(
-                color: AppColors.black.withOpacity(0.02),
-                offset: const Offset(0, 2),
-                blurRadius: 1,
+                color: AppColors.black.withOpacity(0.05),
+                offset: const Offset(0, 0),
+                blurRadius: 4,
                 spreadRadius: 1,
               ),
             ],
           ),
           child: ListTile(
-            leading: _buildAppIcon(item),
+            leading: AppIconWidget(item: item),
             title: Text(
               item.signInLocation ?? '',
               style: ThemeText.bodyMedium,
@@ -158,39 +159,6 @@ class PasswordListScreen extends GetView<PasswordListController> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAppIcon(PasswordItem item) {
-    if (item.appIcon != null) {
-      return AppImageWidget(
-        bytes: item.appIcon!,
-        padding: EdgeInsets.all(AppDimens.space_2),
-        backgroundColor: AppColors.white,
-        size: AppDimens.space_36,
-        margin: EdgeInsets.all(AppDimens.space_4),
-        borderRadius: BorderRadius.circular(4),
-      );
-    }
-
-    final firstLetter = (item.signInLocation ?? '').isURL
-        ? (item.signInLocation ?? '').split('.').first[0]
-        : (item.signInLocation ?? '')[0];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.blue50,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      padding: EdgeInsets.all(AppDimens.space_2),
-      margin: EdgeInsets.all(AppDimens.space_4),
-      width: AppDimens.space_36,
-      height: AppDimens.space_36,
-      alignment: Alignment.center,
-      child: Text(
-        firstLetter,
-        style: ThemeText.bodyStrong.s24.blue400,
       ),
     );
   }

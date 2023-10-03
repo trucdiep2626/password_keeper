@@ -116,6 +116,10 @@ class TranslationConstants {
   static const String hello = "hello";
   static const String welcome = "welcome";
   static const String passwordHealth = "password_health";
+  static const String total = "total";
+  static const String reused = "reused";
+  static const String weak = "weak";
+  static const String safe = "safe";
 
   //bottom navigation bar
   static const String home = 'home';
@@ -162,6 +166,11 @@ class TranslationConstants {
   static const String weakPasswordWarning = "weak_password_warning";
   static const String weakPasswordWarningMessage =
       "weak_password_warning_message";
+  static const String viewDetail = "view_detail";
+  static const String weakPasswords = "weak_passwords";
+  static const String reusedPasswords = "reused_passwords";
+  static const String safePasswords = "safe_passwords";
+  static const String signInLocationsApps = "sign_in_locations_apps";
 
   //setting
   static const String settings = "settings";

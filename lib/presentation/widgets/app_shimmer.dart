@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:password_keeper/common/utils/app_screen_utils/flutter_screenutils.dart';
+import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -27,7 +27,8 @@ class AppShimmer extends StatelessWidget {
         height: height ?? 20,
         decoration: BoxDecoration(
           color: backgroundColor ?? AppColors.white,
-          borderRadius: borderRadius ?? BorderRadius.circular(8.0.sp),
+          borderRadius:
+              borderRadius ?? BorderRadius.circular(AppDimens.radius_4),
         ),
       ),
     );

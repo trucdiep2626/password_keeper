@@ -130,7 +130,8 @@ class AppTextFieldState extends State<AppTextField> {
             color: widget.backgroundColor ?? AppColors.white,
             borderRadius: widget.isUnderline
                 ? null
-                : BorderRadius.circular(widget.borderRadius ?? 5),
+                : BorderRadius.circular(
+                    widget.borderRadius ?? AppDimens.radius_4),
             border: widget.isUnderline
                 ? Border(
                     bottom: BorderSide(

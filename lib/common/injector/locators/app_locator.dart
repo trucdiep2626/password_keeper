@@ -16,6 +16,7 @@ import 'package:password_keeper/presentation/controllers/password_generation_con
 import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_controller.dart';
 import 'package:password_keeper/presentation/journey/change_master_password/change_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
+import 'package:password_keeper/presentation/journey/filtered_password_list/filtered_password_list_controller.dart';
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/journey/login/login_controller.dart';
@@ -94,6 +95,8 @@ void configLocator() {
   getIt.registerFactory<ResetPasswordController>(() => ResetPasswordController(
         accountUseCase: getIt<AccountUseCase>(),
       ));
+  getIt.registerFactory<FilteredPasswordListController>(
+      () => FilteredPasswordListController());
 
   ///helper
   getIt.registerLazySingleton<CryptoController>(() => CryptoController(

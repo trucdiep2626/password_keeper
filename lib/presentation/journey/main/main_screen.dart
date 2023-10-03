@@ -42,8 +42,8 @@ class MainScreen extends GetView<MainController> {
   }) {
     return AppTouchable(
         onPressed: onPressed,
-        outlinedBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
+        outlinedBorder: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
         ),
         // height: 70.sp,
         width: Get.width / 4,

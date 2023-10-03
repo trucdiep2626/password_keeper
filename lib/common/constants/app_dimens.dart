@@ -14,6 +14,7 @@ class AppDimens {
   /// Space
   static double space_2 = 2.sp;
   static double space_4 = 4.sp;
+  static double space_6 = 6.sp;
   static double space_8 = 8.sp;
   static double space_12 = 12.sp;
   static double space_14 = 14.sp;

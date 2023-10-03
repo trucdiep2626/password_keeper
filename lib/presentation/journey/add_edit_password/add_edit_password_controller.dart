@@ -13,6 +13,7 @@ import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_controller.dart';
 import 'package:password_keeper/presentation/widgets/app_dialog.dart';
@@ -126,6 +127,8 @@ class AddEditPasswordController extends GetxController with MixinController {
 
     //refresh password list
     await Get.find<PasswordListController>().onRefresh();
+    await Get.find<HomeController>().initData();
+
     Get.back();
   }
 

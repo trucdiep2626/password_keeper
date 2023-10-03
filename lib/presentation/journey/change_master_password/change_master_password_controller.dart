@@ -7,9 +7,7 @@ import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
-import 'package:password_keeper/domain/models/encrypted_string.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
-import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
@@ -148,7 +146,7 @@ class ChangeMasterPasswordController extends GetxController
       //get all passwords and decrypt
       final allPasswordItems = await getPasswordList();
       final allDecryptedPasswordItems =
-          await decryptPasswordList(allPasswordItems);
+          await _cryptoController.decryptPasswordList(allPasswordItems);
 
       //create new key from new master password
       var newKey = await _cryptoController.makeMasterKey(
@@ -157,7 +155,7 @@ class ChangeMasterPasswordController extends GetxController
       );
 
       //encrypt password list with new key
-      final encryptedList = await encryptPasswordList(
+      final encryptedList = await _cryptoController.encryptPasswordList(
         passwords: allDecryptedPasswordItems,
         key: newKey,
       );
@@ -221,54 +219,6 @@ class ChangeMasterPasswordController extends GetxController
       showTopSnackBarError(context, e.toString());
       return [];
     }
-  }
-
-  Future<List<PasswordItem>> decryptPasswordList(
-      List<PasswordItem> passwords) async {
-    final decryptedList = <PasswordItem>[];
-
-    if (passwords.isEmpty) {
-      return decryptedList;
-    }
-
-    for (var item in passwords) {
-      final decrypted = await _cryptoController.decryptToUtf8(
-          encString:
-              EncryptedString.fromString(encryptedString: item.password));
-
-      if (decrypted != null) {
-        decryptedList.add(item.copyWith(password: decrypted));
-      }
-    }
-
-    return decryptedList;
-  }
-
-  Future<List<PasswordItem>> encryptPasswordList({
-    required List<PasswordItem> passwords,
-    required SymmetricCryptoKey key,
-  }) async {
-    final encryptedList = <PasswordItem>[];
-
-    if (passwords.isEmpty) {
-      return encryptedList;
-    }
-
-    for (var item in passwords) {
-      final encrypted = await _cryptoController.encryptString(
-        plainValue: item.password,
-        key: key,
-      );
-
-      if (encrypted != null) {
-        encryptedList.add(item.copyWith(
-          password: encrypted.encryptedString ?? '',
-          updatedAt: DateTime.now().millisecondsSinceEpoch,
-        ));
-      }
-    }
-
-    return encryptedList;
   }
 
   void onChangedMasterPwd() {

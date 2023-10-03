@@ -10,7 +10,7 @@ class ThemeText {
     fontWeight: FontWeight.w400,
     fontSize: 14.sp,
     fontFamily: FontFamily.mr,
-    color: AppColors.blue500,
+    color: AppColors.black,
   );
 
   static final TextStyle bodyMedium = bodyRegular.copyWith(

@@ -10,7 +10,7 @@ class AppColors {
   static const Color primary = Color(0xFF012A4A);
   static const Color greyF0FF = Color(0xFFEBF0FF);
   static const Color text = black;
-  static Color? background = grey50;
+  static Color? background = blue100;
   static const backgroundColor = Color(0xffFCFAF3);
   static const bianca = Color(0xffFCFAF3);
   // static const backgroundColor = Color(0xfff6f6f6);

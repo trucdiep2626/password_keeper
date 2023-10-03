@@ -64,4 +64,13 @@ enum HashPurpose {
   final int id;
 }
 
-enum PasswordType { password, passphrase }
+enum PasswordType {
+  password,
+  passphrase,
+}
+
+enum FilteredType {
+  weak,
+  safe,
+  reused,
+}

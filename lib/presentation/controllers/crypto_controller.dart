@@ -14,6 +14,7 @@ import 'package:password_keeper/domain/models/argon2_params.dart';
 import 'package:password_keeper/domain/models/enc_key_result.dart';
 import 'package:password_keeper/domain/models/encrypted_object.dart';
 import 'package:password_keeper/domain/models/encrypted_string.dart';
+import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/models/protected_value.dart';
 import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
@@ -1143,5 +1144,53 @@ class CryptoController extends GetxController with MixinController {
   Future<void> setMasterKey(SymmetricCryptoKey key) async {
     await setMasterKeyDecrypted(key);
     await setMasterKeyEncrypted(key.keyB64 ?? '');
+  }
+
+  Future<List<PasswordItem>> decryptPasswordList(
+      List<PasswordItem> passwords) async {
+    final decryptedList = <PasswordItem>[];
+
+    if (passwords.isEmpty) {
+      return decryptedList;
+    }
+
+    for (var item in passwords) {
+      final decrypted = await decryptToUtf8(
+          encString:
+              EncryptedString.fromString(encryptedString: item.password));
+
+      if (decrypted != null) {
+        decryptedList.add(item.copyWith(password: decrypted));
+      }
+    }
+
+    return decryptedList;
+  }
+
+  Future<List<PasswordItem>> encryptPasswordList({
+    required List<PasswordItem> passwords,
+    required SymmetricCryptoKey key,
+  }) async {
+    final encryptedList = <PasswordItem>[];
+
+    if (passwords.isEmpty) {
+      return encryptedList;
+    }
+
+    for (var item in passwords) {
+      final encrypted = await encryptString(
+        plainValue: item.password,
+        key: key,
+      );
+
+      if (encrypted != null) {
+        encryptedList.add(item.copyWith(
+          password: encrypted.encryptedString ?? '',
+          updatedAt: DateTime.now().millisecondsSinceEpoch,
+        ));
+      }
+    }
+
+    return encryptedList;
   }
 }

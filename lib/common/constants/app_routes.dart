@@ -20,6 +20,7 @@ class AppRoutes {
   static const String addEditPassword = '/add_edit_password';
   static const String passwordList = '/password_list';
   static const String passwordDetail = '/password_detail';
+  static const String filteredPasswordList = '/filtered_password_list';
 
   //main
   static const String main = '/main';

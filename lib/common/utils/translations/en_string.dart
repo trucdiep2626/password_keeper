@@ -95,6 +95,10 @@ const enString = {
   "hello": "Hello",
   "welcome": "Welcome to your password manager.",
   "password_health": "Password Health",
+  "total": "Total",
+  "reused": "Reused",
+  "weak": "Weak",
+  "safe": "Safe",
 
   //bottom navigation bar
   "home": "Home",
@@ -142,6 +146,11 @@ const enString = {
   "weak_password_warning": "Weak password warning",
   "weak_password_warning_message":
       "We noticed your password could be stronger. Would you like to try again with a mix of uppercase, lowercase, numbers, and special characters for added security?",
+  "view_detail": "View detail",
+  "weak_passwords": "Weak passwords",
+  "reused_passwords": "Reused passwords",
+  "safe_passwords": "Safe passwords",
+  "sign_in_locations_apps": "Sign-in Locations/Apps",
 
   //setting
   "settings": "Settings",

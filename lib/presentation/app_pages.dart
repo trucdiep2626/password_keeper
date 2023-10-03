@@ -3,6 +3,7 @@ import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/injector/bindings/add_edit_password_binding.dart';
 import 'package:password_keeper/common/injector/bindings/change_master_password_binding.dart';
 import 'package:password_keeper/common/injector/bindings/create_master_password_binding.dart';
+import 'package:password_keeper/common/injector/bindings/filtered_password_list_binding.dart';
 import 'package:password_keeper/common/injector/bindings/generated_password_history_binding.dart';
 import 'package:password_keeper/common/injector/bindings/home_binding.dart';
 import 'package:password_keeper/common/injector/bindings/login_binding.dart';
@@ -20,6 +21,7 @@ import 'package:password_keeper/common/injector/bindings/verify_master_password_
 import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_screen.dart';
 import 'package:password_keeper/presentation/journey/change_master_password/change_master_password_screen.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_screen.dart';
+import 'package:password_keeper/presentation/journey/filtered_password_list/filtered_password_list_screen.dart';
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_screen.dart';
 import 'package:password_keeper/presentation/journey/login/login_screen.dart';
 import 'package:password_keeper/presentation/journey/main/main_screen.dart';
@@ -105,5 +107,10 @@ List<GetPage> myPages = [
     name: AppRoutes.changeMasterPassword,
     page: () => const ChangeMasterPasswordScreen(),
     binding: ChangeMasterPasswordBinding(),
+  ),
+  GetPage(
+    name: AppRoutes.filteredPasswordList,
+    page: () => const FilteredPasswordListScreen(),
+    binding: FilteredPasswordListBinding(),
   ),
 ];
