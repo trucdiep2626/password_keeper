@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
-import 'package:password_keeper/presentation/widgets/app_image_widget.dart';
-import 'package:password_keeper/presentation/widgets/app_loading_widget.dart';
-import 'package:password_keeper/presentation/widgets/app_touchable.dart';
+import 'package:password_keeper/presentation/widgets/app_icon_widget.dart';
+import 'package:password_keeper/presentation/widgets/app_refresh_widget.dart';
+import 'package:password_keeper/presentation/widgets/empty_password_list.dart';
+import 'package:password_keeper/presentation/widgets/export.dart';
 
 import 'home_controller.dart';
 
@@ -23,25 +25,42 @@ class HomeScreen extends GetView<HomeController> {
       },
       child: Scaffold(
         backgroundColor: AppColors.background,
-        body: Obx(() => controller.rxLoadedHome.value == LoadedType.start
-            ? const AppLoadingWidget()
-            : SingleChildScrollView(
-                child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: AppDimens.space_16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: Get.mediaQuery.viewPadding.top,
-                        ),
-                        //welcom text
-                        _buildWelcome(),
-                        //password health
-                        //  _buildPasswordHealth(),
-                      ],
-                    )),
-              )),
+        body: AppRefreshWidget(
+          onRefresh: () async => await controller.initData(),
+          controller: controller.refreshController,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
+              child: Obx(
+                () => controller.rxLoadedHome.value == LoadedType.start
+                    ? _buildShimmerList()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: Get.mediaQuery.viewPadding.top,
+                          ),
+                          _buildWelcome(),
+                          Text(
+                            TranslationConstants.recentUsed.tr,
+                            style: ThemeText.bodyMedium.grey600Color,
+                          ),
+                          SizedBox(
+                            height: AppDimens.space_16,
+                          ),
+                          if (controller.recentUsedPasswords.value.isEmpty)
+                            const EmptyPasswordList(),
+                          ...List.generate(
+                            controller.recentUsedPasswords.length,
+                            (index) => _buildItem(
+                                controller.recentUsedPasswords[index]),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -81,7 +100,9 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildPasswordHealth() {
-    return Obx(() => Row(children: [
+    return Obx(
+      () => Row(
+        children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,24 +123,27 @@ class HomeScreen extends GetView<HomeController> {
             ),
           ),
           Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildPasswordHealthItem(
-                title: TranslationConstants.weak.tr,
-                value: controller.totalWeakPasswords.value,
-                color: AppColors.red,
-                onPressed: () async => await controller.goToWeakPasswords(),
-              ),
-              _buildPasswordHealthItem(
-                title: TranslationConstants.safe.tr,
-                value: controller.totalSafePasswords.value,
-                color: AppColors.blue,
-                onPressed: () async => await controller.goToSafePasswords(),
-              ),
-            ],
-          )),
-        ]));
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPasswordHealthItem(
+                  title: TranslationConstants.weak.tr,
+                  value: controller.totalWeakPasswords.value,
+                  color: AppColors.red,
+                  onPressed: () async => await controller.goToWeakPasswords(),
+                ),
+                _buildPasswordHealthItem(
+                  title: TranslationConstants.safe.tr,
+                  value: controller.totalSafePasswords.value,
+                  color: AppColors.blue,
+                  onPressed: () async => await controller.goToSafePasswords(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildPasswordHealthItem({
@@ -187,6 +211,90 @@ class HomeScreen extends GetView<HomeController> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildItem(PasswordItem item) {
+    return AppTouchable(
+      onPressed: () => controller.goToPasswordDetail(item),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: AppDimens.space_4),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(AppDimens.radius_12),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withOpacity(0.05),
+                offset: const Offset(0, 0),
+                blurRadius: 4,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: ListTile(
+            leading: AppIconWidget(item: item),
+            title: Text(
+              item.signInLocation ?? '',
+              style: ThemeText.bodyMedium,
+            ),
+            subtitle: Text(
+              item.userId ?? '',
+              style: ThemeText.bodyRegular.s12.grey600Color,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerItem() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: AppDimens.space_4),
+      child: ListTile(
+        title: AppShimmer(
+          height: AppDimens.space_8,
+          width: AppDimens.space_72,
+        ),
+        subtitle: AppShimmer(
+          height: AppDimens.space_8,
+          width: AppDimens.space_48,
+        ),
+        leading: AppShimmer(
+          height: AppDimens.space_36,
+          width: AppDimens.space_36,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: Get.mediaQuery.viewPadding.top,
+        ),
+        AppShimmer(
+          borderRadius: BorderRadius.circular(AppDimens.radius_12),
+          height: Get.height / 3,
+          width: Get.width,
+        ),
+        SizedBox(
+          height: AppDimens.space_16,
+        ),
+        AppShimmer(
+          width: AppDimens.space_84,
+        ),
+        _buildShimmerItem(),
+        _buildShimmerItem(),
+        _buildShimmerItem(),
+        _buildShimmerItem(),
+        _buildShimmerItem(),
+        _buildShimmerItem(),
+        _buildShimmerItem(),
+        _buildShimmerItem(),
+      ],
     );
   }
 }

@@ -10,6 +10,7 @@ import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/journey/main/main_controller.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeController extends GetxController with MixinController {
   AccountUseCase accountUsecase;
@@ -32,7 +33,11 @@ class HomeController extends GetxController with MixinController {
   RxInt totalReusePasswords = 0.obs;
 
   RxList<PasswordItem> allPasswords = <PasswordItem>[].obs;
+  RxList<PasswordItem> recentUsedPasswords = <PasswordItem>[].obs;
+
   Map<String, int> passwordCounts = {};
+
+  final RefreshController refreshController = RefreshController();
 
   @override
   Future<void> onReady() async {
@@ -53,6 +58,8 @@ class HomeController extends GetxController with MixinController {
 
       await getAllPasswords();
 
+      await getRecentUsedPasswords();
+
       totalWeakPasswords.value = allPasswords
           .where((element) =>
               element.passwordStrengthLevel == PasswordStrengthLevel.weak ||
@@ -67,6 +74,7 @@ class HomeController extends GetxController with MixinController {
       debugPrint(e.toString());
       showErrorMessage();
     } finally {
+      refreshController.refreshCompleted();
       rxLoadedHome.value = LoadedType.finish;
     }
   }
@@ -161,5 +169,36 @@ class HomeController extends GetxController with MixinController {
     passwordCounts.values
         .forEach((count) => {if (count > 1) reusedPasswords += count});
     return reusedPasswords;
+  }
+
+  Future<void> getRecentUsedPasswords() async {
+    // //check internet connection
+    // final isConnected = await checkConnectivity();
+    // if (!isConnected) {
+    //   return;
+    // }
+
+    rxLoadedHome.value = LoadedType.start;
+
+    try {
+      final result = await passwordUseCase.getRecentUsedList(
+        userId: user?.uid ?? '',
+      );
+      recentUsedPasswords.clear();
+      recentUsedPasswords.addAll(result);
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    } finally {
+      rxLoadedHome.value = LoadedType.finish;
+    }
+  }
+
+  Future<void> goToPasswordDetail(PasswordItem passwordItem) async {
+    final result =
+        await Get.toNamed(AppRoutes.passwordDetail, arguments: passwordItem);
+    if (result is bool && result) {
+      await Get.find<HomeController>().initData();
+    }
   }
 }

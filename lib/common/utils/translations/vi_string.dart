@@ -151,6 +151,7 @@ const viString = {
   "reused_passwords": "Reused passwords",
   "safe_passwords": "Safe passwords",
   "sign_in_locations_apps": "Sign-in Locations/Apps",
+  "recent_used": "Recent Used",
 
   //setting
   "settings": "Settings",

@@ -10,6 +10,7 @@ import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/app_icon_widget.dart';
 import 'package:password_keeper/presentation/widgets/app_refresh_widget.dart';
+import 'package:password_keeper/presentation/widgets/empty_password_list.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 class PasswordListScreen extends GetView<PasswordListController> {
@@ -92,7 +93,7 @@ class PasswordListScreen extends GetView<PasswordListController> {
                             controller.rxLoadedList.value == LoadedType.start
                                 ? _buildShimmerList()
                                 : (controller.displayPasswords.isEmpty
-                                    ? _buildEmptyList()
+                                    ? const EmptyPasswordList()
                                     : Column(
                                         children: controller.displayPasswords
                                             .map((e) => _buildItem(e))
@@ -195,31 +196,6 @@ class PasswordListScreen extends GetView<PasswordListController> {
         _buildShimmerItem(),
         _buildShimmerItem(),
       ],
-    );
-  }
-
-  Widget _buildEmptyList() {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: AppDimens.space_32, horizontal: AppDimens.space_16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          AppImageWidget(
-            asset: Assets.images.svg.icEmpty,
-            size: Get.width / 2,
-            color: AppColors.grey400,
-          ),
-          SizedBox(
-            height: AppDimens.space_24,
-          ),
-          Text(
-            TranslationConstants.passwordListEmpty.tr,
-            style: ThemeText.bodyMedium.grey400Color.s16,
-            textAlign: TextAlign.center,
-          )
-        ],
-      ),
     );
   }
 }

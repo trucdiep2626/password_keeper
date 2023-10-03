@@ -15,6 +15,7 @@ class PasswordItem extends ISuspensionBean {
   String? note;
   int? createdAt;
   int? updatedAt;
+  int? recentUsedAt;
   PasswordStrengthLevel? passwordStrengthLevel;
   String? tagIndex;
 
@@ -30,6 +31,7 @@ class PasswordItem extends ISuspensionBean {
     this.updatedAt,
     this.passwordStrengthLevel,
     this.tagIndex,
+    this.recentUsedAt,
   });
 
   PasswordItem.fromJson(Map<String, dynamic> json) {
@@ -47,7 +49,7 @@ class PasswordItem extends ISuspensionBean {
     note = json['note'];
     signInLocation = json['sign_in_location'];
     appIcon = json['app_icon'] == null ? null : base64.decode(json['app_icon']);
-
+    recentUsedAt = json['recent_used_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     passwordStrengthLevel = PasswordHelper.getPasswordStrengthFromId(
@@ -69,6 +71,7 @@ class PasswordItem extends ISuspensionBean {
     if (appIcon != null) {
       data['app_icon'] = base64.encode(appIcon!.toList());
     }
+    data['recent_used_at'] = recentUsedAt;
     data['updated_at'] = updatedAt;
     data['created_at'] = createdAt;
     data['password_strength_level'] = passwordStrengthLevel?.id;
@@ -88,9 +91,11 @@ class PasswordItem extends ISuspensionBean {
     String? note,
     int? createdAt,
     int? updatedAt,
+    int? recentUsedAt,
     PasswordStrengthLevel? passwordStrengthLevel,
   }) =>
       PasswordItem(
+        recentUsedAt: recentUsedAt ?? this.recentUsedAt,
         id: id ?? this.id,
         isApp: isApp ?? this.isApp,
         signInLocation: signInLocation ?? this.signInLocation,

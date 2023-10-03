@@ -171,6 +171,7 @@ class TranslationConstants {
   static const String reusedPasswords = "reused_passwords";
   static const String safePasswords = "safe_passwords";
   static const String signInLocationsApps = "sign_in_locations_apps";
+  static const String recentUsed = "recent_used";
 
   //setting
   static const String settings = "settings";

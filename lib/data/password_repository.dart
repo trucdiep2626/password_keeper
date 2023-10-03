@@ -170,6 +170,43 @@ class PasswordRepository {
         .update(passwordItem.toJson());
   }
 
+  Future<void> updateRecentUsedPassword({
+    required String userId,
+    required PasswordItem password,
+  }) async {
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.passwordsCollection)
+        .doc(password.id)
+        .update({'recent_used_at': password.recentUsedAt});
+  }
+
+  Future<List<PasswordItem>> getRecentUsedList({required String userId}) async {
+    final response = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.passwordsCollection)
+        .orderBy('recent_used_at', descending: true)
+        .limit(10)
+        .get();
+
+    if (response.docs.isEmpty) {
+      return <PasswordItem>[];
+    } else {
+      List<PasswordItem> passwords = [];
+      for (var item in response.docs) {
+        Map<String, dynamic> password = {};
+        password.addAll({'id': item.id});
+        password.addAll(item.data());
+        PasswordItem passwordItem = PasswordItem.fromJson(password);
+        passwords.add(passwordItem);
+      }
+
+      return passwords;
+    }
+  }
+
   Future<List<PasswordItem>> getPasswordList({
     required String userId,
     PasswordItem? lastItem,

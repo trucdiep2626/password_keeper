@@ -81,6 +81,20 @@ class PasswordUseCase {
     );
   }
 
+  Future<void> updateRecentUsedPassword({
+    required String userId,
+    required PasswordItem password,
+  }) async {
+    return await passwordRepository.updateRecentUsedPassword(
+      userId: userId,
+      password: password,
+    );
+  }
+
+  Future<List<PasswordItem>> getRecentUsedList({required String userId}) async {
+    return await passwordRepository.getRecentUsedList(userId: userId);
+  }
+
   Future<List<PasswordItem>> getPasswordList({
     required String userId,
     PasswordItem? lastItem,

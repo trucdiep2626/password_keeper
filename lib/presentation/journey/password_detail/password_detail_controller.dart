@@ -11,6 +11,7 @@ import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/widgets/app_dialog.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -116,6 +117,36 @@ class PasswordDetailController extends GetxController with MixinController {
     if (pwd is PasswordItem) {
       password.value = pwd;
       await _handleDisplayItem();
+    }
+  }
+
+  @override
+  void onReady() async {
+    super.onReady();
+    await updateRecentUsed();
+    await Get.find<HomeController>().getRecentUsedPasswords();
+  }
+
+  Future<void> updateRecentUsed() async {
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+
+    rxLoadedDetail.value = LoadedType.start;
+
+    try {
+      await passwordUseCase.updateRecentUsedPassword(
+        userId: user?.uid ?? '',
+        password: password.value
+            .copyWith(recentUsedAt: DateTime.now().millisecondsSinceEpoch),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    } finally {
+      rxLoadedDetail.value = LoadedType.finish;
     }
   }
 
