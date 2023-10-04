@@ -1,45 +1,3 @@
-// class Account {
-//   AccountProfile? profile;
-//   // AccountTokens? tokens;
-//   // AccountSettings? settings;
-//   AccountVolatileData? volatileData;
-//
-//   Account({
-//     required this.profile,
-//     //  required this.tokens
-//   }) {
-//     //  settings = AccountSettings();
-//     volatileData = AccountVolatileData();
-//   }
-//
-//   // Account.copy(Account account)
-//   //     : profile = AccountProfile.copy(account.profile!),
-//   //       // tokens = AccountTokens.copy(account.tokens!),
-//   //       // settings = AccountSettings.copy(account.settings!),
-//   //       volatileData = AccountVolatileData();
-//
-//   Account.fromJson(Map<String, dynamic> json) {
-//     profile = json['profile'] != null
-//         ? AccountProfile.fromJson(json['profile'])
-//         : null;
-//     volatileData = json['volatile_data'] != null
-//         ? AccountVolatileData.fromJson(json['volatile_data'])
-//         : null;
-//   }
-//
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = <String, dynamic>{};
-//     if (profile != null) {
-//       data['profile'] = profile!.toJson();
-//     }
-//     if (volatileData != null) {
-//       data['volatile_data'] = volatileData!.toJson();
-//     }
-//
-//     return data;
-//   }
-// }
-
 class Account {
   String? id;
   String? userId;
@@ -53,6 +11,7 @@ class Account {
   // bool? biometricUnlockEnabled;
 
   String? name;
+  bool? allowScreenCapture;
 //  String? stamp;
 //  String? orgIdentifier;
 //  String? avatarColor;
@@ -76,6 +35,7 @@ class Account {
     this.kdfIterations,
     this.kdfMemory,
     this.kdfParallelism,
+    this.allowScreenCapture,
     // this.biometricUnlockEnabled = false,
     // this.emailVerified,
     // this.hasPremiumPersonally,
@@ -93,11 +53,14 @@ class Account {
     int? kdfMemory,
     int? kdfParallelism,
     String? name,
+    bool? allowScreenCapture,
     //  bool? biometricUnlockEnabled,
   }) =>
       Account(
         // biometricUnlockEnabled:
         //     biometricUnlockEnabled ?? this.biometricUnlockEnabled,
+        name: name ?? this.name,
+        allowScreenCapture: allowScreenCapture ?? this.allowScreenCapture,
         id: id ?? this.id,
         userId: userId ?? this.userId,
         email: email ?? this.email,
@@ -121,10 +84,12 @@ class Account {
     kdfParallelism = json['kdf_parallelism'];
     name = json['name'];
     userId = json['user_id'];
+    allowScreenCapture = json['allow_screen_capture'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['allow_screen_capture'] = allowScreenCapture ?? false;
     data['email'] = email;
     data['hashed_master_password'] = hashedMasterPassword;
     data['master_password_hint'] = masterPasswordHint;
@@ -137,77 +102,6 @@ class Account {
     return data;
   }
 }
-
-// class AccountTokens {
-//   String? accessToken;
-//   String? refreshToken;
-//
-//   AccountTokens();
-//
-//   AccountTokens.copy(AccountTokens copy) {
-//     accessToken = copy.accessToken;
-//     refreshToken = copy.refreshToken;
-//   }
-// }
-//
-// class AccountSettings {
-//   EnvironmentUrlData? environmentUrls;
-//   int? vaultTimeout;
-//   VaultTimeoutAction? vaultTimeoutAction;
-//   bool? screenCaptureAllowed;
-//
-//   AccountSettings();
-//
-//   AccountSettings.copy(AccountSettings copy) {
-//     environmentUrls = copy.environmentUrls;
-//     vaultTimeout = copy.vaultTimeout;
-//     vaultTimeoutAction = copy.vaultTimeoutAction;
-//     screenCaptureAllowed = copy.screenCaptureAllowed;
-//   }
-// }
-
-// class AccountVolatileData {
-//   SymmetricCryptoKey? key;
-//   EncryptedString? pinProtectedKey;
-//   bool? biometricLocked;
-//
-//   AccountVolatileData({
-//     this.key,
-//     this.biometricLocked,
-//     this.pinProtectedKey,
-//   });
-//
-//   AccountVolatileData.fromJson(Map<String, dynamic> json) {
-//     key = json['key'] != null ? SymmetricCryptoKey.fromJson(json['key']) : null;
-//     pinProtectedKey = json['pin_protected_key'] != null
-//         ? EncryptedString.fromJson(json['pin_protected_key'])
-//         : null;
-//     biometricLocked = json['biometric_locked'];
-//   }
-//
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = <String, dynamic>{};
-//     if (key != null) {
-//       data['key'] = key!.toJson();
-//     }
-//     if (pinProtectedKey != null) {
-//       data['pin_protected_key'] = pinProtectedKey!.toJson();
-//     }
-//
-//     data['biometric_locked'] = biometricLocked;
-//     return data;
-//   }
-// }
-//
-// class EnvironmentUrlData {
-//   // Implement EnvironmentUrlData if needed
-//   // ...
-// }
-
-// enum KdfType {
-//   // Implement KdfType enum if needed
-//   // ...
-// }
 
 enum VaultTimeoutAction {
   lock,

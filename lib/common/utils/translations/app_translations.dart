@@ -180,6 +180,12 @@ class TranslationConstants {
   static const String lock = "lock";
   static const String changeMasterPassword = "change_master_password";
   static const String logoutConfirmMessage = "logout_confirm_message";
+  static const String avoidScreenshotMessage = "avoid_screenshot_message";
+  static const String allowScreenCapture = "allow_screen_capture";
+  static const String allowScreenCaptureConfirm =
+      "allow_screen_capture_confirm";
+  static const String enableScreenCapture = "enable_screen_capture";
+  static const String disableScreenCapture = "disable_screen_capture";
 
   //password detail
   static const String passwordDetail = "password_detail";

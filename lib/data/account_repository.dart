@@ -18,36 +18,6 @@ class AccountRepository {
 
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
 
-  // //Account
-  // Account? get getAccount => Account.fromJson(
-  //       json.decode(json.encode(hiveServices.hiveBox.get(HiveKey.accountKey)))
-  //               as Map<String, dynamic> ??
-  //           {},
-  //     );
-  //
-  // Future<void> setAccount({Account? account}) async {
-  //   return await hiveServices.hiveBox
-  //       .put(HiveKey.accountKey, account?.toJson());
-  // }
-
-  // //AuthCredential
-  // AuthCredential? getUserCredential() {
-  //   final mapCredential =
-  //       hiveServices.hiveBox.get(HiveKey.userCredentialKey) as Map?;
-  //   return mapCredential == null
-  //       ? null
-  //       : AuthCredential(
-  //           providerId: mapCredential['providerId'],
-  //           signInMethod: mapCredential['signInMethod'],
-  //           token: mapCredential['token'],
-  //           accessToken: mapCredential['accessToken']);
-  // }
-  //
-  // Future<void> setUserCredential({AuthCredential? authCredential}) async {
-  //   return await hiveServices.hiveBox
-  //       .put(HiveKey.userCredentialKey, authCredential?.asMap());
-  // }
-
   Future<void> signUpWithEmail({
     required String fullname,
     required String email,
@@ -71,24 +41,12 @@ class AccountRepository {
   }
 
   // Future<AuthCredential?> loginWithAuthCredential(
-  //     {required AuthCredential authCredential}) async {
-  //   final result = await auth.signInWithCredential(authCredential);
-  //   return result.credential;
-  // }
 
   Future<void> sendEmailVerification() async {
     await auth.currentUser!.sendEmailVerification();
   }
 
   Future<AuthCredential?> signInWithGoogle() async {
-    // if (kIsWeb) {
-    //   GoogleAuthProvider googleProvider = GoogleAuthProvider();
-    //
-    //   googleProvider
-    //       .addScope('https://www.googleapis.com/auth/contacts.readonly');
-    //
-    //   return await auth.signInWithPopup(googleProvider);
-    // } else {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     final GoogleSignInAuthentication? googleAuth =
@@ -148,17 +106,22 @@ class AccountRepository {
         .update(account.toJson());
   }
 
-  // Future<void> updateBiometricUnlockEnabled({
-  //   required String userId,
-  //   required bool enabled,
-  // }) async {
-  //   await db
-  //       .collection(AppConfig.userCollection)
-  //       .doc(userId)
-  //       .collection(AppConfig.profileCollection)
-  //       .doc(user?.uid)
-  //       .update({'biometric_unlock_enabled': enabled});
-  // }
+  Future<void> updateAllowScreenCapture({
+    required String userId,
+    required bool value,
+  }) async {
+    final account = await getProfile(userId: userId);
+
+    if (account != null) {
+      await editProfile(account.copyWith(allowScreenCapture: value));
+    }
+  }
+
+  Future<bool> getAllowScreenCapture({required String usedId}) async {
+    final account = await getProfile(userId: usedId);
+
+    return account?.allowScreenCapture ?? false;
+  }
 
   Future<Account?> getProfile({required String userId}) async {
     final response = await db

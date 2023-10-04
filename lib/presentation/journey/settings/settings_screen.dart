@@ -38,12 +38,22 @@ class SettingsScreen extends GetView<SettingsController> {
                   ),
                   Obx(
                     () => _buildItem(
-                      onPressed: () =>
-                          controller.onChangedBiometricStorageStatus(),
+                      onPressed: () async =>
+                          await controller.onChangedBiometricStorageStatus(),
                       icon: Assets.images.svg.icFingerScan,
                       title: TranslationConstants.unlockWithBiometrics.tr,
                       showSwitch: true,
                       switchValue: controller.isDeviceQuickUnlockEnabled.value,
+                    ),
+                  ),
+                  Obx(
+                    () => _buildItem(
+                      onPressed: () async =>
+                          await controller.onChangedAllowScreenCapture(),
+                      icon: Assets.images.svg.icCamera,
+                      title: TranslationConstants.allowScreenCapture.tr,
+                      showSwitch: true,
+                      switchValue: controller.allowScreenCapture.value,
                     ),
                   ),
                   _buildItem(

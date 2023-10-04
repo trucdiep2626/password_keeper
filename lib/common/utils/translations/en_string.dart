@@ -160,6 +160,12 @@ const enString = {
   "lock": "Lock",
   "change_master_password": "Change master password",
   "logout_confirm_message": "Are you sure you want to log out?",
+  "avoid_screenshot_message": "Can't take screenshot due to security policy",
+  "allow_screen_capture": "Allow screen capture",
+  "allow_screen_capture_confirm":
+      "Are you sure to want to allow screen capture?",
+  "enable_screen_capture": "Screen capture is now enabled.",
+  "disable_screen_capture": "Screen capture is now disabled.",
 
   //password detail
   "password_detail": "Password detail",

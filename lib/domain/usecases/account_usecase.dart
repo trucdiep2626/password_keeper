@@ -109,15 +109,19 @@ class AccountUseCase {
     await accountRepo.editProfile(account);
   }
 
-  // Future<void> updateBiometricUnlockEnabled({
-  //   required String userId,
-  //   required bool enabled,
-  // }) async {
-  //   await accountRepo.updateBiometricUnlockEnabled(
-  //     userId: userId,
-  //     enabled: enabled,
-  //   );
-  // }
+  Future<void> updateAllowScreenCapture({
+    required String userId,
+    required bool value,
+  }) async {
+    await accountRepo.updateAllowScreenCapture(
+      userId: userId,
+      value: value,
+    );
+  }
+
+  Future<bool> getAllowScreenCapture({required String usedId}) async {
+    return await accountRepo.getAllowScreenCapture(usedId: usedId);
+  }
 
   Future<Account?> getProfile({required String userId}) async {
     return await accountRepo.getProfile(userId: userId);
