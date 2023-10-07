@@ -56,20 +56,26 @@ class HomeController extends GetxController with MixinController {
       rxLoadedHome.value = LoadedType.start;
       await getPasswordListLength();
 
-      await getAllPasswords();
+      if (totalPasswords.value > 0) {
+        await getAllPasswords();
 
-      await getRecentUsedPasswords();
+        await getRecentUsedPasswords();
 
-      totalWeakPasswords.value = allPasswords
-          .where((element) =>
-              element.passwordStrengthLevel == PasswordStrengthLevel.weak ||
-              element.passwordStrengthLevel == PasswordStrengthLevel.veryWeak)
-          .length;
+        totalWeakPasswords.value = allPasswords
+            .where((element) =>
+                element.passwordStrengthLevel == PasswordStrengthLevel.weak ||
+                element.passwordStrengthLevel == PasswordStrengthLevel.veryWeak)
+            .length;
 
-      totalSafePasswords.value =
-          totalPasswords.value - totalWeakPasswords.value;
+        totalSafePasswords.value =
+            totalPasswords.value - totalWeakPasswords.value;
 
-      totalReusePasswords.value = countReusedPasswords(allPasswords);
+        totalReusePasswords.value = countReusedPasswords(allPasswords);
+      } else {
+        totalSafePasswords.value = 0;
+        totalWeakPasswords.value = 0;
+        totalReusePasswords.value = 0;
+      }
     } catch (e) {
       debugPrint(e.toString());
       showErrorMessage();

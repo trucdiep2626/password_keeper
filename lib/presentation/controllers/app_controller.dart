@@ -7,20 +7,28 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
+import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/widgets/export.dart';
+import 'package:receive_intent/receive_intent.dart';
 
 class AppController extends SuperController with MixinController {
-  late String uid;
+  // late String uid;
   //Instance of Flutter Connectivity
   final Connectivity _connectivity = Connectivity();
 
   //Stream to keep listening to network change state
   late StreamSubscription _streamSubscription;
 
-  late final Rx<User?> firebaseUser;
+  StreamSubscription? _receiveIntentSubscription;
+
+//  late final Rx<User?> firebaseUser;
   late final GoogleSignInAccount googleUser;
+
+  RxBool isOpenApp = true.obs;
 
   AccountUseCase accountUseCase;
 
@@ -30,16 +38,37 @@ class AppController extends SuperController with MixinController {
   void onInit() {
     super.onInit();
     getConnectionType();
+    if (GetPlatform.isAndroid) _initReceiveIntentSubscription();
     _streamSubscription =
         _connectivity.onConnectivityChanged.listen(_updateState);
   }
 
   @override
   void onReady() {
-    firebaseUser = Rx<User?>(accountUseCase.user);
-    firebaseUser.bindStream(accountUseCase.authState);
+    super.onReady();
+
+    //   firebaseUser = Rx<User?>(accountUseCase.user);
+    // firebaseUser.bindStream(accountUseCase.authState);
     // _navigateScreen(firebaseUser.value);
     //ever(firebaseUser, _navigateScreen);
+  }
+
+  void _initReceiveIntentSubscription() async {
+    _receiveIntentSubscription =
+        ReceiveIntent.receivedIntentStream.listen((Intent? intent) {
+      logger('Received intent: $intent');
+      if (Get.context == null) {
+        logger(
+            'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
+        return;
+      }
+      final mode = intent?.extra?['autofill_mode'];
+      if (mode?.startsWith('/autofill') ?? false) {
+        // BlocProvider.of<AutofillCubit>(navContext).refresh();
+      }
+    }, onError: (err) {
+      logger('intent error: $err');
+    });
   }
 
   _navigateScreen(User? user) {
@@ -59,23 +88,29 @@ class AppController extends SuperController with MixinController {
     } on PlatformException catch (e) {
       log(e.toString());
     }
-    return _updateState(connectivityResult!);
+    _updateState(connectivityResult!);
   }
 
   _updateState(ConnectivityResult result) {
-    // if (result == ConnectivityResult.none) {
-    //   showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
-    // } else {
-    //   showTopSnackBar(
-    //       type: SnackBarType.done,
-    //       Get.context!,
-    //       message: TranslationConstants.internetRestore.tr);
-    // }
+    if (result == ConnectivityResult.none) {
+      showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
+    } else {
+      if (isOpenApp.value) {
+        isOpenApp.value = false;
+        return;
+      }
+
+      showTopSnackBar(
+          type: SnackBarType.done,
+          Get.context!,
+          message: TranslationConstants.internetRestore.tr);
+    }
   }
 
   @override
   void onClose() {
     super.onClose();
+    if (GetPlatform.isAndroid) unawaited(_receiveIntentSubscription?.cancel());
     //stop listening to network state when app is closed
     _streamSubscription.cancel();
   }

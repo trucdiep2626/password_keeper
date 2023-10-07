@@ -36,12 +36,22 @@ class PasswordUseCase {
   Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory({
     required String userId,
     GeneratedPasswordItem? lastItem,
-    required int pageSize,
+    int? pageSize,
   }) async {
     return await passwordRepository.getGeneratedPasswordHistory(
       userId: userId,
       lastItem: lastItem,
       pageSize: pageSize,
+    );
+  }
+
+  Future<void> updateGeneratedPasswordList({
+    required String userId,
+    required List<GeneratedPasswordItem> passwords,
+  }) async {
+    await passwordRepository.updateGeneratedPasswordList(
+      userId: userId,
+      passwords: passwords,
     );
   }
 

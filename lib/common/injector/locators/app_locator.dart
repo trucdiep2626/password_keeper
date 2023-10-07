@@ -56,10 +56,12 @@ void configLocator() {
       () => LoginController(accountUsecase: getIt<AccountUseCase>()));
   getIt.registerFactory<CreateMasterPasswordController>(() =>
       CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<ChangeMasterPasswordController>(() =>
-      ChangeMasterPasswordController(
-          accountUsecase: getIt<AccountUseCase>(),
-          passwordUseCase: getIt<PasswordUseCase>()));
+  getIt.registerFactory<ChangeMasterPasswordController>(
+      () => ChangeMasterPasswordController(
+            accountUsecase: getIt<AccountUseCase>(),
+            passwordUseCase: getIt<PasswordUseCase>(),
+            localUseCase: getIt<LocalUseCase>(),
+          ));
   getIt.registerFactory<VerifyMasterPasswordController>(
       () => VerifyMasterPasswordController(
             accountUseCase: getIt<AccountUseCase>(),

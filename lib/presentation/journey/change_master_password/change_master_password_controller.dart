@@ -1,17 +1,24 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/injector/locators/app_locator.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
+import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/widgets/app_dialog.dart';
 import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dart';
 
@@ -54,11 +61,16 @@ class ChangeMasterPasswordController extends GetxController
 
   AccountUseCase accountUsecase;
   PasswordUseCase passwordUseCase;
+  LocalUseCase localUseCase;
 
   final _cryptoController = Get.find<CryptoController>();
+  final PasswordGenerationController _passwordGenerationController =
+      getIt<PasswordGenerationController>();
+
   ChangeMasterPasswordController({
     required this.accountUsecase,
     required this.passwordUseCase,
+    required this.localUseCase,
   });
 
   User? get user => accountUsecase.user;
@@ -115,6 +127,10 @@ class ChangeMasterPasswordController extends GetxController
         : '';
     masterPwdValidate.value =
         AppValidator.validatePassword(masterPwdController);
+    masterPwdValidate.value =
+        currentMasterPwdController.text.compareTo(masterPwdController.text) == 0
+            ? TranslationConstants.sameMasterPassword.tr
+            : '';
     confirmMasterPwdValidate.value = AppValidator.validateConfirmPassword(
         masterPwdController, confirmMasterPwdController);
 
@@ -124,69 +140,99 @@ class ChangeMasterPasswordController extends GetxController
       return;
     }
 
-    //   try {
-    if (masterPwdValidate.value.isEmpty &&
-        currentMasterPwdValidate.value.isEmpty &&
-        confirmMasterPwdValidate.value.isEmpty) {
-      rxLoadedButton.value = LoadedType.start;
+    try {
+      if (masterPwdValidate.value.isEmpty &&
+          currentMasterPwdValidate.value.isEmpty &&
+          confirmMasterPwdValidate.value.isEmpty) {
+        rxLoadedButton.value = LoadedType.start;
 
-      final email = (user?.email ?? '').trim().toLowerCase();
-      final newMasterPassword = masterPwdController.text;
+        final email = (user?.email ?? '').trim().toLowerCase();
+        final newMasterPassword = masterPwdController.text;
 
-      final currentMasterPasswordValid = await checkCurrentMasterPassword();
+        final currentMasterPasswordValid = await checkCurrentMasterPassword();
 
-      if (!currentMasterPasswordValid) {
-        currentMasterPwdValidate.value =
-            TranslationConstants.wrongMasterPassword.tr;
-        rxLoadedButton.value = LoadedType.finish;
+        if (!currentMasterPasswordValid) {
+          currentMasterPwdValidate.value =
+              TranslationConstants.wrongMasterPassword.tr;
+          rxLoadedButton.value = LoadedType.finish;
 
-        return;
+          return;
+        }
+
+        //get all passwords and decrypt
+        final allPasswordItems = await getPasswordList();
+        final allDecryptedPasswordItems =
+            await _cryptoController.decryptPasswordList(allPasswordItems);
+
+        //get all generated passwords and decrypt
+        final allGeneratedPasswordItems = await getGeneratedPasswordList();
+        final allDecryptedGeneratedPasswordItems =
+            await _passwordGenerationController.decryptHistory(
+                history: allGeneratedPasswordItems);
+
+        //create new master key
+        var newMasterKey = await _cryptoController.makeMasterKey(
+          password: newMasterPassword,
+          salt: email,
+        );
+
+        //update new enc key and hash master key
+        var newEncKey = await _cryptoController.makeEncKey(newMasterKey);
+        var hashedNewPassword = await _cryptoController.hashPassword(
+          password: newMasterPassword,
+          key: newMasterKey,
+        );
+        final profile =
+            await accountUsecase.getProfile(userId: user?.uid ?? '');
+        await accountUsecase.editProfile(profile!.copyWith(
+          key: newEncKey?.encKey?.encryptedString,
+          hashedMasterPassword: hashedNewPassword,
+          masterPasswordHint: masterPwdHintController.text,
+        ));
+
+        //save new key in local
+        _cryptoController.setHashedMasterKey(hashedNewPassword);
+        await _cryptoController.setMasterKey(newMasterKey);
+        await _cryptoController
+            .setEncKeyEncrypted(newEncKey?.encKey?.encryptedString ?? '');
+
+        //change biometric data
+        if (Get.find<SettingsController>().isDeviceQuickUnlockEnabled.value) {
+          await localUseCase.saveDataInBiometricStorage(
+              value: jsonEncode(newMasterKey.toJson()));
+        }
+
+        //encrypt password list with new key
+        final encryptedGeneratedList =
+            await _passwordGenerationController.encryptHistory(
+          history: allDecryptedGeneratedPasswordItems,
+        );
+
+        //update all encrypted passwords
+        await passwordUseCase.updateGeneratedPasswordList(
+          userId: user?.uid ?? '',
+          passwords: encryptedGeneratedList,
+        );
+
+        //encrypt password list with new key
+        final encryptedList = await _cryptoController.encryptPasswordList(
+          passwords: allDecryptedPasswordItems,
+        );
+
+        //update all encrypted passwords
+        await passwordUseCase.updatePasswordList(
+          userId: user?.uid ?? '',
+          passwords: encryptedList,
+        );
+
+        await accountUsecase.lock();
+        Get.offAllNamed(AppRoutes.verifyMasterPassword);
       }
-
-      //get all passwords and decrypt
-      final allPasswordItems = await getPasswordList();
-      final allDecryptedPasswordItems =
-          await _cryptoController.decryptPasswordList(allPasswordItems);
-
-      //create new key from new master password
-      var newKey = await _cryptoController.makeMasterKey(
-        password: newMasterPassword,
-        salt: email,
-      );
-
-      //encrypt password list with new key
-      final encryptedList = await _cryptoController.encryptPasswordList(
-        passwords: allDecryptedPasswordItems,
-        key: newKey,
-      );
-
-      //update all encrypted passwords
-      await passwordUseCase.updatePasswordList(
-        userId: user?.uid ?? '',
-        passwords: encryptedList,
-      );
-
-      //update new key and new master password
-      var encNewKey = await _cryptoController.makeEncKey(newKey);
-      var hashedNewPassword = await _cryptoController.hashPassword(
-        password: newMasterPassword,
-        key: newKey,
-      );
-      final profile = await accountUsecase.getProfile(userId: user?.uid ?? '');
-      await accountUsecase.editProfile(profile!.copyWith(
-        key: encNewKey?.encKey?.encryptedString,
-        hashedMasterPassword: hashedNewPassword,
-        masterPasswordHint: masterPwdHintController.text,
-      ));
-
-      await accountUsecase.lock();
-      Get.offAllNamed(AppRoutes.verifyMasterPassword);
+    } catch (e) {
+      logger(e.toString());
+    } finally {
+      rxLoadedButton.value = LoadedType.finish;
     }
-    // } catch (e) {
-    //   logger(e.toString());
-    // } finally {
-    rxLoadedButton.value = LoadedType.finish;
-    // }
   }
 
   Future<bool> checkCurrentMasterPassword() async {
@@ -212,6 +258,23 @@ class ChangeMasterPasswordController extends GetxController
       }
 
       return await passwordUseCase.getPasswordList(
+        userId: user?.uid ?? '',
+      );
+    } catch (e) {
+      logger(e.toString());
+      showTopSnackBarError(context, e.toString());
+      return [];
+    }
+  }
+
+  Future<List<GeneratedPasswordItem>> getGeneratedPasswordList() async {
+    try {
+      final isConnected = await checkConnectivity();
+      if (!isConnected) {
+        return [];
+      }
+
+      return await passwordUseCase.getGeneratedPasswordHistory(
         userId: user?.uid ?? '',
       );
     } catch (e) {

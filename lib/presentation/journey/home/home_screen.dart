@@ -43,7 +43,7 @@ class HomeScreen extends GetView<HomeController> {
                           _buildWelcome(),
                           Text(
                             TranslationConstants.recentUsed.tr,
-                            style: ThemeText.bodyMedium.grey600Color,
+                            style: ThemeText.bodySemibold.grey500Color,
                           ),
                           SizedBox(
                             height: AppDimens.space_16,
