@@ -1169,7 +1169,6 @@ class CryptoController extends GetxController with MixinController {
 
   Future<List<PasswordItem>> encryptPasswordList({
     required List<PasswordItem> passwords,
-    required SymmetricCryptoKey key,
   }) async {
     final encryptedList = <PasswordItem>[];
 
@@ -1180,7 +1179,6 @@ class CryptoController extends GetxController with MixinController {
     for (var item in passwords) {
       final encrypted = await encryptString(
         plainValue: item.password,
-        key: key,
       );
 
       if (encrypted != null) {

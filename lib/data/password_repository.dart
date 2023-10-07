@@ -111,25 +111,34 @@ class PasswordRepository {
   Future<List<GeneratedPasswordItem>> getGeneratedPasswordHistory({
     required String userId,
     GeneratedPasswordItem? lastItem,
-    required int pageSize,
+    int? pageSize,
   }) async {
-    final response = lastItem == null
-        ? await db
-            .collection(AppConfig.userCollection)
-            .doc(userId)
-            .collection(AppConfig.generatedPasswordsCollection)
-            .orderBy('created_at', descending: true)
-            .limit(pageSize)
-            .get()
-        : await db
-            .collection(AppConfig.userCollection)
-            .doc(userId)
-            .collection(AppConfig.generatedPasswordsCollection)
-            .orderBy('created_at', descending: true)
-            .startAfter([lastItem.createdAt])
-            .limit(pageSize)
-            .get();
+    QuerySnapshot<Map<String, dynamic>> response;
 
+    if (pageSize == null) {
+      response = await db
+          .collection(AppConfig.userCollection)
+          .doc(userId)
+          .collection(AppConfig.generatedPasswordsCollection)
+          .get();
+    } else {
+      response = lastItem == null
+          ? await db
+              .collection(AppConfig.userCollection)
+              .doc(userId)
+              .collection(AppConfig.generatedPasswordsCollection)
+              .orderBy('created_at', descending: true)
+              .limit(pageSize)
+              .get()
+          : await db
+              .collection(AppConfig.userCollection)
+              .doc(userId)
+              .collection(AppConfig.generatedPasswordsCollection)
+              .orderBy('created_at', descending: true)
+              .startAfter([lastItem.createdAt])
+              .limit(pageSize)
+              .get();
+    }
     if (response.docs.isEmpty) {
       return <GeneratedPasswordItem>[];
     } else {
@@ -144,6 +153,38 @@ class PasswordRepository {
       }
 
       return generatedPasswords;
+    }
+  }
+
+  Future<void> updateGeneratedPasswordList({
+    required String userId,
+    required List<GeneratedPasswordItem> passwords,
+  }) async {
+    final passwordsCollection = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.generatedPasswordsCollection)
+        .get();
+    final totalPwdDocs = passwordsCollection.docs.length;
+    final batches =
+        (totalPwdDocs / 500).ceil(); // Calculate how many batches needed
+
+    for (var i = 0; i < batches; i++) {
+      // Creating a new batch for each bunch of 500 documents
+      final batch = db.batch();
+      final docs = passwordsCollection.docs.skip(i * 500).take(500);
+      int j = i * 500;
+      for (final doc in docs) {
+        final docRef = db
+            .collection(AppConfig.userCollection)
+            .doc(userId)
+            .collection(AppConfig.generatedPasswordsCollection)
+            .doc(doc.id);
+        batch.update(docRef, passwords[j].toJson());
+        j++;
+      }
+
+      await batch.commit(); // Committing after each 500 operations.
     }
   }
 
@@ -316,15 +357,15 @@ class PasswordRepository {
       // Creating a new batch for each bunch of 500 documents
       final batch = db.batch();
       final docs = passwordsCollection.docs.skip(i * 500).take(500);
-
+      int j = i * 500;
       for (final doc in docs) {
         final docRef = db
             .collection(AppConfig.userCollection)
             .doc(userId)
             .collection(AppConfig.passwordsCollection)
             .doc(doc.id);
-        batch.update(docRef,
-            passwords[i].toJson()); // Update the 'myField' of each document
+        batch.update(docRef, passwords[j].toJson());
+        j++;
       }
 
       await batch.commit(); // Committing after each 500 operations.

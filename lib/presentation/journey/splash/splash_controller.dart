@@ -14,7 +14,7 @@ class SplashController extends GetxController with MixinController {
   @override
   void onInit() {
     super.onInit();
-    setStatusBarStyle(statusBarStyleType: StatusBarStyleType.light);
+    setStatusBarStyle(statusBarStyleType: StatusBarStyleType.dark);
   }
 
   @override

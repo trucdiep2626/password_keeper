@@ -111,7 +111,9 @@ class AddEditPasswordController extends GetxController with MixinController {
       userId: userIdController.text,
       note: noteController.text,
       createdAt: DateTime.now().millisecondsSinceEpoch,
+      recentUsedAt: DateTime.now().millisecondsSinceEpoch,
       updatedAt: DateTime.now().millisecondsSinceEpoch,
+      appPackageName: selectedApp.value?.packageName,
     );
 
     await passwordUseCase.addPasswordItem(
@@ -145,6 +147,8 @@ class AddEditPasswordController extends GetxController with MixinController {
       createdAt:
           oldPassword?.createdAt ?? DateTime.now().millisecondsSinceEpoch,
       updatedAt: DateTime.now().millisecondsSinceEpoch,
+      recentUsedAt: DateTime.now().millisecondsSinceEpoch,
+      appPackageName: selectedApp.value?.packageName,
     );
 
     await passwordUseCase.editPasswordItem(
@@ -279,7 +283,12 @@ class AddEditPasswordController extends GetxController with MixinController {
           oldPassword?.passwordStrengthLevel ?? PasswordStrengthLevel.weak;
       if (!isNullEmpty(oldPassword?.appIcon)) {
         selectedApp.value = AppInfo(
-            oldPassword?.signInLocation ?? '', oldPassword?.appIcon, '', '', 0);
+          oldPassword?.signInLocation ?? '',
+          oldPassword?.appIcon,
+          oldPassword?.appPackageName,
+          '',
+          0,
+        );
       } else {
         selectedUrl.value = oldPassword?.signInLocation ?? '';
       }

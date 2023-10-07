@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:azlistview/azlistview.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/password_helper.dart';
 
-class PasswordItem extends ISuspensionBean {
+class PasswordItem {
   String? id;
   bool? isApp;
   String? signInLocation;
+  String? appPackageName;
   Uint8List? appIcon;
   String? userId;
   String? password;
@@ -17,7 +17,6 @@ class PasswordItem extends ISuspensionBean {
   int? updatedAt;
   int? recentUsedAt;
   PasswordStrengthLevel? passwordStrengthLevel;
-  String? tagIndex;
 
   PasswordItem({
     this.id,
@@ -30,21 +29,14 @@ class PasswordItem extends ISuspensionBean {
     this.createdAt,
     this.updatedAt,
     this.passwordStrengthLevel,
-    this.tagIndex,
     this.recentUsedAt,
+    this.appPackageName,
   });
 
   PasswordItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    //  password = json['password'];
-
     password = json['password'];
-    // == null
-    // ? null
-    // : EncryptedString.fromString(encryptedString: json['password']);
-
     isApp = json['is_app'];
-
     userId = json['user_id'];
     note = json['note'];
     signInLocation = json['sign_in_location'];
@@ -54,16 +46,13 @@ class PasswordItem extends ISuspensionBean {
     updatedAt = json['updated_at'];
     passwordStrengthLevel = PasswordHelper.getPasswordStrengthFromId(
         json['password_strength_level']);
+    appPackageName = json['app_package_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-
-    // data['id'] = id;
-    //if (password != null) {
+    data['app_package_name'] = appPackageName;
     data['password'] = password;
-    //!.encryptedString;
-    //   }
     data['is_app'] = isApp;
     data['user_id'] = userId;
     data['note'] = note;
@@ -77,9 +66,6 @@ class PasswordItem extends ISuspensionBean {
     data['password_strength_level'] = passwordStrengthLevel?.id;
     return data;
   }
-
-  @override
-  String getSuspensionTag() => tagIndex ?? '';
 
   PasswordItem copyWith({
     String? id,

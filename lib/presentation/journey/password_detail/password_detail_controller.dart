@@ -43,9 +43,10 @@ class PasswordDetailController extends GetxController with MixinController {
 
   Future<void> decryptPassword() async {
     rxLoadedDetail.value == LoadedType.start;
-    final decrypted = await _cryptoController.decryptToUtf8(
-        encString: EncryptedString.fromString(
-            encryptedString: password.value.password));
+    final encString =
+        EncryptedString.fromString(encryptedString: password.value.password);
+    final decrypted =
+        await _cryptoController.decryptToUtf8(encString: encString);
 
     if (decrypted != null) {
       password.value = password.value.copyWith(password: decrypted);
