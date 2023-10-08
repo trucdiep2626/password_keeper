@@ -11,8 +11,11 @@ import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/app_controller.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
+import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
+import 'package:password_keeper/presentation/controllers/screen_capture_controller.dart';
 import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_controller.dart';
 import 'package:password_keeper/presentation/journey/change_master_password/change_master_password_controller.dart';
 import 'package:password_keeper/presentation/journey/create_master_password/create_master_password_controller.dart';
@@ -107,9 +110,11 @@ void configLocator() {
       ));
   getIt.registerLazySingleton<PasswordGenerationController>(() =>
       PasswordGenerationController(passwordUseCase: getIt<PasswordUseCase>()));
-  // getIt.registerLazySingleton<StateController>(() => StateController(
-  //     accountUseCase: getIt<AccountUseCase>(),
-  //     localUseCase: getIt<LocalUseCase>()));
+  getIt.registerLazySingleton<BiometricController>(
+      () => BiometricController(localUseCase: getIt<LocalUseCase>()));
+  getIt.registerLazySingleton<ScreenCaptureController>(
+      () => ScreenCaptureController(accountUseCase: getIt<AccountUseCase>()));
+  getIt.registerLazySingleton<AutofillController>(() => AutofillController());
 
   /// UseCases
   getIt.registerFactory<AccountUseCase>(() => AccountUseCase(

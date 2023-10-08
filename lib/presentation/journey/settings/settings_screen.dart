@@ -5,6 +5,9 @@ import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
+import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
+import 'package:password_keeper/presentation/controllers/screen_capture_controller.dart';
 import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
@@ -18,6 +21,10 @@ class SettingsScreen extends GetView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
+    final autofillController = Get.find<AutofillController>();
+    final biometricController = Get.find<BiometricController>();
+    final screenCaptureController = Get.find<ScreenCaptureController>();
+
     return Stack(
       children: [
         Scaffold(
@@ -30,6 +37,17 @@ class SettingsScreen extends GetView<SettingsController> {
               padding: EdgeInsets.all(AppDimens.space_16),
               child: Column(
                 children: [
+                  Obx(
+                    () => _buildItem(
+                      onPressed: () async =>
+                          await autofillController.onChangedAutofillService(),
+                      icon: Assets.images.svg.icPasswordCheck,
+                      title: TranslationConstants.autoFillService.tr,
+                      showSwitch: true,
+                      switchValue:
+                          autofillController.enableAutofillService.value,
+                    ),
+                  ),
                   _buildItem(
                     onPressed: () =>
                         Get.toNamed(AppRoutes.changeMasterPassword),
@@ -38,22 +56,24 @@ class SettingsScreen extends GetView<SettingsController> {
                   ),
                   Obx(
                     () => _buildItem(
-                      onPressed: () async =>
-                          await controller.onChangedBiometricStorageStatus(),
+                      onPressed: () async => await biometricController
+                          .onChangedBiometricStorageStatus(),
                       icon: Assets.images.svg.icFingerScan,
                       title: TranslationConstants.unlockWithBiometrics.tr,
                       showSwitch: true,
-                      switchValue: controller.isDeviceQuickUnlockEnabled.value,
+                      switchValue:
+                          biometricController.enableBiometricUnlock.value,
                     ),
                   ),
                   Obx(
                     () => _buildItem(
-                      onPressed: () async =>
-                          await controller.onChangedAllowScreenCapture(),
+                      onPressed: () async => await screenCaptureController
+                          .onChangedAllowScreenCapture(),
                       icon: Assets.images.svg.icCamera,
                       title: TranslationConstants.allowScreenCapture.tr,
                       showSwitch: true,
-                      switchValue: controller.allowScreenCapture.value,
+                      switchValue:
+                          screenCaptureController.allowScreenCapture.value,
                     ),
                   ),
                   _buildItem(

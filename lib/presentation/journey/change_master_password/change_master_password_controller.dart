@@ -14,10 +14,10 @@ import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
+import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
-import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/widgets/app_dialog.dart';
 import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dart';
 
@@ -196,7 +196,7 @@ class ChangeMasterPasswordController extends GetxController
             .setEncKeyEncrypted(newEncKey?.encKey?.encryptedString ?? '');
 
         //change biometric data
-        if (Get.find<SettingsController>().isDeviceQuickUnlockEnabled.value) {
+        if (Get.find<BiometricController>().enableBiometricUnlock.value) {
           await localUseCase.saveDataInBiometricStorage(
               value: jsonEncode(newMasterKey.toJson()));
         }
