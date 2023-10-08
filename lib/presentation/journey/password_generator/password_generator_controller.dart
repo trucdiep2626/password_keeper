@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
-import 'package:password_keeper/common/injector/locators/app_locator.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
@@ -46,7 +45,7 @@ class PasswordGeneratorController extends GetxController with MixinController {
   });
 
   final PasswordGenerationController _passwordGenerationController =
-      getIt<PasswordGenerationController>();
+      Get.find<PasswordGenerationController>();
 
   User? get user => accountUseCase.user;
 

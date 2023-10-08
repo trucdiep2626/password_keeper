@@ -9,7 +9,7 @@ class AppBinding extends Bindings {
   void dependencies() {
     Get.put(getIt<AppController>());
 //    Get.put(getIt<StateController>());
-    Get.put(getIt<PasswordGenerationController>);
     Get.put(getIt<CryptoController>());
+    Get.put(getIt<PasswordGenerationController>());
   }
 }
