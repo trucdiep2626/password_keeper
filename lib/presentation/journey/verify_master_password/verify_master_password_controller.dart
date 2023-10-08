@@ -1,11 +1,8 @@
 import 'dart:convert';
 
-import 'package:biometric_storage/biometric_storage.dart';
-import 'package:did_change_authlocal/did_change_authlocal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:password_keeper/common/config/database/local_key.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
@@ -14,9 +11,10 @@ import 'package:password_keeper/common/utils/translations/app_translations.dart'
 import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
+import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/widgets/app_dialog.dart';
+import 'package:password_keeper/presentation/controllers/screen_capture_controller.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 class VerifyMasterPasswordController extends GetxController
@@ -32,8 +30,6 @@ class VerifyMasterPasswordController extends GetxController
   RxBool masterPwdHasFocus = false.obs;
 
   RxBool buttonEnable = false.obs;
-
-  RxBool showBiometricUnlock = false.obs;
 
   Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
   AccountUseCase accountUseCase;
@@ -254,50 +250,11 @@ class VerifyMasterPasswordController extends GetxController
     rxLoadedButton.value = LoadedType.finish;
   }
 
-  Future<bool> isBiometricLocked() async {
-    final isLocked =
-        await localUseCase.getSecureData(key: LocalStorageKey.biometricLocked);
-    return isLocked == 'true';
-  }
-
-  //This function will compare previous and current token after the user create a new Face ID and clears Face ID
-  void checkUpdateBiometric() async {
-    await DidChangeAuthLocal.instance.onCheckBiometric().then((value) {
-      if (value == AuthLocalStatus.changed) {
-        showAppDialog(
-          context,
-          TranslationConstants.biometricDataUpdated.tr,
-          TranslationConstants.biometricUpdatedMessage.tr,
-          confirmButtonText: TranslationConstants.ok.tr,
-          confirmButtonCallback: () async {
-            showBiometricUnlock.value = false;
-            await localUseCase.saveSecureData(
-                key: LocalStorageKey.biometricLocked, value: 'false');
-            Get.back();
-          },
-        );
-      }
-    });
-  }
-
-  Future<void> _initBiometricStorageStatus() async {
-    final enabled = (await BiometricStorage().canAuthenticate()) ==
-        CanAuthenticateResponse.success;
-    if (enabled) {
-      final isLocked = await isBiometricLocked();
-      showBiometricUnlock.value = isLocked;
-    } else {
-      showBiometricUnlock.value = false;
-    }
-  }
-
   @override
   void onReady() async {
     super.onReady();
-    await _initBiometricStorageStatus();
-    if (showBiometricUnlock.value) {
-      checkUpdateBiometric();
-    }
+    await Get.find<BiometricController>().init();
+    await Get.find<ScreenCaptureController>().getAllowScreenCapture();
     masterPwdFocusNode.addListener(() {
       masterPwdHasFocus.value = masterPwdFocusNode.hasFocus;
     });

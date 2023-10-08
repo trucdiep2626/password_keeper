@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
+import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
 import 'package:password_keeper/presentation/journey/verify_master_password/verify_master_password_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
@@ -14,6 +15,8 @@ class VerifyMasterPasswordScreen
   @override
   Widget build(BuildContext context) {
     controller.context = context;
+    final biometricController = Get.find<BiometricController>();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -142,7 +145,7 @@ class VerifyMasterPasswordScreen
               SizedBox(
                 height: AppDimens.space_24,
               ),
-              Obx(() => controller.showBiometricUnlock.value
+              Obx(() => biometricController.enableBiometricUnlock.value
                   ? _buildBiometricUnlock()
                   : const SizedBox.shrink()),
               //  Spacer(),
