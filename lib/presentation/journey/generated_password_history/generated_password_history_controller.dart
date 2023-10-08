@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
-import 'package:password_keeper/common/injector/locators/app_locator.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
@@ -29,7 +28,7 @@ class GeneratedPasswordHistoryController extends GetxController
   GeneratedPasswordItem? lastItem;
 
   final PasswordGenerationController _passwordGenerationController =
-      getIt<PasswordGenerationController>();
+      Get.find<PasswordGenerationController>();
 
   GeneratedPasswordHistoryController({
     required this.accountUseCase,

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
-import 'package:password_keeper/common/injector/locators/app_locator.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/password_helper.dart';
@@ -65,7 +64,7 @@ class ChangeMasterPasswordController extends GetxController
 
   final _cryptoController = Get.find<CryptoController>();
   final PasswordGenerationController _passwordGenerationController =
-      getIt<PasswordGenerationController>();
+      Get.find<PasswordGenerationController>();
 
   ChangeMasterPasswordController({
     required this.accountUsecase,
