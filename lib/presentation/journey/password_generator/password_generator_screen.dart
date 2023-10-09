@@ -7,6 +7,7 @@ import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_controller.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
@@ -17,80 +18,83 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Scaffold(
-      backgroundColor: AppColors.grey100,
-      appBar: AppBarWidget(
-        title: TranslationConstants.passwordGenerator.tr,
-        showBackButton: controller.fromAddPassword.value,
-        actions: [
-          Obx(
-            () => controller.fromAddPassword.value
-                ? AppTouchable(
-                    padding: EdgeInsets.all(AppDimens.space_8),
-                    onPressed: () =>
-                        Get.back(result: controller.generatedPassword.value),
-                    child: Center(
-                        child: Icon(
-                      Icons.check,
-                      size: AppDimens.space_30,
-                      color: AppColors.white,
-                    )
-                        // AppImageWidget(
-                        //   margin: EdgeInsets.all(AppDimens.space_8),
-                        //   color: AppColors.white,
-                        //   size: AppDimens.space_24,
-                        //   asset: Assets.images.svg.icTick,
-                        // ),
-                        ),
-                  )
-                : AppTouchable(
-                    onPressed: () => Get.toNamed(AppRoutes.history),
-                    child: Center(
-                      child: AppImageWidget(
-                        margin: EdgeInsets.all(AppDimens.space_8),
+    return Listener(
+      onPointerDown: Get.find<SettingsController>().handleUserInteraction,
+      child: Scaffold(
+        backgroundColor: AppColors.grey100,
+        appBar: AppBarWidget(
+          title: TranslationConstants.passwordGenerator.tr,
+          showBackButton: controller.fromAddPassword.value,
+          actions: [
+            Obx(
+              () => controller.fromAddPassword.value
+                  ? AppTouchable(
+                      padding: EdgeInsets.all(AppDimens.space_8),
+                      onPressed: () =>
+                          Get.back(result: controller.generatedPassword.value),
+                      child: Center(
+                          child: Icon(
+                        Icons.check,
+                        size: AppDimens.space_30,
                         color: AppColors.white,
-                        size: AppDimens.space_24 + 8,
-                        asset: Assets.images.svg.icHistory,
+                      )
+                          // AppImageWidget(
+                          //   margin: EdgeInsets.all(AppDimens.space_8),
+                          //   color: AppColors.white,
+                          //   size: AppDimens.space_24,
+                          //   asset: Assets.images.svg.icTick,
+                          // ),
+                          ),
+                    )
+                  : AppTouchable(
+                      onPressed: () => Get.toNamed(AppRoutes.history),
+                      child: Center(
+                        child: AppImageWidget(
+                          margin: EdgeInsets.all(AppDimens.space_8),
+                          color: AppColors.white,
+                          size: AppDimens.space_24 + 8,
+                          asset: Assets.images.svg.icHistory,
+                        ),
                       ),
                     ),
+            )
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: AppDimens.space_16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildPasswordValue(),
+                Padding(
+                  padding: EdgeInsets.all(AppDimens.space_16),
+                  child: Text(
+                    TranslationConstants.options.tr,
+                    style: ThemeText.bodyMedium.grey600Color,
                   ),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: AppDimens.space_16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildPasswordValue(),
-              Padding(
-                padding: EdgeInsets.all(AppDimens.space_16),
-                child: Text(
-                  TranslationConstants.options.tr,
-                  style: ThemeText.bodyMedium.grey600Color,
                 ),
-              ),
-              //options
-              Container(
-                color: AppColors.white,
-                child: Obx(() =>
-                        // Column(
-                        //   children: [
-                        // _buildPasswordType(),
-                        // controller.selectedType.value == PasswordType.password
-                        //     ?
-                        _buildOptionalsForPassword()
-                    //     : _buildOptionalsForPassphrase()
-                    //   ],
-                    // ),
-                    ),
-              ),
+                //options
+                Container(
+                  color: AppColors.white,
+                  child: Obx(() =>
+                          // Column(
+                          //   children: [
+                          // _buildPasswordType(),
+                          // controller.selectedType.value == PasswordType.password
+                          //     ?
+                          _buildOptionalsForPassword()
+                      //     : _buildOptionalsForPassphrase()
+                      //   ],
+                      // ),
+                      ),
+                ),
 
-              SizedBox(
-                height: AppDimens.space_24,
-              )
-            ],
+                SizedBox(
+                  height: AppDimens.space_24,
+                )
+              ],
+            ),
           ),
         ),
       ),

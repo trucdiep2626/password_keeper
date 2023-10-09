@@ -23,4 +23,9 @@ class MainController extends GetxController with MixinController {
     super.onInit();
     setStatusBarStyle(statusBarStyleType: StatusBarStyleType.dark);
   }
+
+  @override
+  void onReady() async {
+    super.onReady();
+  }
 }

@@ -21,7 +21,6 @@ class BiometricController extends GetxController with MixinController {
   final LocalUseCase localUseCase;
 
   final CryptoController _cryptoController = Get.find<CryptoController>();
-  final SettingsController _settingsController = Get.find<SettingsController>();
 
   BiometricController({required this.localUseCase});
 
@@ -55,7 +54,7 @@ class BiometricController extends GetxController with MixinController {
   Future<void> onChangedBiometricStorageStatus() async {
     final value = !enableBiometricUnlock.value;
     try {
-      _settingsController.rxLoadedSettings.value = LoadedType.start;
+      Get.find<SettingsController>().rxLoadedSettings.value = LoadedType.start;
 
       if (value) {
         //enable biometric
@@ -105,7 +104,7 @@ class BiometricController extends GetxController with MixinController {
       debugPrint(e.toString());
       showErrorMessage();
     } finally {
-      _settingsController.rxLoadedSettings.value = LoadedType.finish;
+      Get.find<SettingsController>().rxLoadedSettings.value = LoadedType.finish;
     }
   }
 
@@ -117,6 +116,7 @@ class BiometricController extends GetxController with MixinController {
           TranslationConstants.biometricDataUpdated.tr,
           TranslationConstants.biometricUpdatedMessage.tr,
           confirmButtonText: TranslationConstants.ok.tr,
+          checkTimeout: false,
           confirmButtonCallback: () async {
             enableBiometricUnlock.value = false;
             await localUseCase.saveSecureData(

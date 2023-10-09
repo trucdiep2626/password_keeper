@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_button.dart';
 
@@ -11,6 +12,7 @@ Future showAppDialog(BuildContext context, String titleText, String messageText,
     String? iconPath,
     bool isIconSvg = false,
     bool customBody = false,
+    bool checkTimeout = true,
     Widget? widgetBody,
     required String confirmButtonText,
     Color confirmButtonColor = AppColors.blue200,
@@ -28,6 +30,7 @@ Future showAppDialog(BuildContext context, String titleText, String messageText,
     barrierDismissible: dismissAble,
     builder: builder ??
         (BuildContext context) => AppDialog(
+              checkTimeout: checkTimeout,
               delayConfirm: delayConfirm,
               title: titleText,
               message: messageText,
@@ -67,6 +70,7 @@ class AppDialog extends StatefulWidget {
   final bool? delayConfirm;
 //  final ButtonState? firstBtnState;
   final TextAlign messageTextAlign;
+  final bool checkTimeout;
 
   const AppDialog(
       {Key? key,
@@ -85,6 +89,7 @@ class AppDialog extends StatefulWidget {
       this.cancelButtonColor,
       this.cancelButtonCallback,
       required this.messageTextAlign,
+      this.checkTimeout = true,
       //  this.confirmButtonState,
       this.delayConfirm = false})
       : super(key: key);
@@ -98,92 +103,97 @@ class _AppDialogState extends State<AppDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => widget.dismissAble,
-      child: Dialog(
-        insetPadding: EdgeInsets.zero,
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(
-        //     AppDimens.radius_5,
-        //   ),
-        // ),
-        // elevation: 0.0,
-        backgroundColor: AppColors.transparent,
-        child: Container(
-          margin: EdgeInsets.all(AppDimens.space_16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              AppDimens.radius_12,
+    return Listener(
+      onPointerDown: !widget.checkTimeout
+          ? null
+          : Get.find<SettingsController>().handleUserInteraction,
+      child: WillPopScope(
+        onWillPop: () async => widget.dismissAble,
+        child: Dialog(
+          insetPadding: EdgeInsets.zero,
+          // shape: RoundedRectangleBorder(
+          //   borderRadius: BorderRadius.circular(
+          //     AppDimens.radius_5,
+          //   ),
+          // ),
+          // elevation: 0.0,
+          backgroundColor: AppColors.transparent,
+          child: Container(
+            margin: EdgeInsets.all(AppDimens.space_16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                AppDimens.radius_12,
+              ),
+              color: AppColors.white,
             ),
-            color: AppColors.white,
-          ),
-          width: Get.width - 2 * AppDimens.space_16,
-          child: Padding(
-            padding: EdgeInsets.all(AppDimens.space_16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // AppUtils.isNullEmpty(widget.iconPath)
-                //     ? const SizedBox.shrink()
-                //     : Center(
-                //         child: AppImage.asset(
-                //           path: widget.iconPath!,
-                //           height: AppDimens.height_35,
-                //           fit: BoxFit.fill,
-                //         ),
-                //       ),
-                isNullEmpty(widget.title)
-                    ? const SizedBox.shrink()
-                    : Text(
-                        widget.title!,
-                        textAlign: TextAlign.start,
-                        style: ThemeText.bodySemibold.s16
-                            .copyWith(color: AppColors.blue500),
-                      ),
-                SizedBox(height: AppDimens.space_8),
-                Text(
-                  widget.message,
-                  textAlign: widget.messageTextAlign,
-                  style: ThemeText.bodyRegular,
-                ),
-                SizedBox(height: AppDimens.space_16),
-                Visibility(
-                  visible: enableConfirm,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      if (widget.cancelButtonText != null)
+            width: Get.width - 2 * AppDimens.space_16,
+            child: Padding(
+              padding: EdgeInsets.all(AppDimens.space_16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // AppUtils.isNullEmpty(widget.iconPath)
+                  //     ? const SizedBox.shrink()
+                  //     : Center(
+                  //         child: AppImage.asset(
+                  //           path: widget.iconPath!,
+                  //           height: AppDimens.height_35,
+                  //           fit: BoxFit.fill,
+                  //         ),
+                  //       ),
+                  isNullEmpty(widget.title)
+                      ? const SizedBox.shrink()
+                      : Text(
+                          widget.title!,
+                          textAlign: TextAlign.start,
+                          style: ThemeText.bodySemibold.s16
+                              .copyWith(color: AppColors.blue500),
+                        ),
+                  SizedBox(height: AppDimens.space_8),
+                  Text(
+                    widget.message,
+                    textAlign: widget.messageTextAlign,
+                    style: ThemeText.bodyRegular,
+                  ),
+                  SizedBox(height: AppDimens.space_16),
+                  Visibility(
+                    visible: enableConfirm,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        if (widget.cancelButtonText != null)
+                          Expanded(
+                            child: AppButton(
+                              titleColor: AppColors.blue400,
+                              titleFontSize: AppDimens.space_14,
+                              //   margin: EdgeInsets.all(0),
+                              //   borderRadius: BorderRadius.circular(0),
+                              //    textStyle: ThemeText.button
+                              //        .copyWith(color: AppColors.grey),
+                              title: widget.cancelButtonText ??
+                                  TranslationConstants.cancel.tr,
+                              backgroundColor: AppColors.transparent,
+                              onPressed: widget.cancelButtonCallback ??
+                                  () => Get.back(),
+                            ),
+                          ),
                         Expanded(
                           child: AppButton(
-                            titleColor: AppColors.blue400,
-                            titleFontSize: AppDimens.space_14,
                             //   margin: EdgeInsets.all(0),
-                            //   borderRadius: BorderRadius.circular(0),
-                            //    textStyle: ThemeText.button
-                            //        .copyWith(color: AppColors.grey),
-                            title: widget.cancelButtonText ??
-                                TranslationConstants.cancel.tr,
-                            backgroundColor: AppColors.transparent,
-                            onPressed:
-                                widget.cancelButtonCallback ?? () => Get.back(),
+                            title: widget.confirmButtonText,
+                            titleFontSize: AppDimens.space_14,
+                            onPressed: widget.confirmButtonCallback,
+                            // buttonState:
+                            //     widget.confirmButtonState ?? ButtonState.active,
                           ),
                         ),
-                      Expanded(
-                        child: AppButton(
-                          //   margin: EdgeInsets.all(0),
-                          title: widget.confirmButtonText,
-                          titleFontSize: AppDimens.space_14,
-                          onPressed: widget.confirmButtonCallback,
-                          // buttonState:
-                          //     widget.confirmButtonState ?? ButtonState.active,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

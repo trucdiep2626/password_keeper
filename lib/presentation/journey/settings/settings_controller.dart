@@ -1,13 +1,16 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
+import 'package:password_keeper/common/constants/constants.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
-import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/controllers/screen_capture_controller.dart';
 import 'package:password_keeper/presentation/widgets/app_dialog.dart';
@@ -15,11 +18,14 @@ import 'package:password_keeper/presentation/widgets/app_dialog.dart';
 class SettingsController extends GetxController with MixinController {
   Rx<LoadedType> rxLoadedSettings = LoadedType.finish.obs;
 
+  RxInt selectedTimeout = Constants.timeout.obs;
+
+  Timer? _timer;
+
   AccountUseCase accountUseCase;
   LocalUseCase localUseCase;
 
-  final _cryptoController = Get.find<CryptoController>();
-  final _screenCaptureController = Get.find<ScreenCaptureController>();
+  // RxBool reset = false.obs;
 
   User? get user => accountUseCase.user;
 
@@ -28,8 +34,56 @@ class SettingsController extends GetxController with MixinController {
     required this.localUseCase,
   });
 
+  void onSelectedTimeOut({required String type, required int timeout}) async {
+    if (type == TranslationConstants.hours.tr) {
+      selectedTimeout.value = timeout * 3600;
+    } else if (type == TranslationConstants.minutes.tr) {
+      selectedTimeout.value = timeout * 60;
+    } else if (type == TranslationConstants.seconds.tr) {
+      selectedTimeout.value = timeout;
+    }
+    await updateTimeoutSetting();
+  }
+
+  Future<void> updateTimeoutSetting() async {
+    try {
+      rxLoadedSettings.value = LoadedType.start;
+
+      await accountUseCase.updateTimeoutSetting(
+        userId: user?.uid ?? '',
+        timeout: selectedTimeout.value,
+      );
+      handleUserInteraction();
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    } finally {
+      rxLoadedSettings.value = LoadedType.finish;
+    }
+  }
+
+  Future<void> getTimeoutSetting() async {
+    try {
+      rxLoadedSettings.value = LoadedType.start;
+
+      final timeout =
+          await accountUseCase.getTimeoutSetting(usedId: user?.uid ?? '');
+      selectedTimeout.value = timeout;
+
+      log('get timeout setting: $timeout');
+      handleUserInteraction();
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    } finally {
+      rxLoadedSettings.value = LoadedType.finish;
+    }
+  }
+
   Future<void> onTapLock() async {
     await accountUseCase.lock();
+    _timer?.cancel();
+    _timer = null;
     Get.offAllNamed(AppRoutes.verifyMasterPassword);
   }
 
@@ -47,8 +101,9 @@ class SettingsController extends GetxController with MixinController {
         }
 
         rxLoadedSettings.value = LoadedType.start;
-
-        await _screenCaptureController.resetWhenLogOut();
+        _timer?.cancel();
+        _timer = null;
+        await Get.find<ScreenCaptureController>().resetWhenLogOut();
         await accountUseCase.signOut();
 
         Get.offAllNamed(AppRoutes.login);
@@ -59,5 +114,178 @@ class SettingsController extends GetxController with MixinController {
         rxLoadedSettings.value = LoadedType.finish;
       }
     });
+  }
+
+  @override
+  void onInit() async {
+    super.onInit();
+    await getTimeoutSetting();
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+  }
+
+  // void startTimer() {
+  //   _timer =
+  //       RestartableTimer(Duration(seconds: selectedTimeout.value), () async {
+  //     log('tick ${_timer?.tick}');
+  //     //  if (_timer?.tick == selectedTimeout.value) {
+  //     if (!(Get.currentRoute == AppRoutes.register ||
+  //         Get.currentRoute == AppRoutes.login ||
+  //         Get.currentRoute == AppRoutes.verifyEmail ||
+  //         Get.currentRoute == AppRoutes.createMasterPassword ||
+  //         Get.currentRoute == AppRoutes.verifyMasterPassword)) {
+  //       log(' lock app');
+  //       log(DateTime.now().toIso8601String());
+  //       _timer?.cancel();
+  //       //  _timer = null;
+  //       await onTapLock();
+  //     }
+  //     //     }
+  //   });
+  //   log('start timer');
+  // }
+  //
+  // void reset() {
+  //   if ((Get.currentRoute == AppRoutes.register ||
+  //       Get.currentRoute == AppRoutes.login ||
+  //       Get.currentRoute == AppRoutes.verifyEmail ||
+  //       Get.currentRoute == AppRoutes.createMasterPassword ||
+  //       Get.currentRoute == AppRoutes.verifyMasterPassword)) {
+  //     return;
+  //   }
+  //   //  if (_timer != null) {
+  //
+  //   _timer?.reset();
+  //   log('reset');
+  //   // }
+  // }
+  //
+  // bool isActive() => _timer?.isActive ?? false;
+
+  // void setupUserInteractionListener() {
+  //   //  WidgetsBinding.instance.addPostFrameCallback((_) {
+  //   if ((Get.currentRoute == AppRoutes.register ||
+  //       Get.currentRoute == AppRoutes.login ||
+  //       Get.currentRoute == AppRoutes.verifyEmail ||
+  //       Get.currentRoute == AppRoutes.verifyMasterPassword ||
+  //       Get.currentRoute == AppRoutes.verifyMasterPassword)) {
+  //     return;
+  //   }
+  //
+  //   log('reset');
+  //   log(DateTime.now().toIso8601String());
+  //
+  //   if (_timer != null) {
+  //     log('not null');
+  //     _timer?.cancel();
+  //     _timer = null;
+  //     // reset.value = true;
+  //   }
+  //   log('active ${_timer?.isActive} ');
+  //
+  //   _timer = Timer(Duration(seconds: selectedTimeout.value), () async {
+  //     // reset.listen((value) {
+  //     //   log('--------------$value ');
+  //     //   if (value) {
+  //     //     _timer.cancel();
+  //     //     reset.value = false;
+  //     //   }
+  //     // });
+  //     log('tick ${this._timer?.tick}');
+  //
+  //     // if (!(Get.currentRoute == AppRoutes.register ||
+  //     //     Get.currentRoute == AppRoutes.login ||
+  //     //     Get.currentRoute == AppRoutes.verifyEmail ||
+  //     //     Get.currentRoute == AppRoutes.verifyMasterPassword ||
+  //     //     Get.currentRoute == AppRoutes.verifyMasterPassword)) {
+  //     log(' lock app');
+  //     log(DateTime.now().toIso8601String());
+  //     _timer?.cancel();
+  //     _timer = null;
+  //     await onTapLock();
+  //     // }
+  //   });
+  //
+  //   log('active ${_timer?.isActive} ');
+  //   //  });
+  //
+  //   // });
+  // }
+
+  void _initializeTimer() {
+    log('reset');
+    log(DateTime.now().toIso8601String());
+    if (_timer != null) {
+      log('not null');
+      _timer!.cancel();
+    }
+
+    _timer = Timer(Duration(seconds: selectedTimeout.value), _logOutUser);
+  }
+
+  void _logOutUser() async {
+    _timer?.cancel();
+
+    // // Popping all routes and pushing welcome screen
+    // log('-----------${DateTime.now().toIso8601String()}');
+    // await onTapLock();
+
+    if (!(Get.currentRoute == AppRoutes.register ||
+        Get.currentRoute == AppRoutes.login ||
+        Get.currentRoute == AppRoutes.verifyEmail ||
+        Get.currentRoute == AppRoutes.verifyMasterPassword ||
+        Get.currentRoute == AppRoutes.verifyMasterPassword ||
+        Get.currentRoute == AppRoutes.resetPassword)) {
+      log(' lock app');
+      log(DateTime.now().toIso8601String());
+      _timer?.cancel();
+      _timer = null;
+      await onTapLock();
+    }
+  }
+
+  void handleUserInteraction([_]) {
+    if ((Get.currentRoute == AppRoutes.register ||
+        Get.currentRoute == AppRoutes.login ||
+        Get.currentRoute == AppRoutes.verifyEmail ||
+        Get.currentRoute == AppRoutes.createMasterPassword ||
+        Get.currentRoute == AppRoutes.verifyMasterPassword ||
+        Get.currentRoute == AppRoutes.resetPassword)) {
+      return;
+    }
+    _initializeTimer();
+  }
+
+  String getTimeoutString(int timeout) {
+    if (timeout >= 3600) {
+      return '${timeout ~/ 3600} ${TranslationConstants.hours.tr}';
+    } else if (timeout >= 60) {
+      return '${timeout ~/ 60} ${TranslationConstants.minutes.tr}';
+    } else {
+      return '${timeout} ${TranslationConstants.seconds.tr}';
+    }
+  }
+
+  int getTimeoutIndex() {
+    if (selectedTimeout.value >= 3600) {
+      return (selectedTimeout.value ~/ 3600) - 1;
+    } else if (selectedTimeout.value >= 60) {
+      return (selectedTimeout.value ~/ 60) - 1;
+    } else {
+      return selectedTimeout.value - 1;
+    }
+  }
+
+  int getTypeIndex() {
+    if (selectedTimeout.value >= 3600) {
+      return 0;
+    } else if (selectedTimeout.value >= 60) {
+      return 1;
+    } else {
+      return 2;
+    }
   }
 }

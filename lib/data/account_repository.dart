@@ -123,6 +123,23 @@ class AccountRepository {
     return account?.allowScreenCapture ?? false;
   }
 
+  Future<void> updateTimeoutSetting({
+    required String userId,
+    required int timeout,
+  }) async {
+    final account = await getProfile(userId: userId);
+
+    if (account != null) {
+      await editProfile(account.copyWith(timeoutSetting: timeout));
+    }
+  }
+
+  Future<int> getTimeoutSetting({required String usedId}) async {
+    final account = await getProfile(userId: usedId);
+
+    return account?.timeoutSetting ?? Constants.timeout;
+  }
+
   Future<Account?> getProfile({required String userId}) async {
     final response = await db
         .collection(AppConfig.userCollection)
