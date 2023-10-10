@@ -4,6 +4,7 @@ import 'package:installed_apps/app_info.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_controller.dart';
 import 'package:password_keeper/presentation/theme/theme_color.dart';
 import 'package:password_keeper/presentation/theme/theme_text.dart';
@@ -16,22 +17,25 @@ class SignInLocationScreen extends GetView<SignInLocationController> {
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Scaffold(
-      backgroundColor: AppColors.grey100,
-      appBar: AppBarWidget(
-        showBackButton: true,
-        title: TranslationConstants.signInLocationOrApp.tr,
-      ),
-      body: SizedBox(
-        height: Get.height,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSignInLocation(),
-              Expanded(child: _buildApps()),
-            ],
+    return Listener(
+      onPointerDown: Get.find<SettingsController>().handleUserInteraction,
+      child: Scaffold(
+        backgroundColor: AppColors.grey100,
+        appBar: AppBarWidget(
+          showBackButton: true,
+          title: TranslationConstants.signInLocationOrApp.tr,
+        ),
+        body: SizedBox(
+          height: Get.height,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSignInLocation(),
+                Expanded(child: _buildApps()),
+              ],
+            ),
           ),
         ),
       ),

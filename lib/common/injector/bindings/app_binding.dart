@@ -6,7 +6,6 @@ import 'package:password_keeper/presentation/controllers/biometric_controller.da
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/password_generation_controller.dart';
 import 'package:password_keeper/presentation/controllers/screen_capture_controller.dart';
-import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 
 class AppBinding extends Bindings {
   @override
@@ -15,7 +14,6 @@ class AppBinding extends Bindings {
 //    Get.put(getIt<StateController>());
     Get.put(getIt<CryptoController>());
     Get.put(getIt<PasswordGenerationController>());
-    Get.put(getIt<SettingsController>());
     Get.put(getIt<BiometricController>());
     Get.put(getIt<ScreenCaptureController>());
     Get.put(getIt<AutofillController>());

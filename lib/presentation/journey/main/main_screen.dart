@@ -7,6 +7,7 @@ import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/home/home_screen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
 import 'package:password_keeper/presentation/journey/password_list/password_list_screen.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/journey/settings/settings_screen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
@@ -120,52 +121,58 @@ class MainScreen extends GetView<MainController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.grey100,
-      body: Obx(() => pages[controller.rxCurrentNavIndex.value]),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 3,
-        child: _buildBottomNavigationBar(context),
-      ),
-      floatingActionButton: Obx(() => Visibility(
-            visible: Get.mediaQuery.viewInsets.bottom == 0 &&
-                (controller.rxCurrentNavIndex.value == 0 ||
-                    controller.rxCurrentNavIndex.value == 1),
-            child: Container(
-              width: Get.width / 7,
-              decoration: BoxDecoration(
-                color: AppColors.blue400,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                      color: AppColors.black.withOpacity(0.2),
-                      offset: const Offset(0.5, 0.5),
-                      blurRadius: 3,
-                      spreadRadius: 1)
-                ],
-              ),
-              child: AppTouchable(
-                width: Get.width / 5,
-                borderRadius:
-                    BorderRadius.circular(Get.width / 5 - AppDimens.space_36),
-                onPressed: () => Get.toNamed(AppRoutes.addEditPassword),
-                child: AppImageWidget(
-                  asset: Assets.images.svg.icAdd,
-                  // height: AppDimens.space_20,
-                  color: AppColors.white,
-                  size: Get.width / 5 - AppDimens.space_36,
-                  margin: EdgeInsets.only(
-                    top: AppDimens.space_16,
-                    bottom: MediaQuery.of(context).padding.bottom +
-                        AppDimens.space_16,
+    controller.context = context;
+    final settingsController = Get.find<SettingsController>();
+
+    return Listener(
+      onPointerDown: settingsController.handleUserInteraction,
+      child: Scaffold(
+        backgroundColor: AppColors.grey100,
+        body: Obx(() => pages[controller.rxCurrentNavIndex.value]),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 3,
+          child: _buildBottomNavigationBar(context),
+        ),
+        floatingActionButton: Obx(() => Visibility(
+              visible: Get.mediaQuery.viewInsets.bottom == 0 &&
+                  (controller.rxCurrentNavIndex.value == 0 ||
+                      controller.rxCurrentNavIndex.value == 1),
+              child: Container(
+                width: Get.width / 7,
+                decoration: BoxDecoration(
+                  color: AppColors.blue400,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                        color: AppColors.black.withOpacity(0.2),
+                        offset: const Offset(0.5, 0.5),
+                        blurRadius: 3,
+                        spreadRadius: 1)
+                  ],
+                ),
+                child: AppTouchable(
+                  width: Get.width / 5,
+                  borderRadius:
+                      BorderRadius.circular(Get.width / 5 - AppDimens.space_36),
+                  onPressed: () => Get.toNamed(AppRoutes.addEditPassword),
+                  child: AppImageWidget(
+                    asset: Assets.images.svg.icAdd,
+                    // height: AppDimens.space_20,
+                    color: AppColors.white,
+                    size: Get.width / 5 - AppDimens.space_36,
+                    margin: EdgeInsets.only(
+                      top: AppDimens.space_16,
+                      bottom: MediaQuery.of(context).padding.bottom +
+                          AppDimens.space_16,
+                    ),
                   ),
                 ),
               ),
-            ),
-          )),
-      //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            )),
+        //    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      ),
     );
   }
 }

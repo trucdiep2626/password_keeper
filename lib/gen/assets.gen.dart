@@ -3,13 +3,13 @@
 ///  FlutterGen
 /// *****************************************************
 
+import 'package:flutter/services.dart';
 // coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 
 class $AssetsFontsGen {
@@ -170,6 +170,9 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/ic_home.svg
   SvgGenImage get icHome => const SvgGenImage('assets/images/svg/ic_home.svg');
 
+  /// File path: assets/images/svg/ic_key.svg
+  SvgGenImage get icKey => const SvgGenImage('assets/images/svg/ic_key.svg');
+
   /// File path: assets/images/svg/ic_location.svg
   SvgGenImage get icLocation =>
       const SvgGenImage('assets/images/svg/ic_location.svg');
@@ -223,6 +226,10 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/ic_tick.svg
   SvgGenImage get icTick => const SvgGenImage('assets/images/svg/ic_tick.svg');
 
+  /// File path: assets/images/svg/ic_timer.svg
+  SvgGenImage get icTimer =>
+      const SvgGenImage('assets/images/svg/ic_timer.svg');
+
   /// File path: assets/images/svg/ic_trash.svg
   SvgGenImage get icTrash =>
       const SvgGenImage('assets/images/svg/ic_trash.svg');
@@ -275,6 +282,7 @@ class $AssetsImagesSvgGen {
         icGoogle,
         icHistory,
         icHome,
+        icKey,
         icLocation,
         icLoginScreen,
         icLogout,
@@ -289,6 +297,7 @@ class $AssetsImagesSvgGen {
         icSetting,
         icSort,
         icTick,
+        icTimer,
         icTrash,
         icUser,
         icWallet,

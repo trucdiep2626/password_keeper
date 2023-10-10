@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -169,6 +171,7 @@ class PasswordListController extends GetxController with MixinController {
   void onReady() async {
     await getPasswordListLength();
     await onRefresh();
+    log('fdffdfbdfbdf');
     searchController.addListener(() {
       if (isNullEmpty(searchController.text.trim())) {
         displayPasswords.value = passwords;

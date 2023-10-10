@@ -7,6 +7,7 @@ import 'package:password_keeper/common/utils/translations/app_translations.dart'
 import 'package:password_keeper/domain/models/generated_password_item.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/generated_password_history/generated_password_history_controller.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/app_refresh_widget.dart';
@@ -19,48 +20,51 @@ class GeneratedPasswordHistoryScreen
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBarWidget(
-        showBackButton: true,
-        title: TranslationConstants.history.tr,
-      ),
-      body: Obx(
-        () => AppRefreshWidget(
-          enableLoadMore: controller.canLoadMore.value,
-          footer: Padding(
-            padding: EdgeInsets.symmetric(vertical: AppDimens.space_4),
-            child: AppLoadingWidget(
-              width: Get.width / 5,
+    return Listener(
+      onPointerDown: Get.find<SettingsController>().handleUserInteraction,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBarWidget(
+          showBackButton: true,
+          title: TranslationConstants.history.tr,
+        ),
+        body: Obx(
+          () => AppRefreshWidget(
+            enableLoadMore: controller.canLoadMore.value,
+            footer: Padding(
+              padding: EdgeInsets.symmetric(vertical: AppDimens.space_4),
+              child: AppLoadingWidget(
+                width: Get.width / 5,
+              ),
             ),
-          ),
-          onLoadMore: () async {
-            double oldPosition = controller.scrollController.position.pixels;
-            await controller.getHistory();
-            controller.scrollController.position.jumpTo(oldPosition);
-          },
-          onRefresh: controller.onRefresh,
-          controller: controller.historyController,
-          child: Padding(
-            padding: EdgeInsets.all(AppDimens.space_16),
-            child: CustomScrollView(
-              controller: controller.scrollController,
-              shrinkWrap: true,
-              slivers: [
-                SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      controller.rxLoadedHistory.value == LoadedType.start
-                          ? _buildShimmerList()
-                          : Column(
-                              children: controller.history
-                                  .map((e) => _buildItem(e))
-                                  .toList(),
-                            )
-                    ],
-                  ),
-                )
-              ],
+            onLoadMore: () async {
+              double oldPosition = controller.scrollController.position.pixels;
+              await controller.getHistory();
+              controller.scrollController.position.jumpTo(oldPosition);
+            },
+            onRefresh: controller.onRefresh,
+            controller: controller.historyController,
+            child: Padding(
+              padding: EdgeInsets.all(AppDimens.space_16),
+              child: CustomScrollView(
+                controller: controller.scrollController,
+                shrinkWrap: true,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        controller.rxLoadedHistory.value == LoadedType.start
+                            ? _buildShimmerList()
+                            : Column(
+                                children: controller.history
+                                    .map((e) => _buildItem(e))
+                                    .toList(),
+                              )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

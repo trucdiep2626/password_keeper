@@ -14,6 +14,7 @@ import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/app_image_widget.dart';
 import 'package:password_keeper/presentation/widgets/app_loading_widget.dart';
 import 'package:password_keeper/presentation/widgets/app_touchable.dart';
+import 'package:password_keeper/presentation/widgets/timeout_picker.dart';
 
 class SettingsScreen extends GetView<SettingsController> {
   const SettingsScreen({super.key});
@@ -51,7 +52,7 @@ class SettingsScreen extends GetView<SettingsController> {
                   _buildItem(
                     onPressed: () =>
                         Get.toNamed(AppRoutes.changeMasterPassword),
-                    icon: Assets.images.svg.icPasswordCheck,
+                    icon: Assets.images.svg.icKey,
                     title: TranslationConstants.changeMasterPassword.tr,
                   ),
                   Obx(
@@ -76,6 +77,16 @@ class SettingsScreen extends GetView<SettingsController> {
                           screenCaptureController.allowScreenCapture.value,
                     ),
                   ),
+                  Obx(() => _buildItem(
+                        onPressed: () => _showTimeoutPicker(context),
+                        icon: Assets.images.svg.icTimer,
+                        title: TranslationConstants.timeout.tr,
+                        trailing: Text(
+                          controller.getTimeoutString(
+                              controller.selectedTimeout.value),
+                          style: ThemeText.bodyMedium.grey600Color,
+                        ),
+                      )),
                   _buildItem(
                     onPressed: () async => await controller.onTapLock(),
                     icon: Assets.images.svg.icPassword,
@@ -104,6 +115,7 @@ class SettingsScreen extends GetView<SettingsController> {
     required String title,
     bool showSwitch = false,
     bool switchValue = false,
+    Widget? trailing,
   }) {
     return AppTouchable(
       onPressed: onPressed,
@@ -138,16 +150,33 @@ class SettingsScreen extends GetView<SettingsController> {
               style: ThemeText.bodyMedium.grey600Color,
             ),
             const Spacer(),
-            showSwitch
-                ? Switch(
-                    value: switchValue,
-                    onChanged: (value) => onPressed(),
-                    activeColor: AppColors.blue400,
-                  )
-                : const SizedBox.shrink()
+            if (trailing != null)
+              trailing
+            else if (showSwitch)
+              Switch(
+                value: switchValue,
+                onChanged: (value) => onPressed(),
+                activeColor: AppColors.blue400,
+              )
           ],
         ),
       ),
     );
+  }
+
+  void _showTimeoutPicker(
+    BuildContext context,
+  ) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => TimeoutPicker(
+              timeIndex: controller.getTimeoutIndex(),
+              typeIndex: controller.getTypeIndex(),
+              confirmButtonCallback: (type, timeout) {
+                controller.onSelectedTimeOut(type: type, timeout: timeout);
+                Get.back();
+              },
+            ));
   }
 }

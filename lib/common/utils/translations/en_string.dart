@@ -15,6 +15,9 @@ const enString = {
   "try_again": "Try again",
   "continue_anyway": "Continue anyway",
   "edit": "Edit",
+  "hours": "hours",
+  "minutes": "minutes",
+  "seconds": "seconds",
 
   //account
   "contact_information": "Contact Information",
@@ -67,6 +70,8 @@ const enString = {
   "confirm_new_master_password": "Confirm New Master Password",
   "change_master_password_confirm":
       "Are you sure you want to change your master password?",
+  "same_master_password":
+      "New master password cannot be the same as the current master password. Please enter a different master password.",
 
   //verify email
   "verify_email": "Verify your email address",
@@ -166,6 +171,7 @@ const enString = {
       "Are you sure to want to allow screen capture?",
   "enable_screen_capture": "Screen capture is now enabled.",
   "disable_screen_capture": "Screen capture is now disabled.",
+  "timeout": "Timeout",
 
   //password detail
   "password_detail": "Password detail",
@@ -197,4 +203,9 @@ const enString = {
   "biometric_updated_message": "We've detected changes in your biometric data. "
       "For security, biometric unlock is temporarily disabled. "
       "Please use your master password to verify your identity and reactivate biometric unlock in settings.",
+
+  //auto-fill
+  "unsupported_auto_fill": "Auto-fill service is not supported on your device.",
+  "enable_auto_fill": "Auto-fill service is now enabled",
+  "disable_auto_fill": "Auto-fill service is now disabled",
 };

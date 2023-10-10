@@ -47,6 +47,9 @@ class TranslationConstants {
   static const String continueAnyway = "continue_anyway";
   static const String tryAgain = "try_again";
   static const String edit = "edit";
+  static const String hours = "hours";
+  static const String minutes = "minutes";
+  static const String seconds = "seconds";
 
   //account
   static const String contactInformation = "contact_information";
@@ -93,6 +96,7 @@ class TranslationConstants {
   static const String confirmNewMasterPassword = "confirm_new_master_password";
   static const String changeMasterPasswordConfirm =
       "change_master_password_confirm";
+  static const String sameMasterPassword = "same_master_password";
 
   //verify email
   static const String verifyEmail = "verify_email";
@@ -186,6 +190,7 @@ class TranslationConstants {
       "allow_screen_capture_confirm";
   static const String enableScreenCapture = "enable_screen_capture";
   static const String disableScreenCapture = "disable_screen_capture";
+  static const String timeout = "timeout";
 
   //password detail
   static const String passwordDetail = "password_detail";
@@ -215,4 +220,9 @@ class TranslationConstants {
   static const String disableUnlockBiometric = "disable_unlock_biometric";
   static const String biometricDataUpdated = "biometric_data_updated";
   static const String biometricUpdatedMessage = "biometric_updated_message";
+
+  //auto-fill
+  static const String unsupportedAutofill = "unsupported_auto_fill";
+  static const String enableAutofill = "enable_auto_fill";
+  static const String disableAutofill = "disable_auto_fill";
 }

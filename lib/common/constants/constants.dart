@@ -30,6 +30,8 @@ class Constants {
 
   static const int maxGeneratedPasswordInHistory = 100;
 
+  static const int timeout = 60;
+
   static const String notSetHintMailTitle =
       "Hint for Master Password is not set";
   static const String masterPasswordHintMailTitle = "Hint for Master Password!";

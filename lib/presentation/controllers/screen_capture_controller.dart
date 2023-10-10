@@ -13,8 +13,6 @@ import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dar
 class ScreenCaptureController extends GetxController with MixinController {
   RxBool allowScreenCapture = false.obs;
 
-  final SettingsController _settingsController = Get.find<SettingsController>();
-
   final AccountUseCase accountUseCase;
 
   User? get user => accountUseCase.user;
@@ -25,7 +23,7 @@ class ScreenCaptureController extends GetxController with MixinController {
 
   Future<void> getAllowScreenCapture() async {
     try {
-      _settingsController.rxLoadedSettings.value = LoadedType.start;
+      // _settingsController.rxLoadedSettings.value = LoadedType.start;
 
       final allowCapture =
           await accountUseCase.getAllowScreenCapture(usedId: user?.uid ?? '');
@@ -35,7 +33,7 @@ class ScreenCaptureController extends GetxController with MixinController {
       debugPrint(e.toString());
       showErrorMessage();
     } finally {
-      _settingsController.rxLoadedSettings.value = LoadedType.finish;
+      //  _settingsController.rxLoadedSettings.value = LoadedType.finish;
     }
   }
 
@@ -56,7 +54,7 @@ class ScreenCaptureController extends GetxController with MixinController {
 
   Future<void> handleChangeAllowScreenCapture(bool value) async {
     try {
-      _settingsController.rxLoadedSettings.value = LoadedType.start;
+      Get.find<SettingsController>().rxLoadedSettings.value = LoadedType.start;
 
       await accountUseCase.updateAllowScreenCapture(
         userId: user?.uid ?? '',
@@ -68,7 +66,7 @@ class ScreenCaptureController extends GetxController with MixinController {
       debugPrint(e.toString());
       showErrorMessage();
     } finally {
-      _settingsController.rxLoadedSettings.value = LoadedType.finish;
+      Get.find<SettingsController>().rxLoadedSettings.value = LoadedType.finish;
     }
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
-import 'package:password_keeper/common/injector/bindings/app_binding.dart';
+import 'package:password_keeper/common/injector/injector.dart';
 import 'package:password_keeper/common/utils/app_screen_utils/flutter_screenutils.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';

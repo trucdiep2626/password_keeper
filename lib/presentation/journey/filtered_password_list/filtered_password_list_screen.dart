@@ -6,6 +6,7 @@ import 'package:password_keeper/common/utils/translations/app_translations.dart'
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/journey/filtered_password_list/filtered_password_list_controller.dart';
+import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/app_appbar.dart';
 import 'package:password_keeper/presentation/widgets/app_icon_widget.dart';
@@ -18,34 +19,37 @@ class FilteredPasswordListScreen
   @override
   Widget build(BuildContext context) {
     controller.context = context;
-    return Obx(
-      () => Scaffold(
-          backgroundColor: AppColors.background,
-          appBar: AppBarWidget(
-            showBackButton: true,
-            title: controller.title.value,
-          ),
-          body: Padding(
-            padding: EdgeInsets.all(AppDimens.space_16),
-            child: CustomScrollView(
-              shrinkWrap: true,
-              slivers: controller.type == FilteredType.reused
-                  ? _buildReusedList(controller.reusedPasswords)
-                  : [
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            return _buildItem(
-                              passwordItem: controller.passwords[index],
-                              index: index,
-                            );
-                          },
-                          childCount: controller.passwords.length,
-                        ),
-                      ),
-                    ],
+    return Listener(
+      onPointerDown: Get.find<SettingsController>().handleUserInteraction,
+      child: Obx(
+        () => Scaffold(
+            backgroundColor: AppColors.background,
+            appBar: AppBarWidget(
+              showBackButton: true,
+              title: controller.title.value,
             ),
-          )),
+            body: Padding(
+              padding: EdgeInsets.all(AppDimens.space_16),
+              child: CustomScrollView(
+                shrinkWrap: true,
+                slivers: controller.type == FilteredType.reused
+                    ? _buildReusedList(controller.reusedPasswords)
+                    : [
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return _buildItem(
+                                passwordItem: controller.passwords[index],
+                                index: index,
+                              );
+                            },
+                            childCount: controller.passwords.length,
+                          ),
+                        ),
+                      ],
+              ),
+            )),
+      ),
     );
   }
 

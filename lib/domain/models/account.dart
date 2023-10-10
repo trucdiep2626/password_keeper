@@ -9,7 +9,7 @@ class Account {
   int? kdfMemory;
   int? kdfParallelism;
   // bool? biometricUnlockEnabled;
-
+  int? timeoutSetting;
   String? name;
   bool? allowScreenCapture;
 //  String? stamp;
@@ -36,6 +36,7 @@ class Account {
     this.kdfMemory,
     this.kdfParallelism,
     this.allowScreenCapture,
+    this.timeoutSetting,
     // this.biometricUnlockEnabled = false,
     // this.emailVerified,
     // this.hasPremiumPersonally,
@@ -54,11 +55,9 @@ class Account {
     int? kdfParallelism,
     String? name,
     bool? allowScreenCapture,
-    //  bool? biometricUnlockEnabled,
+    int? timeoutSetting,
   }) =>
       Account(
-        // biometricUnlockEnabled:
-        //     biometricUnlockEnabled ?? this.biometricUnlockEnabled,
         name: name ?? this.name,
         allowScreenCapture: allowScreenCapture ?? this.allowScreenCapture,
         id: id ?? this.id,
@@ -70,10 +69,10 @@ class Account {
         kdfIterations: kdfIterations ?? this.kdfIterations,
         kdfMemory: kdfMemory ?? this.kdfMemory,
         kdfParallelism: kdfParallelism ?? this.kdfParallelism,
+        timeoutSetting: timeoutSetting ?? this.timeoutSetting,
       );
 
   Account.fromJson(Map<String, dynamic> json) {
-    //  biometricUnlockEnabled = json['biometric_unlock_enabled'] ?? false;
     id = json['id'];
     email = json['email'];
     hashedMasterPassword = json['hashed_master_password'];
@@ -85,6 +84,7 @@ class Account {
     name = json['name'];
     userId = json['user_id'];
     allowScreenCapture = json['allow_screen_capture'] ?? false;
+    timeoutSetting = json['timeout_setting'];
   }
 
   Map<String, dynamic> toJson() {
@@ -98,25 +98,7 @@ class Account {
     data['kdf_memory'] = kdfMemory;
     data['kdf_parallelism'] = kdfParallelism;
     data['name'] = name;
-    // data['biometric_unlock_enabled'] = biometricUnlockEnabled;
+    data['timeout_setting'] = timeoutSetting;
     return data;
   }
-}
-
-enum VaultTimeoutAction {
-  lock,
-  logout,
-}
-
-enum ForcePasswordResetReason {
-  /// <summary>
-  /// Occurs when an organization admin forces a user to reset their password.
-  /// </summary>
-  adminForcePasswordReset,
-
-  /// <summary>
-  /// Occurs when a user logs in with a master password that does not meet an organization's master password
-  /// policy that is enforced on login.
-  /// </summary>
-  weakMasterPasswordOnLogin
 }

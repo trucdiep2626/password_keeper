@@ -123,6 +123,20 @@ class AccountUseCase {
     return await accountRepo.getAllowScreenCapture(usedId: usedId);
   }
 
+  Future<void> updateTimeoutSetting({
+    required String userId,
+    required int timeout,
+  }) async {
+    return accountRepo.updateTimeoutSetting(
+      userId: userId,
+      timeout: timeout,
+    );
+  }
+
+  Future<int> getTimeoutSetting({required String usedId}) async {
+    return accountRepo.getTimeoutSetting(usedId: usedId);
+  }
+
   Future<Account?> getProfile({required String userId}) async {
     return await accountRepo.getProfile(userId: userId);
   }
