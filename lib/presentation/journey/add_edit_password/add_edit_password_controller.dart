@@ -113,7 +113,7 @@ class AddEditPasswordController extends GetxController with MixinController {
       createdAt: DateTime.now().millisecondsSinceEpoch,
       recentUsedAt: DateTime.now().millisecondsSinceEpoch,
       updatedAt: DateTime.now().millisecondsSinceEpoch,
-      appPackageName: selectedApp.value?.packageName,
+      androidPackageNames: selectedApp.value?.packageName,
     );
 
     await passwordUseCase.addPasswordItem(
@@ -148,7 +148,7 @@ class AddEditPasswordController extends GetxController with MixinController {
           oldPassword?.createdAt ?? DateTime.now().millisecondsSinceEpoch,
       updatedAt: DateTime.now().millisecondsSinceEpoch,
       recentUsedAt: DateTime.now().millisecondsSinceEpoch,
-      appPackageName: selectedApp.value?.packageName,
+      androidPackageNames: selectedApp.value?.packageName,
     );
 
     await passwordUseCase.editPasswordItem(
@@ -285,7 +285,7 @@ class AddEditPasswordController extends GetxController with MixinController {
         selectedApp.value = AppInfo(
           oldPassword?.signInLocation ?? '',
           oldPassword?.appIcon,
-          oldPassword?.appPackageName,
+          oldPassword?.androidPackageNames,
           '',
           0,
         );

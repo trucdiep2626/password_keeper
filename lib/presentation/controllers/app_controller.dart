@@ -6,13 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:password_keeper/common/constants/app_routes.dart';
-import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
-import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
-import 'package:password_keeper/presentation/widgets/export.dart';
 import 'package:receive_intent/receive_intent.dart';
 
 class AppController extends SuperController with MixinController {
@@ -33,6 +30,10 @@ class AppController extends SuperController with MixinController {
   AccountUseCase accountUseCase;
 
   AppController({required this.accountUseCase});
+
+  final _autofillController = Get.find<AutofillController>();
+
+  DateTime? stopAt;
 
   @override
   void onInit() {
@@ -64,7 +65,7 @@ class AppController extends SuperController with MixinController {
       }
       final mode = intent?.extra?['autofill_mode'];
       if (mode?.startsWith('/autofill') ?? false) {
-        // BlocProvider.of<AutofillCubit>(navContext).refresh();
+        _autofillController.refresh();
       }
     }, onError: (err) {
       logger('intent error: $err');
@@ -92,19 +93,22 @@ class AppController extends SuperController with MixinController {
   }
 
   _updateState(ConnectivityResult result) {
-    if (result == ConnectivityResult.none) {
-      showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
-    } else {
-      if (isOpenApp.value) {
-        isOpenApp.value = false;
-        return;
-      }
-
-      showTopSnackBar(
-          type: SnackBarType.done,
-          Get.context!,
-          message: TranslationConstants.internetRestore.tr);
-    }
+    //    if (result == ConnectivityResult.none) {
+    //      showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
+    //    } else {
+    //      if (isOpenApp.value) {
+    //        isOpenApp.value = false;
+    //        return;
+    //      }
+    //
+    // if(Get.context != null)
+    //   {
+    //     showTopSnackBar(
+    //         type: SnackBarType.done,
+    //         Get.context!,
+    //         message: TranslationConstants.internetRestore.tr);
+    //   }
+    //   }
   }
 
   @override
@@ -123,17 +127,26 @@ class AppController extends SuperController with MixinController {
   @override
   void onInactive() {
     logger('---------App State onInactive');
-    Get.offAllNamed(AppRoutes.splash);
+    // Get.offAllNamed(AppRoutes.splash);
+    stopAt = DateTime.now();
   }
 
   @override
   void onPaused() {
     logger('---------App State onPaused');
-    Get.offAllNamed(AppRoutes.splash);
+    //  Get.offAllNamed(AppRoutes.splash);
+    stopAt = DateTime.now();
   }
 
   @override
   void onResumed() async {
+    // if (stopAt != null) {
+    //   final diff = DateTime.now().difference(stopAt!);
+    //   if (diff.inSeconds > 10) {
+    //     log('lockkkk');
+    //     Get.offAllNamed(AppRoutes.splash);
+    //   }
+    // }
     // //check internet connection
     // final isConnected = await checkConnectivity();
     // if (!isConnected) {

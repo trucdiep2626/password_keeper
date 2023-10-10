@@ -8,7 +8,7 @@ class PasswordItem {
   String? id;
   bool? isApp;
   String? signInLocation;
-  String? appPackageName;
+  String? androidPackageNames;
   Uint8List? appIcon;
   String? userId;
   String? password;
@@ -30,7 +30,7 @@ class PasswordItem {
     this.updatedAt,
     this.passwordStrengthLevel,
     this.recentUsedAt,
-    this.appPackageName,
+    this.androidPackageNames,
   });
 
   PasswordItem.fromJson(Map<String, dynamic> json) {
@@ -46,12 +46,12 @@ class PasswordItem {
     updatedAt = json['updated_at'];
     passwordStrengthLevel = PasswordHelper.getPasswordStrengthFromId(
         json['password_strength_level']);
-    appPackageName = json['app_package_name'];
+    androidPackageNames = json['android_package_names'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['app_package_name'] = appPackageName;
+    data['android_package_names'] = androidPackageNames;
     data['password'] = password;
     data['is_app'] = isApp;
     data['user_id'] = userId;
