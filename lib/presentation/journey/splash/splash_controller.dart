@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -5,6 +7,7 @@ import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/status_bar_style/status_bar_style_type.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 
 class SplashController extends GetxController with MixinController {
@@ -15,6 +18,8 @@ class SplashController extends GetxController with MixinController {
   void onInit() {
     super.onInit();
     setStatusBarStyle(statusBarStyleType: StatusBarStyleType.dark);
+
+  //  unawaited(Get.find<AutofillController>().refreshAutofilll());
   }
 
   @override

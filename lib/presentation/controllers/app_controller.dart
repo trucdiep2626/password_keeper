@@ -55,21 +55,34 @@ class AppController extends SuperController with MixinController {
   }
 
   void _initReceiveIntentSubscription() async {
-    _receiveIntentSubscription =
-        ReceiveIntent.receivedIntentStream.listen((Intent? intent) {
-      logger('Received intent: $intent');
-      if (Get.context == null) {
-        logger(
-            'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
-        return;
-      }
-      final mode = intent?.extra?['autofill_mode'];
-      if (mode?.startsWith('/autofill') ?? false) {
-        _autofillController.refresh();
-      }
-    }, onError: (err) {
-      logger('intent error: $err');
-    });
+    logger('initReceiveIntentSubscription');
+    final intent= await ReceiveIntent.getInitialIntent();
+    logger('Received intent: $intent');
+    if (Get.context == null) {
+      logger(
+          'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
+      return;
+    }
+    final mode = intent?.extra?['autofill_mode'];
+    if (mode?.startsWith('/autofill') ?? false) {
+      _autofillController.refreshAutofilll();
+    }
+
+    // _receiveIntentSubscription =
+    //     ReceiveIntent.receivedIntentStream.listen((Intent? intent) {
+    //   logger('Received intent: $intent');
+    //   if (Get.context == null) {
+    //     logger(
+    //         'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
+    //     return;
+    //   }
+    //   final mode = intent?.extra?['autofill_mode'];
+    //   if (mode?.startsWith('/autofill') ?? false) {
+    //     _autofillController.refreshAutofilll();
+    //   }
+    // }, onError: (err) {
+    //   logger('intent error: $err');
+    // });
   }
 
   _navigateScreen(User? user) {

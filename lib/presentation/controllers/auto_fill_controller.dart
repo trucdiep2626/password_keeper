@@ -19,6 +19,7 @@ class AutofillController extends GetxController with MixinController {
   RxBool enableAutofillService = false.obs;
 
   Future<void> refreshAutofilll() async {
+    logger('refreshAutofilll');
     if (GetPlatform.isIOS) {
       ///TODO: implement for iOS
       return;
@@ -32,10 +33,10 @@ class AutofillController extends GetxController with MixinController {
       return;
     }
 
-    bool autofillRequested = await AutofillService().fillRequestedAutomatic;
+    bool autofillRequested = await _autofillService.fillRequestedAutomatic;
     bool autofillForceInteractive =
-        await AutofillService().fillRequestedInteractive;
-    final androidMetadata = await AutofillService().autofillMetadata;
+        await _autofillService.fillRequestedInteractive;
+    final androidMetadata = await _autofillService.autofillMetadata;
     logger('androidMetadata $androidMetadata');
     bool saveRequested = androidMetadata?.saveInfo != null;
 
@@ -63,7 +64,11 @@ class AutofillController extends GetxController with MixinController {
     // we only call this cubit's function if we have some sort of intent relating to the
     // autofill service so we can now assume the user is asking for us to autofill another app/site
     autofillState.value = AutofillState.requested;
+    enableAutofillService.value = true;
+    this.androidMetadata = androidMetadata;
     forceInteractive = autofillForceInteractive;
+
+    logger('------------${autofillState.value}-----------$forceInteractive');
   }
 
   Future<void> finishSaving() async {
@@ -99,7 +104,7 @@ class AutofillController extends GetxController with MixinController {
       // Autofill library may further reduce the number if the device IME requests fewer than 11 results
       final datasets = matchingEntries.take(10).map(entryToPwDataset).toList();
       final response = await AutofillService().resultWithDatasets(datasets);
-      l.d('resultWithDatasets $response');
+      logger('resultWithDatasets $response');
       return true; // kinda pointless since Android will kill us shortly but meh
     } else {
       return false;
@@ -109,56 +114,53 @@ class AutofillController extends GetxController with MixinController {
   bool shouldIgnoreRequest(AutofillMetadata androidMetadata) {
     bool ignoreRequest = false;
     if (androidMetadata.packageNames.length > 1) {
-      l.e("Multiple package names found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed names.");
+      logger("Multiple package names found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed names.");
       ignoreRequest = true;
     }
     if (androidMetadata.webDomains.length > 1) {
-      l.e("Multiple domains found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed domains.");
+      logger("Multiple domains found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed domains.");
       ignoreRequest = true;
     }
     if ((androidMetadata.webDomains.firstOrNull?.domain.isEmpty ?? true) &&
         (androidMetadata.packageNames.firstOrNull?.isEmpty ?? true)) {
-      l.w('Supplied domain is empty and no packageName was found. We will ignore this autofill request.');
+      logger('Supplied domain is empty and no packageName was found. We will ignore this autofill request.');
       ignoreRequest = true;
     }
     if (androidMetadata.packageNames.firstOrNull != null &&
         _excludedPackages.contains(androidMetadata.packageNames.firstOrNull)) {
-      l.i('Supplied packageName is on our exclude list. We will ignore this autofill request.');
+      logger('Supplied packageName is on our exclude list. We will ignore this autofill request.');
       ignoreRequest = true;
     }
     return ignoreRequest;
   }
 
-  PwDataset entryToPwDataset(KdbxEntry entry) {
-    final title =
-        entry.getString(KdbxKeyCommon.TITLE)?.getText() ?? 'untitled entry';
-    final username = entry.getString(KdbxKeyCommon.USER_NAME)?.getText() ?? '';
-    final pwd = entry.getString(KdbxKeyCommon.PASSWORD)?.getText() ?? '';
-    return PwDataset(
-      label: title,
-      username: username,
-      password: pwd,
-    );
-  }
+  PwDataset entryToPwDataset(PasswordItem item)  =>
 
-  void autofillInstantly(KdbxEntry entry) async {
-    final dataset = entryToPwDataset(entry);
+      PwDataset(
+      label: item.userId ?? '',
+      username:  item.userId ?? '',
+      password:  item.password ?? '',
+    );
+
+
+  void autofillInstantly(PasswordItem passwordItem) async {
+    final dataset = entryToPwDataset(passwordItem);
     final response = await AutofillService().resultWithDataset(
       label: dataset.label,
       username: dataset.username,
       password: dataset.password,
     );
-    l.d('resultWithDataset $response');
+    logger('resultWithDataset $response');
   }
 
-  void autofillWithListOfOneEntry(KdbxEntry entry) async {
-    final dataset = entryToPwDataset(entry);
+  void autofillWithListOfOneEntry( PasswordItem  passwordItem) async {
+     final dataset = entryToPwDataset(passwordItem);
     final response = await AutofillService().resultWithDatasets([dataset]);
-    l.d('resultWithDatasets $response');
+   logger('resultWithDatasets $response');
   }
 
   static final Set<String> _excludedPackages = <String>{
-    'com.keevault.keevault',
+    'kma.dieptt.password_keeper',
     'android',
     'com.android.settings',
     'com.oneplus.applocker',
@@ -184,7 +186,7 @@ class AutofillController extends GetxController with MixinController {
       required List<PasswordItem> current}) {
     final matches = <PasswordItem>[];
     matches.addAll(current.where((entry) =>
-        androidMetadata.packageNames.contains(entry.androidPackageNames)));
+        androidMetadata.packageNames.first.toUpperCase().contains((entry.androidPackageName ?? '').toUpperCase())));
     return matches;
   }
 

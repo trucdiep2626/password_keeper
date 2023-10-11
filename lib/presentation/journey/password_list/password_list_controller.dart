@@ -72,36 +72,6 @@ class PasswordListController extends GetxController with MixinController {
     }
   }
 
-  // void _handleList() {
-  //   if (passwords.isEmpty) return;
-  //   for (int i = 0, length = passwords.length; i < length; i++) {
-  //     String name = passwords[i].signInLocation ?? '';
-  //     String tag = name.substring(0, 1).toUpperCase();
-  //
-  //     if (RegExp("[A-Z]").hasMatch(tag)) {
-  //       passwords[i].tagIndex = tag;
-  //     } else {
-  //       passwords[i].tagIndex = "#";
-  //     }
-  //   }
-  //
-  //   passwords.sort((a, b) {
-  //     String aName = a.signInLocation ?? '';
-  //     String bName = b.signInLocation ?? '';
-  //     return aName.toUpperCase().compareTo(bName.toUpperCase());
-  //   });
-
-  // // A-Z sort.
-  // SuspensionUtil.sortListBySuspensionTag(_contacts);
-  //
-  // // show sus tag.
-  // SuspensionUtil.setShowSuspensionStatus(_contacts);
-  //
-  // // add header.
-  // _contacts.insert(0, ContactInfo(name: 'header', tagIndex: '↑'));
-  //
-  // setState(() {});
-  //}
 
   Future<void> getPasswordListLength() async {
     try {
@@ -171,7 +141,6 @@ class PasswordListController extends GetxController with MixinController {
   void onReady() async {
     await getPasswordListLength();
     await onRefresh();
-    log('fdffdfbdfbdf');
     searchController.addListener(() {
       if (isNullEmpty(searchController.text.trim())) {
         displayPasswords.value = passwords;

@@ -69,6 +69,7 @@ void configLocator() {
       () => VerifyMasterPasswordController(
             accountUseCase: getIt<AccountUseCase>(),
             localUseCase: getIt<LocalUseCase>(),
+            passwordUseCase: getIt<PasswordUseCase>(),
           ));
   getIt.registerFactory<VerifyEmailController>(
       () => VerifyEmailController(accountUseCase: getIt<AccountUseCase>()));

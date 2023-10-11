@@ -31,8 +31,12 @@ class LocalRepository {
   }
 
   Future<String?> getDataInBiometricStorage() async {
-    final storage = await _storageFile;
-    return await storage.read();
+    try {
+      final storage = await _storageFile;
+      return await storage.read();
+    } catch (e) {
+      return null;
+    }
   }
 
   // dynamic getLocalValue({required String key}) => hiveServices.hiveBox.get(key);

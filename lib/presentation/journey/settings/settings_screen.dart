@@ -49,12 +49,6 @@ class SettingsScreen extends GetView<SettingsController> {
                           autofillController.enableAutofillService.value,
                     ),
                   ),
-                  _buildItem(
-                    onPressed: () =>
-                        Get.toNamed(AppRoutes.changeMasterPassword),
-                    icon: Assets.images.svg.icKey,
-                    title: TranslationConstants.changeMasterPassword.tr,
-                  ),
                   Obx(
                     () => _buildItem(
                       onPressed: () async => await biometricController
@@ -87,6 +81,12 @@ class SettingsScreen extends GetView<SettingsController> {
                           style: ThemeText.bodyMedium.grey600Color,
                         ),
                       )),
+                  _buildItem(
+                    onPressed: () =>
+                        Get.toNamed(AppRoutes.changeMasterPassword),
+                    icon: Assets.images.svg.icKey,
+                    title: TranslationConstants.changeMasterPassword.tr,
+                  ),
                   _buildItem(
                     onPressed: () async => await controller.onTapLock(),
                     icon: Assets.images.svg.icPassword,

@@ -44,46 +44,7 @@ class PasswordListScreen extends GetView<PasswordListController> {
                   onLoadMore: () async => await controller.onLoadMore(),
                   onRefresh: controller.onRefresh,
                   controller: controller.passwordListController,
-                  child:
-                      // AzListView(
-                      //   data: controller.displayPasswords,
-                      //   itemCount: controller.displayPasswords.length,
-                      //   itemBuilder: (BuildContext context, int index) {
-                      //     return _buildItem(controller.displayPasswords[index]);
-                      //   },
-                      //   physics: NeverScrollableScrollPhysics(),
-                      //   indexBarData: SuspensionUtil.getTagIndexList(
-                      //       controller.displayPasswords),
-                      //   indexHintBuilder: (context, hint) {
-                      //     return Container(
-                      //       alignment: Alignment.center,
-                      //       width: 60.0,
-                      //       height: 60.0,
-                      //       decoration: BoxDecoration(
-                      //         color: Colors.blue[700]!.withAlpha(200),
-                      //         shape: BoxShape.circle,
-                      //       ),
-                      //       child: Text(hint,
-                      //           style: TextStyle(
-                      //               color: Colors.white, fontSize: 30.0)),
-                      //     );
-                      //   },
-                      //   indexBarMargin: EdgeInsets.all(10),
-                      //   indexBarOptions: IndexBarOptions(
-                      //     needRebuild: true,
-                      //     decoration: BoxDecoration(
-                      //         color: AppColors.grey50,
-                      //         borderRadius: BorderRadius.circular(20.0),
-                      //         border: Border.all(
-                      //             color: Colors.grey[300]!, width: .5)),
-                      //     downDecoration: BoxDecoration(
-                      //         color: AppColors.grey50,
-                      //         borderRadius: BorderRadius.circular(20.0),
-                      //         border: Border.all(
-                      //             color: Colors.grey[300]!, width: .5)),
-                      //   ),
-                      // )
-                      CustomScrollView(
+                  child: CustomScrollView(
                     controller: controller.scrollController,
                     shrinkWrap: true,
                     slivers: [

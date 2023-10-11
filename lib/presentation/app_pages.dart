@@ -27,6 +27,7 @@ import 'package:password_keeper/presentation/journey/login/login_screen.dart';
 import 'package:password_keeper/presentation/journey/main/main_screen.dart';
 import 'package:password_keeper/presentation/journey/password_detail/password_detail_screen.dart';
 import 'package:password_keeper/presentation/journey/password_generator/password_generator_screen.dart';
+import 'package:password_keeper/presentation/journey/password_list/password_list_screen.dart';
 import 'package:password_keeper/presentation/journey/register/register_screen.dart';
 import 'package:password_keeper/presentation/journey/reset_password/reset_password_screen.dart';
 import 'package:password_keeper/presentation/journey/signin_location/signin_location_screen.dart';
@@ -92,6 +93,11 @@ List<GetPage> myPages = [
     name: AppRoutes.passwordGenerator,
     page: () => const PasswordGeneratorScreen(),
     binding: PasswordGeneratorBinding(),
+  ),
+  GetPage(
+    name: AppRoutes.passwordList,
+    page: () => const PasswordListScreen(),
+    binding: PasswordListBinding(),
   ),
   GetPage(
     name: AppRoutes.passwordDetail,

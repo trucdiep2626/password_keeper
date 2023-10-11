@@ -6,10 +6,10 @@ import io.flutter.embedding.android.FlutterFragmentActivity
 import io.flutter.embedding.engine.FlutterEngine
 
 class AutofillActivity: FlutterFragmentActivity() {
-
-        override fun getDartEntrypointFunctionName(): String {
-            return "autofillEntryPoint"
-        }
+//
+//        override fun getDartEntrypointFunctionName(): String {
+//            return "autofillEntryPoint"
+//        }
 
 }
 

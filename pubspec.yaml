@@ -107,6 +107,12 @@ dependencies:
   did_change_authlocal: 0.0.6
   flutter_windowmanager: 0.2.0
 
+  receive_intent: 0.2.4
+  flutter_autofill_service:
+    git:
+      url: https://github.com/kee-org/flutter_autofill_service.git
+      ref: master
+
 dev_dependencies:
   #  flutter_test:
   #    sdk: flutter

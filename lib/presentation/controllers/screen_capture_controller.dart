@@ -91,6 +91,6 @@ class ScreenCaptureController extends GetxController with MixinController {
   @override
   void onReady() async {
     super.onReady();
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+    // await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
   }
 }
