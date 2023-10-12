@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:installed_apps/app_info.dart';
+import 'package:installed_apps/installed_apps.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
@@ -11,6 +12,7 @@ import 'package:password_keeper/domain/models/encrypted_string.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
@@ -55,6 +57,7 @@ class AddEditPasswordController extends GetxController with MixinController {
   RxBool ignoreWeakPassword = false.obs;
 
   final _cryptoController = Get.find<CryptoController>();
+  final _autofillController = Get.find<AutofillController>();
 
   AddEditPasswordController({
     required this.accountUseCase,
@@ -200,6 +203,10 @@ class AddEditPasswordController extends GetxController with MixinController {
       } else {
         await handleEditPassword(encPassword);
       }
+
+      if (_autofillController.autofillState.value == AutofillState.saving) {
+        await _autofillController.finishSaving();
+      }
     } catch (e) {
       debugPrint(e.toString());
       showErrorMessage();
@@ -267,10 +274,11 @@ class AddEditPasswordController extends GetxController with MixinController {
     passwordFocusNode.addListener(() {
       checkPasswordStrength();
     });
+    await handleDataAutoSave();
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     final args = Get.arguments;
     if (!isNullEmpty(args) && args is PasswordItem) {
@@ -292,6 +300,29 @@ class AddEditPasswordController extends GetxController with MixinController {
       } else {
         selectedUrl.value = oldPassword?.signInLocation ?? '';
       }
+    }
+  }
+
+  Future<void> handleDataAutoSave() async {
+    if (_autofillController.autofillState.value == AutofillState.saving) {
+      userIdController.text =
+          _autofillController.androidMetadata?.saveInfo?.username ?? '';
+      passwordController.text =
+          _autofillController.androidMetadata?.saveInfo?.password ?? '';
+
+      final appId = _autofillController.androidMetadata?.packageNames.first;
+      selectedUrl.value = _autofillController
+              .androidMetadata!.webDomains.isNotEmpty
+          ? _autofillController.androidMetadata?.webDomains.first.domain ?? ''
+          : '';
+      final scheme = _autofillController.androidMetadata!.webDomains.isNotEmpty
+          ? _autofillController.androidMetadata?.webDomains.first.scheme
+          : null;
+
+      if (!isNullEmpty(appId)) {
+        selectedApp.value = await InstalledApps.getAppInfo(appId ?? '');
+      }
+      ;
     }
   }
 }

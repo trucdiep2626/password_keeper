@@ -5,6 +5,7 @@ import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
 import 'package:password_keeper/presentation/journey/add_edit_password/add_edit_password_controller.dart';
 import 'package:password_keeper/presentation/journey/settings/settings_controller.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
@@ -20,7 +21,10 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
   Widget build(BuildContext context) {
     controller.context = context;
     return Listener(
-      onPointerDown: Get.find<SettingsController>().handleUserInteraction,
+      onPointerDown: Get.find<AutofillController>().autofillState.value ==
+              AutofillState.saving
+          ? null
+          : Get.find<SettingsController>().handleUserInteraction,
       child: Stack(
         children: [
           Scaffold(

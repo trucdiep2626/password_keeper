@@ -275,6 +275,9 @@ class VerifyMasterPasswordController extends GetxController
         }
       }
       Get.offAllNamed(AppRoutes.passwordList);
+    } else if (_autofillController.autofillState.value ==
+        AutofillState.saving) {
+      Get.offAllNamed(AppRoutes.addEditPassword);
     } else {
       Get.offAllNamed(AppRoutes.main);
     }

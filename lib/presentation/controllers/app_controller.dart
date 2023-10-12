@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:password_keeper/common/constants/app_routes.dart';
+import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
@@ -56,33 +58,47 @@ class AppController extends SuperController with MixinController {
 
   void _initReceiveIntentSubscription() async {
     logger('initReceiveIntentSubscription');
-    final intent= await ReceiveIntent.getInitialIntent();
-    logger('Received intent: $intent');
-    if (Get.context == null) {
-      logger(
-          'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
-      return;
-    }
-    final mode = intent?.extra?['autofill_mode'];
-    if (mode?.startsWith('/autofill') ?? false) {
-      _autofillController.refreshAutofilll();
-    }
+    // final intent = await ReceiveIntent.getInitialIntent();
+    // logger('Received intent: $intent');
+    // if (Get.context == null) {
+    //   logger(
+    //       'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
+    //   return;
+    // }
+    // final mode = intent?.extra?['autofill_mode'];
+    // if (mode?.startsWith('/autofill') ?? false) {
+    //   _autofillController.refreshAutofilll();
+    // }
 
-    // _receiveIntentSubscription =
-    //     ReceiveIntent.receivedIntentStream.listen((Intent? intent) {
-    //   logger('Received intent: $intent');
-    //   if (Get.context == null) {
-    //     logger(
-    //         'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
-    //     return;
-    //   }
-    //   final mode = intent?.extra?['autofill_mode'];
-    //   if (mode?.startsWith('/autofill') ?? false) {
-    //     _autofillController.refreshAutofilll();
-    //   }
-    // }, onError: (err) {
-    //   logger('intent error: $err');
-    // });
+    _receiveIntentSubscription =
+        ReceiveIntent.receivedIntentStream.listen((Intent? intent) {
+      logger('Received intent: $intent');
+      if (Get.context == null) {
+        logger(
+            'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
+        return;
+      }
+      final mode = intent?.extra?['autofill_mode'];
+      if (mode?.startsWith('/autofill') ?? false) {
+        _autofillController
+            .refreshAutofilll()
+            .then((value) => navigateWhenVerified());
+      }
+    }, onError: (err) {
+      logger('intent error: $err');
+    });
+  }
+
+  Future<void> navigateWhenVerified() async {
+    final _autofillController = Get.find<AutofillController>();
+    logger(
+        '--------------${_autofillController.autofillState.value} ------${_autofillController.enableAutofillService.value}----${(_autofillController.forceInteractive ?? false)}');
+
+    if (_autofillController.autofillState.value == AutofillState.saving) {
+      Get.toNamed(AppRoutes.addEditPassword);
+    } else {
+      Get.offAllNamed(AppRoutes.main);
+    }
   }
 
   _navigateScreen(User? user) {

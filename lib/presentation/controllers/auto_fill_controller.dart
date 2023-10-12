@@ -114,34 +114,35 @@ class AutofillController extends GetxController with MixinController {
   bool shouldIgnoreRequest(AutofillMetadata androidMetadata) {
     bool ignoreRequest = false;
     if (androidMetadata.packageNames.length > 1) {
-      logger("Multiple package names found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed names.");
+      logger(
+          "Multiple package names found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed names.");
       ignoreRequest = true;
     }
     if (androidMetadata.webDomains.length > 1) {
-      logger("Multiple domains found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed domains.");
+      logger(
+          "Multiple domains found for autofill. We will ignore this autofill request because we don't know why this can happen or whether we can trust the claimed domains.");
       ignoreRequest = true;
     }
     if ((androidMetadata.webDomains.firstOrNull?.domain.isEmpty ?? true) &&
         (androidMetadata.packageNames.firstOrNull?.isEmpty ?? true)) {
-      logger('Supplied domain is empty and no packageName was found. We will ignore this autofill request.');
+      logger(
+          'Supplied domain is empty and no packageName was found. We will ignore this autofill request.');
       ignoreRequest = true;
     }
     if (androidMetadata.packageNames.firstOrNull != null &&
         _excludedPackages.contains(androidMetadata.packageNames.firstOrNull)) {
-      logger('Supplied packageName is on our exclude list. We will ignore this autofill request.');
+      logger(
+          'Supplied packageName is on our exclude list. We will ignore this autofill request.');
       ignoreRequest = true;
     }
     return ignoreRequest;
   }
 
-  PwDataset entryToPwDataset(PasswordItem item)  =>
-
-      PwDataset(
-      label: item.userId ?? '',
-      username:  item.userId ?? '',
-      password:  item.password ?? '',
-    );
-
+  PwDataset entryToPwDataset(PasswordItem item) => PwDataset(
+        label: item.userId ?? '',
+        username: item.userId ?? '',
+        password: item.password ?? '',
+      );
 
   void autofillInstantly(PasswordItem passwordItem) async {
     final dataset = entryToPwDataset(passwordItem);
@@ -153,10 +154,10 @@ class AutofillController extends GetxController with MixinController {
     logger('resultWithDataset $response');
   }
 
-  void autofillWithListOfOneEntry( PasswordItem  passwordItem) async {
-     final dataset = entryToPwDataset(passwordItem);
+  void autofillWithListOfOneEntry(PasswordItem passwordItem) async {
+    final dataset = entryToPwDataset(passwordItem);
     final response = await AutofillService().resultWithDatasets([dataset]);
-   logger('resultWithDatasets $response');
+    logger('resultWithDatasets $response');
   }
 
   static final Set<String> _excludedPackages = <String>{
@@ -185,8 +186,9 @@ class AutofillController extends GetxController with MixinController {
       {required AutofillMetadata androidMetadata,
       required List<PasswordItem> current}) {
     final matches = <PasswordItem>[];
-    matches.addAll(current.where((entry) =>
-        androidMetadata.packageNames.first.toUpperCase().contains((entry.androidPackageName ?? '').toUpperCase())));
+    matches.addAll(current.where((entry) => androidMetadata.packageNames.first
+        .toUpperCase()
+        .contains((entry.androidPackageName ?? '').toUpperCase())));
     return matches;
   }
 

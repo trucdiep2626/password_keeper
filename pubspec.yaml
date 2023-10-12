@@ -111,7 +111,8 @@ dependencies:
   flutter_autofill_service:
     git:
       url: https://github.com/kee-org/flutter_autofill_service.git
-      ref: master
+      ref: master #7d4e54b on Aug 31
+
 
 dev_dependencies:
   #  flutter_test:
