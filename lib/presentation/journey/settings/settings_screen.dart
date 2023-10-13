@@ -50,6 +50,21 @@ class SettingsScreen extends GetView<SettingsController> {
                     ),
                   ),
                   Obx(
+                    () => autofillController.enableAutofillService.value &&
+                            GetPlatform.isAndroid
+                        ? _buildItem(
+                            onPressed: () async => await autofillController
+                                .setSavingPreference(!autofillController
+                                    .offerToSavePassword.value),
+                            icon: Assets.images.svg.icPasswordCheck,
+                            title: TranslationConstants.offerToSavePassword.tr,
+                            showSwitch: true,
+                            switchValue:
+                                autofillController.offerToSavePassword.value,
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                  Obx(
                     () => _buildItem(
                       onPressed: () async => await biometricController
                           .onChangedBiometricStorageStatus(),

@@ -17,6 +17,7 @@ class AutofillController extends GetxController with MixinController {
   Rx<AutofillState> autofillState = AutofillState.initial.obs;
 
   RxBool enableAutofillService = false.obs;
+  RxBool offerToSavePassword = true.obs;
 
   Future<void> refreshAutofilll() async {
     logger('refreshAutofilll');
@@ -39,6 +40,9 @@ class AutofillController extends GetxController with MixinController {
     final androidMetadata = await _autofillService.autofillMetadata;
     logger('androidMetadata $androidMetadata');
     bool saveRequested = androidMetadata?.saveInfo != null;
+
+    offerToSavePassword.value =
+        (await _autofillService.preferences).enableSaving;
 
     if (!autofillRequested && !autofillForceInteractive && !saveRequested) {
       enableAutofillService.value = enabled;
@@ -81,7 +85,9 @@ class AutofillController extends GetxController with MixinController {
 
   Future<void> setSavingPreference(value) async {
     final prefs = await AutofillService().preferences;
-    await AutofillService().setPreferences(AutofillPreferences(
+
+    offerToSavePassword.value = value;
+    await _autofillService.setPreferences(AutofillPreferences(
       enableDebug: prefs.enableDebug,
       enableSaving: value,
     ));
@@ -306,8 +312,8 @@ class AutofillController extends GetxController with MixinController {
 
   Future<void> onChangedAutofillService() async {
     logger('Starting autofill enable request.');
-    final response = await AutofillService().requestSetAutofillService();
-    logger('autofill enable request finished $response');
+    // final response = await AutofillService().requestSetAutofillService();
+    // logger('autofill enable request finished $response');
     final available = await AutofillService().hasAutofillServicesSupport;
     final enabled = available
         ? await AutofillService().status == AutofillServiceStatus.enabled
@@ -325,6 +331,7 @@ class AutofillController extends GetxController with MixinController {
       }
       enableAutofillService.value = true;
       autofillState.value == AutofillState.available;
+      await setSavingPreference(true);
     } else {
       if (Get.context != null && enableAutofillService.value) {
         showTopSnackBar(Get.context!,

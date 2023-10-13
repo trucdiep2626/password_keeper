@@ -208,4 +208,5 @@ const enString = {
   "unsupported_auto_fill": "Auto-fill service is not supported on your device.",
   "enable_auto_fill": "Auto-fill service is now enabled",
   "disable_auto_fill": "Auto-fill service is now disabled",
+  "offer_to_save_password":"Offer to save password"
 };

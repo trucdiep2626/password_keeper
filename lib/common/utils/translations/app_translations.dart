@@ -225,4 +225,5 @@ class TranslationConstants {
   static const String unsupportedAutofill = "unsupported_auto_fill";
   static const String enableAutofill = "enable_auto_fill";
   static const String disableAutofill = "disable_auto_fill";
+  static const String offerToSavePassword = "offer_to_save_password";
 }
