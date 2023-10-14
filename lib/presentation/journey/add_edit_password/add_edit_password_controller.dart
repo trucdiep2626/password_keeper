@@ -91,6 +91,7 @@ class AddEditPasswordController extends GetxController with MixinController {
         confirmButtonText: TranslationConstants.continueAnyway.tr,
         messageTextAlign: TextAlign.start,
         dismissAble: true,
+        checkTimeout: !_autofillController.isAutofillSaving(),
         confirmButtonCallback: () {
           ignoreWeakPassword.value = true;
           Get.back(result: true);
@@ -130,11 +131,15 @@ class AddEditPasswordController extends GetxController with MixinController {
     );
     clearData();
 
-    //refresh password list
-    await Get.find<PasswordListController>().onRefresh();
-    await Get.find<HomeController>().initData();
+    if (!_autofillController.isAutofillSaving()) {
+      //refresh password list
+      await Get.find<PasswordListController>().onRefresh();
+      await Get.find<HomeController>().initData();
 
-    Get.back();
+      Get.back();
+    } else {
+      Get.offAllNamed(AppRoutes.main);
+    }
   }
 
   Future<void> handleEditPassword(EncryptedString encPassword) async {
@@ -204,7 +209,7 @@ class AddEditPasswordController extends GetxController with MixinController {
         await handleEditPassword(encPassword);
       }
 
-      if (_autofillController.autofillState.value == AutofillState.saving) {
+      if (_autofillController.isAutofillSaving()) {
         await _autofillController.finishSaving();
       }
     } catch (e) {
@@ -304,7 +309,7 @@ class AddEditPasswordController extends GetxController with MixinController {
   }
 
   Future<void> handleDataAutoSave() async {
-    if (_autofillController.autofillState.value == AutofillState.saving) {
+    if (_autofillController.isAutofillSaving()) {
       userIdController.text =
           _autofillController.androidMetadata?.saveInfo?.username ?? '';
       passwordController.text =
@@ -319,10 +324,12 @@ class AddEditPasswordController extends GetxController with MixinController {
           ? _autofillController.androidMetadata?.webDomains.first.scheme
           : null;
 
-      if (!isNullEmpty(appId)) {
+      if (!isNullEmpty(appId) &&
+          _autofillController.androidMetadata!.webDomains.isEmpty) {
         selectedApp.value = await InstalledApps.getAppInfo(appId ?? '');
       }
-      ;
+      checkButtonEnable();
+      checkPasswordStrength();
     }
   }
 }

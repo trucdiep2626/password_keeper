@@ -30,7 +30,15 @@ class PasswordListScreen extends GetView<PasswordListController> {
           children: [
             //  SizedBox(height: AppDimens.space_16),
             _buildSearchTextField(),
-            SizedBox(height: AppDimens.space_16),
+            SizedBox(height: AppDimens.space_8),
+            if (controller.autofillController.isAutofilling())
+              Padding(
+                padding: EdgeInsets.only(bottom: AppDimens.space_8),
+                child: Text(
+                  controller.autofillController.selectItemToFill,
+                  style: ThemeText.bodyMedium.s10.grey500Color,
+                ),
+              ),
             Expanded(
               child: Obx(
                 () => AppRefreshWidget(
@@ -92,7 +100,11 @@ class PasswordListScreen extends GetView<PasswordListController> {
     return AppTouchable(
       onPressed: () {
         FocusScope.of(controller.context).unfocus();
-        controller.goToDetail(item);
+        if (controller.autofillController.isAutofilling()) {
+          controller.autofill(item);
+        } else {
+          controller.goToDetail(item);
+        }
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: AppDimens.space_4),

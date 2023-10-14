@@ -208,5 +208,6 @@ const viString = {
   "unsupported_auto_fill": "Auto-fill service is not supported on your device.",
   "enable_auto_fill": "Auto-fill service is now enabled",
   "disable_auto_fill": "Auto-fill service is now disabled",
-  "offer_to_save_password":"Offer to save password"
+  "offer_to_save_password": "Offer to save password",
+  "select_item_to_fill": "Select a password item to fill into"
 };

@@ -21,8 +21,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
   Widget build(BuildContext context) {
     controller.context = context;
     return Listener(
-      onPointerDown: Get.find<AutofillController>().autofillState.value ==
-              AutofillState.saving
+      onPointerDown: Get.find<AutofillController>().isAutofillSaving()
           ? null
           : Get.find<SettingsController>().handleUserInteraction,
       child: Stack(

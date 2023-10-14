@@ -259,7 +259,7 @@ class VerifyMasterPasswordController extends GetxController
     logger(
         '-------------- ------${_autofillController.enableAutofillService.value}----${(_autofillController.forceInteractive ?? false)}');
 
-    if (_autofillController.autofillState.value == AutofillState.requested) {
+    if (_autofillController.isAutofilling()) {
       final result = await passwordUseCase.getPasswordList(
         userId: user?.uid ?? '',
       );
@@ -275,8 +275,7 @@ class VerifyMasterPasswordController extends GetxController
         }
       }
       Get.offAllNamed(AppRoutes.passwordList);
-    } else if (_autofillController.autofillState.value ==
-        AutofillState.saving) {
+    } else if (_autofillController.isAutofillSaving()) {
       Get.offAllNamed(AppRoutes.addEditPassword);
     } else {
       Get.offAllNamed(AppRoutes.main);

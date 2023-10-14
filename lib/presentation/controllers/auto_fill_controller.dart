@@ -79,12 +79,13 @@ class AutofillController extends GetxController with MixinController {
     if (autofillState.value == AutofillState.saving ||
         autofillState.value == AutofillState.saved) {
       //    emit(AutofillSaved((state as AutofillModeActive).androidMetadata));
-      await AutofillService().onSaveComplete();
+      autofillState.value = AutofillState.saved;
+      await _autofillService.onSaveComplete();
     }
   }
 
   Future<void> setSavingPreference(value) async {
-    final prefs = await AutofillService().preferences;
+    final prefs = await _autofillService.preferences;
 
     offerToSavePassword.value = value;
     await _autofillService.setPreferences(AutofillPreferences(
@@ -100,7 +101,7 @@ class AutofillController extends GetxController with MixinController {
 
     // final androidMetadata = (state as AutofillRequested).androidMetadata;
     if (shouldIgnoreRequest(androidMetadata!)) {
-      await AutofillService().resultWithDatasets(null);
+      await _autofillService.resultWithDatasets(null);
       return true;
     }
 
@@ -109,7 +110,7 @@ class AutofillController extends GetxController with MixinController {
       // Limited to 10 results due to Android Parcelable bugs. Totally arbitrary but we have to start somewhere.
       // Autofill library may further reduce the number if the device IME requests fewer than 11 results
       final datasets = matchingEntries.take(10).map(entryToPwDataset).toList();
-      final response = await AutofillService().resultWithDatasets(datasets);
+      final response = await _autofillService.resultWithDatasets(datasets);
       logger('resultWithDatasets $response');
       return true; // kinda pointless since Android will kill us shortly but meh
     } else {
@@ -152,7 +153,7 @@ class AutofillController extends GetxController with MixinController {
 
   void autofillInstantly(PasswordItem passwordItem) async {
     final dataset = entryToPwDataset(passwordItem);
-    final response = await AutofillService().resultWithDataset(
+    final response = await _autofillService.resultWithDataset(
       label: dataset.label,
       username: dataset.username,
       password: dataset.password,
@@ -162,7 +163,7 @@ class AutofillController extends GetxController with MixinController {
 
   void autofillWithListOfOneEntry(PasswordItem passwordItem) async {
     final dataset = entryToPwDataset(passwordItem);
-    final response = await AutofillService().resultWithDatasets([dataset]);
+    final response = await _autofillService.resultWithDatasets([dataset]);
     logger('resultWithDatasets $response');
   }
 
@@ -205,9 +206,9 @@ class AutofillController extends GetxController with MixinController {
     // we can't apply the same level of control over which entries we consider a match.
     // Old versions of Android don't tell us the scheme so we have to assume it is
     // https otherwise we'll rarely be able to match any entries.
-    // final requestedUrl =
-    //     "${androidMetadata.webDomains.firstOrNull?.scheme ?? 'https'}://${androidMetadata.webDomains.firstOrNull?.domain ?? ''}"
-    //         .trim();
+    final requestedUrl =
+        "${androidMetadata.webDomains.firstOrNull?.scheme ?? 'https'}://${androidMetadata.webDomains.firstOrNull?.domain ?? ''}"
+            .trim();
     //
     // // Apparently Android never supplies us with a port so this is the best we can do
     // final hostname = requestedUrl?.publicSuffixUrl.sourceUrl.host;
@@ -216,6 +217,14 @@ class AutofillController extends GetxController with MixinController {
     // final scheme = requestedUrl?.publicSuffixUrl.sourceUrl.scheme;
 
     final matches = <PasswordItem>[];
+
+    current.forEach((element) {
+      if (requestedUrl
+          .toUpperCase()
+          .contains((element.signInLocation ?? '').toUpperCase())) {
+        matches.add(element);
+      }
+    });
     //
     // if (hostname == null || registrableDomain == null || scheme == null) {
     //   l.e("Android supplied a WebDomain we can't understand. Please report the exact web page you encounter this error on so we can see if it is possible to add support for autofilling this in future.");
@@ -310,13 +319,16 @@ class AutofillController extends GetxController with MixinController {
   bool isAutofilling() => autofillState.value == AutofillState.requested;
   bool isAutofillSaving() => autofillState.value == AutofillState.saving;
 
+  String get selectItemToFill =>
+      '${TranslationConstants.selectItemToFill.tr} ${androidMetadata?.webDomains.firstOrNull?.domain ?? androidMetadata?.packageNames.firstOrNull ?? 'app/website'}';
+
   Future<void> onChangedAutofillService() async {
     logger('Starting autofill enable request.');
-    // final response = await AutofillService().requestSetAutofillService();
-    // logger('autofill enable request finished $response');
-    final available = await AutofillService().hasAutofillServicesSupport;
+    final response = await _autofillService.requestSetAutofillService();
+    logger('autofill enable request finished $response');
+    final available = await _autofillService.hasAutofillServicesSupport;
     final enabled = available
-        ? await AutofillService().status == AutofillServiceStatus.enabled
+        ? await _autofillService.status == AutofillServiceStatus.enabled
         : false;
     if (!available) {
       if (Get.context != null) {
@@ -340,5 +352,11 @@ class AutofillController extends GetxController with MixinController {
       enableAutofillService.value = false;
       autofillState.value == AutofillState.available;
     }
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    refreshAutofilll();
   }
 }

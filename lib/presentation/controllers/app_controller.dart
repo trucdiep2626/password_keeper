@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
-import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
@@ -94,7 +93,7 @@ class AppController extends SuperController with MixinController {
     logger(
         '--------------${_autofillController.autofillState.value} ------${_autofillController.enableAutofillService.value}----${(_autofillController.forceInteractive ?? false)}');
 
-    if (_autofillController.autofillState.value == AutofillState.saving) {
+    if (_autofillController.isAutofillSaving()) {
       Get.toNamed(AppRoutes.addEditPassword);
     } else {
       Get.offAllNamed(AppRoutes.main);
