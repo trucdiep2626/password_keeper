@@ -172,6 +172,7 @@ const enString = {
   "enable_screen_capture": "Screen capture is now enabled.",
   "disable_screen_capture": "Screen capture is now disabled.",
   "timeout": "Timeout",
+  "delete_account": "Delete account",
 
   //password detail
   "password_detail": "Password detail",
@@ -209,5 +210,8 @@ const enString = {
   "enable_auto_fill": "Auto-fill service is now enabled",
   "disable_auto_fill": "Auto-fill service is now disabled",
   "offer_to_save_password": "Offer to save password",
-  "select_item_to_fill": "Select a password item to fill into"
+  "select_item_to_fill": "Select a password item to fill into",
+
+  //delete account
+  "delete_account_confirm": "Are you sure you want to delete this account?",
 };

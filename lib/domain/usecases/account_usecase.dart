@@ -97,8 +97,10 @@ class AccountUseCase {
         key: LocalStorageKey.masterKeyEncryptedKey);
   }
 
-  Future<void> deleteAccount() async {
-    await accountRepo.deleteAccount();
+  Future<void> deleteAccount(String userId) async {
+    await accountRepo.deleteAccount(userId);
+    await localRepo.deleteAllSecureData();
+    await localRepo.clearBiometricStorage();
   }
 
   Future createUser(Account account) async {

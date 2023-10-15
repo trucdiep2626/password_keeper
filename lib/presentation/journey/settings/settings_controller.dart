@@ -116,6 +116,35 @@ class SettingsController extends GetxController with MixinController {
     });
   }
 
+  Future<void> onTapDeleteAccount() async {
+    showAppDialog(context, TranslationConstants.deleteAccount.tr,
+        TranslationConstants.deleteConfirmMessage.tr,
+        confirmButtonText: TranslationConstants.confirm.tr,
+        cancelButtonText: TranslationConstants.cancel.tr,
+        confirmButtonCallback: () async {
+      try {
+        //check internet connection
+        final isConnected = await checkConnectivity();
+        if (!isConnected) {
+          return;
+        }
+
+        rxLoadedSettings.value = LoadedType.start;
+        _timer?.cancel();
+        _timer = null;
+        await Get.find<ScreenCaptureController>().resetWhenLogOut();
+        await accountUseCase.deleteAccount(user?.uid ?? '');
+
+        Get.offAllNamed(AppRoutes.login);
+      } catch (e) {
+        debugPrint(e.toString());
+        showErrorMessage();
+      } finally {
+        rxLoadedSettings.value = LoadedType.finish;
+      }
+    });
+  }
+
   @override
   void onInit() async {
     super.onInit();

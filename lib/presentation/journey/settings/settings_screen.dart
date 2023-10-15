@@ -56,7 +56,7 @@ class SettingsScreen extends GetView<SettingsController> {
                             onPressed: () async => await autofillController
                                 .setSavingPreference(!autofillController
                                     .offerToSavePassword.value),
-                            icon: Assets.images.svg.icPasswordCheck,
+                            icon: Assets.images.svg.icArchiveAdd,
                             title: TranslationConstants.offerToSavePassword.tr,
                             showSwitch: true,
                             switchValue:
@@ -111,6 +111,12 @@ class SettingsScreen extends GetView<SettingsController> {
                     onPressed: () async => await controller.onTapLogout(),
                     icon: Assets.images.svg.icLogout,
                     title: TranslationConstants.logout.tr,
+                  ),
+                  _buildItem(
+                    onPressed: () async =>
+                        await controller.onTapDeleteAccount(),
+                    icon: Assets.images.svg.icProfileDelete,
+                    title: TranslationConstants.deleteAccount.tr,
                   ),
                 ],
               ),

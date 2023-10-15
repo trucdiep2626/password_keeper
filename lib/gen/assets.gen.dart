@@ -92,6 +92,10 @@ class $AssetsImagesSvgGen {
   /// File path: assets/images/svg/ic_add.svg
   SvgGenImage get icAdd => const SvgGenImage('assets/images/svg/ic_add.svg');
 
+  /// File path: assets/images/svg/ic_archive_add.svg
+  SvgGenImage get icArchiveAdd =>
+      const SvgGenImage('assets/images/svg/ic_archive_add.svg');
+
   /// File path: assets/images/svg/ic_arrow_down.svg
   SvgGenImage get icArrowDown =>
       const SvgGenImage('assets/images/svg/ic_arrow_down.svg');
@@ -212,6 +216,10 @@ class $AssetsImagesSvgGen {
   SvgGenImage get icPasswordCheck =>
       const SvgGenImage('assets/images/svg/ic_password_check.svg');
 
+  /// File path: assets/images/svg/ic_profile_delete.svg
+  SvgGenImage get icProfileDelete =>
+      const SvgGenImage('assets/images/svg/ic_profile_delete.svg');
+
   /// File path: assets/images/svg/ic_search.svg
   SvgGenImage get icSearch =>
       const SvgGenImage('assets/images/svg/ic_search.svg');
@@ -261,6 +269,7 @@ class $AssetsImagesSvgGen {
   List<dynamic> get values => [
         authenticationBackground,
         icAdd,
+        icArchiveAdd,
         icArrowDown,
         icArrowLeft,
         icArrowRight,
@@ -293,6 +302,7 @@ class $AssetsImagesSvgGen {
         icNavHome,
         icPassword,
         icPasswordCheck,
+        icProfileDelete,
         icSearch,
         icSetting,
         icSort,
