@@ -191,6 +191,7 @@ class TranslationConstants {
   static const String enableScreenCapture = "enable_screen_capture";
   static const String disableScreenCapture = "disable_screen_capture";
   static const String timeout = "timeout";
+  static const String deleteAccount = "delete_account";
 
   //password detail
   static const String passwordDetail = "password_detail";
@@ -225,4 +226,9 @@ class TranslationConstants {
   static const String unsupportedAutofill = "unsupported_auto_fill";
   static const String enableAutofill = "enable_auto_fill";
   static const String disableAutofill = "disable_auto_fill";
+  static const String offerToSavePassword = "offer_to_save_password";
+  static const String selectItemToFill = "select_item_to_fill";
+
+  //delete account
+  static const String deleteAccountConfirm = "delete_account_confirm";
 }

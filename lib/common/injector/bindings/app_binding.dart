@@ -10,12 +10,12 @@ import 'package:password_keeper/presentation/controllers/screen_capture_controll
 class AppBinding extends Bindings {
   @override
   void dependencies() {
+    Get.put(getIt<AutofillController>());
     Get.put(getIt<AppController>());
 //    Get.put(getIt<StateController>());
     Get.put(getIt<CryptoController>());
     Get.put(getIt<PasswordGenerationController>());
     Get.put(getIt<BiometricController>());
     Get.put(getIt<ScreenCaptureController>());
-    Get.put(getIt<AutofillController>());
   }
 }

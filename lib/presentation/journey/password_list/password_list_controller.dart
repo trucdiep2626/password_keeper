@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -8,6 +6,7 @@ import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/journey/home/home_controller.dart';
 import 'package:password_keeper/presentation/widgets/snack_bar/app_snack_bar.dart';
@@ -29,6 +28,8 @@ class PasswordListController extends GetxController with MixinController {
 
   final RefreshController passwordListController = RefreshController();
   final scrollController = ScrollController();
+
+  final autofillController = Get.find<AutofillController>();
 
   PasswordUseCase passwordUseCase;
   AccountUseCase accountUseCase;
@@ -71,37 +72,6 @@ class PasswordListController extends GetxController with MixinController {
       passwordListController.loadComplete();
     }
   }
-
-  // void _handleList() {
-  //   if (passwords.isEmpty) return;
-  //   for (int i = 0, length = passwords.length; i < length; i++) {
-  //     String name = passwords[i].signInLocation ?? '';
-  //     String tag = name.substring(0, 1).toUpperCase();
-  //
-  //     if (RegExp("[A-Z]").hasMatch(tag)) {
-  //       passwords[i].tagIndex = tag;
-  //     } else {
-  //       passwords[i].tagIndex = "#";
-  //     }
-  //   }
-  //
-  //   passwords.sort((a, b) {
-  //     String aName = a.signInLocation ?? '';
-  //     String bName = b.signInLocation ?? '';
-  //     return aName.toUpperCase().compareTo(bName.toUpperCase());
-  //   });
-
-  // // A-Z sort.
-  // SuspensionUtil.sortListBySuspensionTag(_contacts);
-  //
-  // // show sus tag.
-  // SuspensionUtil.setShowSuspensionStatus(_contacts);
-  //
-  // // add header.
-  // _contacts.insert(0, ContactInfo(name: 'header', tagIndex: '↑'));
-  //
-  // setState(() {});
-  //}
 
   Future<void> getPasswordListLength() async {
     try {
@@ -167,11 +137,18 @@ class PasswordListController extends GetxController with MixinController {
     }
   }
 
+  autofill(PasswordItem passwordItem) async {
+    if (autofillController.forceInteractive ?? false) {
+      autofillController.autofillInstantly(passwordItem);
+    } else {
+      autofillController.autofillWithListOfOneEntry(passwordItem);
+    }
+  }
+
   @override
   void onReady() async {
     await getPasswordListLength();
     await onRefresh();
-    log('fdffdfbdfbdf');
     searchController.addListener(() {
       if (isNullEmpty(searchController.text.trim())) {
         displayPasswords.value = passwords;

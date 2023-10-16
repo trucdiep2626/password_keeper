@@ -49,11 +49,20 @@ class SettingsScreen extends GetView<SettingsController> {
                           autofillController.enableAutofillService.value,
                     ),
                   ),
-                  _buildItem(
-                    onPressed: () =>
-                        Get.toNamed(AppRoutes.changeMasterPassword),
-                    icon: Assets.images.svg.icKey,
-                    title: TranslationConstants.changeMasterPassword.tr,
+                  Obx(
+                    () => autofillController.enableAutofillService.value &&
+                            GetPlatform.isAndroid
+                        ? _buildItem(
+                            onPressed: () async => await autofillController
+                                .setSavingPreference(!autofillController
+                                    .offerToSavePassword.value),
+                            icon: Assets.images.svg.icArchiveAdd,
+                            title: TranslationConstants.offerToSavePassword.tr,
+                            showSwitch: true,
+                            switchValue:
+                                autofillController.offerToSavePassword.value,
+                          )
+                        : const SizedBox.shrink(),
                   ),
                   Obx(
                     () => _buildItem(
@@ -88,6 +97,12 @@ class SettingsScreen extends GetView<SettingsController> {
                         ),
                       )),
                   _buildItem(
+                    onPressed: () =>
+                        Get.toNamed(AppRoutes.changeMasterPassword),
+                    icon: Assets.images.svg.icKey,
+                    title: TranslationConstants.changeMasterPassword.tr,
+                  ),
+                  _buildItem(
                     onPressed: () async => await controller.onTapLock(),
                     icon: Assets.images.svg.icPassword,
                     title: TranslationConstants.lock.tr,
@@ -96,6 +111,12 @@ class SettingsScreen extends GetView<SettingsController> {
                     onPressed: () async => await controller.onTapLogout(),
                     icon: Assets.images.svg.icLogout,
                     title: TranslationConstants.logout.tr,
+                  ),
+                  _buildItem(
+                    onPressed: () async =>
+                        await controller.onTapDeleteAccount(),
+                    icon: Assets.images.svg.icProfileDelete,
+                    title: TranslationConstants.deleteAccount.tr,
                   ),
                 ],
               ),

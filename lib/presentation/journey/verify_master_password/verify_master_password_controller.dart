@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,8 @@ import 'package:password_keeper/common/utils/translations/app_translations.dart'
 import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
+import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
 import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
@@ -32,8 +35,10 @@ class VerifyMasterPasswordController extends GetxController
   RxBool buttonEnable = false.obs;
 
   Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
+
   AccountUseCase accountUseCase;
   LocalUseCase localUseCase;
+  PasswordUseCase passwordUseCase;
 
   final CryptoController _cryptoController = Get.find<CryptoController>();
 
@@ -43,6 +48,7 @@ class VerifyMasterPasswordController extends GetxController
   VerifyMasterPasswordController({
     required this.accountUseCase,
     required this.localUseCase,
+    required this.passwordUseCase,
   });
 
   void checkButtonEnable() {
@@ -124,7 +130,7 @@ class VerifyMasterPasswordController extends GetxController
         //     type: SnackBarType.done);
         // Read all values
 
-        Get.offAllNamed(AppRoutes.main);
+        navigateWhenVerified();
       } else {
         // if (Get.context != null) {
         //   showTopSnackBarError(
@@ -242,12 +248,38 @@ class VerifyMasterPasswordController extends GetxController
         await _cryptoController.setEncKeyEncrypted(profile!.key!);
       }
 
-      Get.offAllNamed(AppRoutes.main);
-    } else {
-      errorText.value = TranslationConstants.loginError.tr;
+      navigateWhenVerified();
     }
 
     rxLoadedButton.value = LoadedType.finish;
+  }
+
+  Future<void> navigateWhenVerified() async {
+    final _autofillController = Get.find<AutofillController>();
+    logger(
+        '-------------- ------${_autofillController.enableAutofillService.value}----${(_autofillController.forceInteractive ?? false)}');
+
+    if (_autofillController.isAutofilling()) {
+      final result = await passwordUseCase.getPasswordList(
+        userId: user?.uid ?? '',
+      );
+      final decryptedList = await _cryptoController.decryptPasswordList(result);
+
+      if (_autofillController.enableAutofillService.value) {
+        if (!(_autofillController.forceInteractive ?? false)) {
+          final matchFound =
+              await _autofillController.autofillWithList(decryptedList);
+          if (matchFound) {
+            return;
+          }
+        }
+      }
+      Get.offAllNamed(AppRoutes.passwordList);
+    } else if (_autofillController.isAutofillSaving()) {
+      Get.offAllNamed(AppRoutes.addEditPassword);
+    } else {
+      Get.offAllNamed(AppRoutes.main);
+    }
   }
 
   @override
@@ -258,5 +290,8 @@ class VerifyMasterPasswordController extends GetxController
     masterPwdFocusNode.addListener(() {
       masterPwdHasFocus.value = masterPwdFocusNode.hasFocus;
     });
+    if (Get.find<BiometricController>().enableBiometricUnlock.value) {
+      await handleBiometricUnlock();
+    }
   }
 }

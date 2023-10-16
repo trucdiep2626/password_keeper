@@ -81,7 +81,7 @@ class AccountRepository {
     await auth.signOut();
   }
 
-  Future<void> deleteAccount() async {
+  Future<void> deleteAccount(String userId) async {
     await auth.currentUser!.delete();
   }
 

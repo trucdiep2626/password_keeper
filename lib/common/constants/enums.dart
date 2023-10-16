@@ -74,3 +74,13 @@ enum FilteredType {
   safe,
   reused,
 }
+
+enum AutofillState {
+  initial,
+  available,
+  missing,
+  requested,
+  modeActive,
+  saving,
+  saved,
+}

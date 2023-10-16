@@ -235,16 +235,7 @@ class PasswordRepository {
     if (response.docs.isEmpty) {
       return <PasswordItem>[];
     } else {
-      List<PasswordItem> passwords = [];
-      for (var item in response.docs) {
-        Map<String, dynamic> password = {};
-        password.addAll({'id': item.id});
-        password.addAll(item.data());
-        PasswordItem passwordItem = PasswordItem.fromJson(password);
-        passwords.add(passwordItem);
-      }
-
-      return passwords;
+      return parsePasswordList(response.docs);
     }
   }
 
@@ -300,16 +291,9 @@ class PasswordRepository {
     if (response.docs.isEmpty) {
       return <PasswordItem>[];
     } else {
-      List<PasswordItem> passwords = [];
-      for (var item in response.docs) {
-        Map<String, dynamic> password = {};
-        password.addAll({'id': item.id});
-        password.addAll(item.data());
-        PasswordItem passwordItem = PasswordItem.fromJson(password);
-        passwords.add(passwordItem);
-      }
 
-      return passwords;
+
+      return parsePasswordList(response.docs);
     }
   }
 
@@ -370,5 +354,36 @@ class PasswordRepository {
 
       await batch.commit(); // Committing after each 500 operations.
     }
+  }
+
+  List<PasswordItem> parsePasswordList(Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> docs)
+  {
+    List<PasswordItem> passwords = [];
+    for (var item in  docs) {
+      Map<String, dynamic> password = {};
+      password.addAll({'id': item.id});
+      password.addAll(item.data());
+      PasswordItem passwordItem = PasswordItem.fromJson(password);
+      passwords.add(passwordItem);
+    }
+
+    return passwords;
+  }
+
+  Future<List<PasswordItem>> getPasswordListByName({required String userId, required String name}) async {
+   final allPasswords = await getPasswordList(userId: userId);
+   final matchedPasswords = <PasswordItem>[];
+
+    for (var password in allPasswords) {
+      if ((password.signInLocation?? '').toUpperCase().contains(name.toUpperCase())
+      ||
+          (password.androidPackageName ?? '').toUpperCase().contains(name.toUpperCase())
+      ) {
+        matchedPasswords.add(password);
+      }
+    }
+
+   return matchedPasswords;
+
   }
 }
