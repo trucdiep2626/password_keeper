@@ -154,4 +154,18 @@ class AccountUseCase {
   Future<void> sendPasswordResetEmail(String email) async {
     await accountRepo.sendPasswordResetEmail(email);
   }
+
+  Future<void> sendChangedMasterPasswordNotice({
+    required String account,
+    required String name,
+    required String updatedAt,
+    required String device,
+  }) async {
+    await accountRepo.sendChangedMasterPasswordNotice(
+      account: account,
+      name: name,
+      updatedAt: updatedAt,
+      device: device,
+    );
+  }
 }

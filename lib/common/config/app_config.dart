@@ -22,4 +22,5 @@ class AppConfig {
   static const String generatedPasswordsCollection = 'generated_passwords';
   static const String passwordsCollection = 'passwords';
   static const String mailCollection = 'mail';
+  static const String devicesCollection = 'devices';
 }

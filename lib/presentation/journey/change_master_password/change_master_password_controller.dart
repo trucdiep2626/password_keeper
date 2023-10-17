@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -223,6 +224,19 @@ class ChangeMasterPasswordController extends GetxController
           userId: user?.uid ?? '',
           passwords: encryptedList,
         );
+
+        //send notice
+        final deviceInfo = await DeviceInfoPlugin().deviceInfo;
+        logger('------------${deviceInfo.data}------------');
+        await accountUsecase.sendChangedMasterPasswordNotice(
+          account: user?.email ?? '',
+          name: user?.displayName ?? '',
+          updatedAt: dateTimeNowToString(),
+          device: '${deviceInfo.data['model']} ${deviceInfo.data['name']}',
+        );
+
+        //update show changed master password notice
+        await passwordUseCase.updateAllLoggedDevice(userId: user?.uid ?? '');
 
         await accountUsecase.lock();
         Get.offAllNamed(AppRoutes.verifyMasterPassword);

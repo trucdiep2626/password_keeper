@@ -113,6 +113,8 @@ dependencies:
       url: https://github.com/kee-org/flutter_autofill_service.git
       ref: master #7d4e54b on Aug 31
 
+  device_info_plus: 9.1.0
+  firebase_messaging: 14.0.1
 
 dev_dependencies:
   #  flutter_test:

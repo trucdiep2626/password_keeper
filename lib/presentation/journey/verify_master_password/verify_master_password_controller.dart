@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -39,6 +40,7 @@ class VerifyMasterPasswordController extends GetxController
   AccountUseCase accountUseCase;
   LocalUseCase localUseCase;
   PasswordUseCase passwordUseCase;
+  FirebaseMessaging fbMessaging;
 
   final CryptoController _cryptoController = Get.find<CryptoController>();
 
@@ -49,6 +51,7 @@ class VerifyMasterPasswordController extends GetxController
     required this.accountUseCase,
     required this.localUseCase,
     required this.passwordUseCase,
+    required this.fbMessaging,
   });
 
   void checkButtonEnable() {
@@ -282,6 +285,37 @@ class VerifyMasterPasswordController extends GetxController
     }
   }
 
+  Future<void> getLoggedDeviceInfo() async {
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+
+    try {
+      final deviceId = await fbMessaging.getToken();
+      final result = await passwordUseCase.getLoggedInDevice(
+        userId: user?.uid ?? '',
+        deviceId: deviceId ?? '',
+      );
+
+      if (result != null) {
+        if (result.showChangedMasterPassword ?? false) {
+          await Get.find<BiometricController>()
+              .onChangedBiometricStorageStatus();
+          await localUseCase.deleteAllSecureData();
+          await passwordUseCase.updateLoggedInDevice(
+            userId: user?.uid ?? '',
+            loggedInDevice: result.copyWith(showChangedMasterPassword: false),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    }
+  }
+
   @override
   void onReady() async {
     super.onReady();
@@ -290,6 +324,9 @@ class VerifyMasterPasswordController extends GetxController
     masterPwdFocusNode.addListener(() {
       masterPwdHasFocus.value = masterPwdFocusNode.hasFocus;
     });
+    if (Get.find<BiometricController>().enableBiometricUnlock.value) {
+      await getLoggedDeviceInfo();
+    }
     if (Get.find<BiometricController>().enableBiometricUnlock.value) {
       await handleBiometricUnlock();
     }

@@ -1,5 +1,6 @@
 import 'package:password_keeper/data/password_repository.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
+import 'package:password_keeper/domain/models/logged_in_device.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 
@@ -139,5 +140,49 @@ class PasswordUseCase {
       userId: userId,
       passwords: passwords,
     );
+  }
+
+  Future<void> addLoggedInDevice({
+    required String userId,
+    required LoggedInDevice loggedInDevice,
+  }) async {
+    await passwordRepository.addLoggedInDevice(
+      userId: userId,
+      loggedInDevice: loggedInDevice,
+    );
+  }
+
+  Future<LoggedInDevice?> getLoggedInDevice({
+    required String userId,
+    required String deviceId,
+  }) async {
+    return passwordRepository.getLoggedInDevice(
+      userId: userId,
+      deviceId: deviceId,
+    );
+  }
+
+  Future<void> updateLoggedInDevice({
+    required String userId,
+    required LoggedInDevice loggedInDevice,
+  }) async {
+    await passwordRepository.updateLoggedInDevice(
+      userId: userId,
+      loggedInDevice: loggedInDevice,
+    );
+  }
+
+  Future<void> deleteLoggedInDevice({
+    required String userId,
+    required String deviceId,
+  }) async {
+    await passwordRepository.deleteLoggedInDevice(
+      userId: userId,
+      deviceId: deviceId,
+    );
+  }
+
+  Future<void> updateAllLoggedDevice({required String userId}) async {
+    await passwordRepository.updateAllLoggedDevice(userId: userId);
   }
 }

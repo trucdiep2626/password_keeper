@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:password_keeper/common/config/app_config.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/generated_password_item.dart';
+import 'package:password_keeper/domain/models/logged_in_device.dart';
 import 'package:password_keeper/domain/models/password_generation_option.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 
@@ -291,8 +292,6 @@ class PasswordRepository {
     if (response.docs.isEmpty) {
       return <PasswordItem>[];
     } else {
-
-
       return parsePasswordList(response.docs);
     }
   }
@@ -356,10 +355,10 @@ class PasswordRepository {
     }
   }
 
-  List<PasswordItem> parsePasswordList(Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> docs)
-  {
+  List<PasswordItem> parsePasswordList(
+      Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> docs) {
     List<PasswordItem> passwords = [];
-    for (var item in  docs) {
+    for (var item in docs) {
       Map<String, dynamic> password = {};
       password.addAll({'id': item.id});
       password.addAll(item.data());
@@ -370,20 +369,108 @@ class PasswordRepository {
     return passwords;
   }
 
-  Future<List<PasswordItem>> getPasswordListByName({required String userId, required String name}) async {
-   final allPasswords = await getPasswordList(userId: userId);
-   final matchedPasswords = <PasswordItem>[];
+  Future<List<PasswordItem>> getPasswordListByName(
+      {required String userId, required String name}) async {
+    final allPasswords = await getPasswordList(userId: userId);
+    final matchedPasswords = <PasswordItem>[];
 
     for (var password in allPasswords) {
-      if ((password.signInLocation?? '').toUpperCase().contains(name.toUpperCase())
-      ||
-          (password.androidPackageName ?? '').toUpperCase().contains(name.toUpperCase())
-      ) {
+      if ((password.signInLocation ?? '')
+              .toUpperCase()
+              .contains(name.toUpperCase()) ||
+          (password.androidPackageName ?? '')
+              .toUpperCase()
+              .contains(name.toUpperCase())) {
         matchedPasswords.add(password);
       }
     }
 
-   return matchedPasswords;
+    return matchedPasswords;
+  }
 
+  Future<void> addLoggedInDevice({
+    required String userId,
+    required LoggedInDevice loggedInDevice,
+  }) async {
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.devicesCollection)
+        .doc(loggedInDevice.deviceId)
+        .set(loggedInDevice.toJson());
+  }
+
+  Future<LoggedInDevice?> getLoggedInDevice({
+    required String userId,
+    required String deviceId,
+  }) async {
+    final response = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.devicesCollection)
+        .doc(deviceId)
+        .get();
+
+    if (response.data() == null) {
+      return null;
+    }
+    Map<String, dynamic> deviceJson = {};
+    deviceJson.addAll({'device_id': deviceId});
+    deviceJson.addAll(response.data()!);
+
+    return LoggedInDevice.fromJson(deviceJson);
+  }
+
+  Future<void> updateLoggedInDevice({
+    required String userId,
+    required LoggedInDevice loggedInDevice,
+  }) async {
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.devicesCollection)
+        .doc(loggedInDevice.deviceId)
+        .update(loggedInDevice.toJson());
+  }
+
+  Future<void> deleteLoggedInDevice({
+    required String userId,
+    required String deviceId,
+  }) async {
+    await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.devicesCollection)
+        .doc(deviceId)
+        .delete();
+  }
+
+  Future<void> updateAllLoggedDevice({required String userId}) async {
+    final loggedInDeviceCollection = await db
+        .collection(AppConfig.userCollection)
+        .doc(userId)
+        .collection(AppConfig.devicesCollection)
+        .get();
+    final totalDocs = loggedInDeviceCollection.docs.length;
+    final batches =
+        (totalDocs / 500).ceil(); // Calculate how many batches needed
+
+    for (var i = 0; i < batches; i++) {
+      // Creating a new batch for each bunch of 500 documents
+      final batch = db.batch();
+      final docs = loggedInDeviceCollection.docs.skip(i * 500).take(500);
+      int j = i * 500;
+      for (final doc in docs) {
+        final docRef = db
+            .collection(AppConfig.userCollection)
+            .doc(userId)
+            .collection(AppConfig.devicesCollection)
+            .doc(doc.id);
+        batch.update(docRef, {'show_changed_master_password': true});
+        j++;
+      }
+
+      await batch.commit(); // Committing after each 500 operations.
+    }
   }
 }
