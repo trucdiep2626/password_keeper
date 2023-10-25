@@ -168,4 +168,16 @@ class AccountUseCase {
       device: device,
     );
   }
+
+  Future<void> handleWhenMasterPasswordChanged({
+    required String userId,
+    required String deviceToken,
+    required Function handleLogout,
+  }) async {
+    await accountRepo.handleWhenMasterPasswordChanged(
+      userId: userId,
+      deviceToken: deviceToken,
+      handleLogout: handleLogout,
+    );
+  }
 }

@@ -44,7 +44,10 @@ void configLocator() {
       () => AppController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<SplashController>(
       () => SplashController(accountUseCase: getIt<AccountUseCase>()));
-  getIt.registerFactory<MainController>(() => MainController());
+  getIt.registerFactory<MainController>(() => MainController(
+        accountUseCase: getIt<AccountUseCase>(),
+        fbMessaging: getIt<FirebaseMessaging>(),
+      ));
   getIt.registerFactory<HomeController>(() => HomeController(
         accountUsecase: getIt<AccountUseCase>(),
         passwordUseCase: getIt<PasswordUseCase>(),

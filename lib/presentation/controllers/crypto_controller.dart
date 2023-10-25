@@ -905,7 +905,7 @@ class CryptoController extends GetxController with MixinController {
   Uint8List hmac(
       {required Uint8List value,
       required Uint8List key,
-      CryptoHashAlgorithm? algorithm}) {
+      CryptoHashAlgorithm? algorithm,}) {
     // var provider = MacAlgorithmProvider.OpenAlgorithm(ToMacAlgorithm(algorithm));
     // var hasher = provider.CreateHash(key);
     // hasher.Append(value);

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:password_keeper/common/config/app_config.dart';
 
 class FirebaseSetup {
@@ -10,6 +11,12 @@ class FirebaseSetup {
 
   Future<void> setUp() async {
     await Firebase.initializeApp();
+
+    FirebaseDatabase database;
+    database = FirebaseDatabase.instance;
+    database.setPersistenceEnabled(true);
+    database.setPersistenceCacheSizeBytes(10000000); // 10MB cache is enough
+
     userCollection =
         FirebaseFirestore.instance.collection(AppConfig.userCollection);
     // personalCollection = FirebaseFirestore.instance
