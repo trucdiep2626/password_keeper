@@ -40,8 +40,12 @@ GetIt getIt = GetIt.instance;
 
 void configLocator() {
   /// Controllers
-  getIt.registerLazySingleton<AppController>(
-      () => AppController(accountUseCase: getIt<AccountUseCase>()));
+  getIt.registerLazySingleton<AppController>(() => AppController(
+        accountUseCase: getIt<AccountUseCase>(),
+        passwordUseCase: getIt<PasswordUseCase>(),
+        fbMessaging: getIt<FirebaseMessaging>(),
+        db: getIt<FirebaseFirestore>(),
+      ));
   getIt.registerFactory<SplashController>(
       () => SplashController(accountUseCase: getIt<AccountUseCase>()));
   getIt.registerFactory<MainController>(() => MainController(

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_keeper/common/config/app_config.dart';
 import 'package:password_keeper/common/constants/constants.dart';
-import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/domain/models/account.dart';
 
 class AccountRepository {
@@ -206,25 +205,6 @@ class AccountRepository {
           device: device,
         ),
       },
-    });
-  }
-
-  Future<void> handleWhenMasterPasswordChanged({
-    required String userId,
-    required String deviceToken,
-    required Function handleLogout,
-  }) async {
-    await db
-        .collection(AppConfig.userCollection)
-        .doc(userId)
-        .collection(AppConfig.devicesCollection)
-        .doc(deviceToken)
-        .snapshots()
-        .listen((event) {
-      final data = event.data();
-      if (isNullEmpty(data) && data!['show_changed_master_password']) {
-        handleLogout();
-      }
     });
   }
 }

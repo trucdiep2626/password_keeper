@@ -87,6 +87,11 @@ class AccountUseCase {
     await localRepo.clearBiometricStorage();
   }
 
+  Future<void> forceLock() async {
+    await localRepo.deleteAllSecureData();
+    await localRepo.clearBiometricStorage();
+  }
+
   Future<void> lock() async {
     //  await localRepo.clearLocalData();
     await localRepo.deleteSecureData(key: LocalStorageKey.encKeyKey);
@@ -166,18 +171,6 @@ class AccountUseCase {
       name: name,
       updatedAt: updatedAt,
       device: device,
-    );
-  }
-
-  Future<void> handleWhenMasterPasswordChanged({
-    required String userId,
-    required String deviceToken,
-    required Function handleLogout,
-  }) async {
-    await accountRepo.handleWhenMasterPasswordChanged(
-      userId: userId,
-      deviceToken: deviceToken,
-      handleLogout: handleLogout,
     );
   }
 }

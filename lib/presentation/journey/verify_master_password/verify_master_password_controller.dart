@@ -223,6 +223,12 @@ class VerifyMasterPasswordController extends GetxController
         return;
       }
 
+      final deviceId = await FirebaseMessaging.instance.getToken();
+      await passwordUseCase.deleteLoggedInDevice(
+        userId: user?.uid ?? '',
+        deviceId: deviceId ?? '',
+      );
+
       await accountUseCase.signOut();
       Get.offAllNamed(AppRoutes.login);
     } catch (e) {
@@ -258,27 +264,27 @@ class VerifyMasterPasswordController extends GetxController
   }
 
   Future<void> navigateWhenVerified() async {
-    final _autofillController = Get.find<AutofillController>();
+    final autofillController = Get.find<AutofillController>();
     logger(
-        '-------------- ------${_autofillController.enableAutofillService.value}----${(_autofillController.forceInteractive ?? false)}');
+        '-------------- ------${autofillController.enableAutofillService.value}----${(autofillController.forceInteractive ?? false)}');
 
-    if (_autofillController.isAutofilling()) {
+    if (autofillController.isAutofilling()) {
       final result = await passwordUseCase.getPasswordList(
         userId: user?.uid ?? '',
       );
       final decryptedList = await _cryptoController.decryptPasswordList(result);
 
-      if (_autofillController.enableAutofillService.value) {
-        if (!(_autofillController.forceInteractive ?? false)) {
+      if (autofillController.enableAutofillService.value) {
+        if (!(autofillController.forceInteractive ?? false)) {
           final matchFound =
-              await _autofillController.autofillWithList(decryptedList);
+              await autofillController.autofillWithList(decryptedList);
           if (matchFound) {
             return;
           }
         }
       }
       Get.offAllNamed(AppRoutes.passwordList);
-    } else if (_autofillController.isAutofillSaving()) {
+    } else if (autofillController.isAutofillSaving()) {
       Get.offAllNamed(AppRoutes.addEditPassword);
     } else {
       Get.offAllNamed(AppRoutes.main);
