@@ -7,7 +7,6 @@ import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/status_bar_style/status_bar_style_type.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
-import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 
 class SplashController extends GetxController with MixinController {
@@ -19,7 +18,7 @@ class SplashController extends GetxController with MixinController {
     super.onInit();
     setStatusBarStyle(statusBarStyleType: StatusBarStyleType.dark);
 
-  //  unawaited(Get.find<AutofillController>().refreshAutofilll());
+    //  unawaited(Get.find<AutofillController>().refreshAutofilll());
   }
 
   @override
@@ -43,13 +42,19 @@ class SplashController extends GetxController with MixinController {
         if (!user.emailVerified) {
           Get.offAndToNamed(AppRoutes.verifyEmail);
         } else {
-          final profile = await accountUseCase.getProfile(userId: user.uid);
-          if (profile != null) {
-            if (Get.currentRoute == AppRoutes.splash) {
-              Get.offAndToNamed(AppRoutes.verifyMasterPassword);
+          try {
+            final profile = await accountUseCase.getProfile(userId: user.uid);
+            if (profile != null) {
+              if (Get.currentRoute == AppRoutes.splash) {
+                Get.offAndToNamed(AppRoutes.verifyMasterPassword);
+              }
+            } else {
+              Get.offAndToNamed(AppRoutes.createMasterPassword);
             }
-          } else {
-            Get.offAndToNamed(AppRoutes.createMasterPassword);
+          } on FirebaseException catch (e) {
+            if (e.code == 'permission-denied') {
+              Get.offAndToNamed(AppRoutes.login);
+            }
           }
         }
       } else {

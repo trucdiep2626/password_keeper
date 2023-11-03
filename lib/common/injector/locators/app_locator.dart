@@ -68,8 +68,12 @@ void configLocator() {
         accountUsecase: getIt<AccountUseCase>(),
         passwordUseCase: getIt<PasswordUseCase>(),
       ));
-  getIt.registerFactory<CreateMasterPasswordController>(() =>
-      CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<CreateMasterPasswordController>(
+      () => CreateMasterPasswordController(
+            accountUsecase: getIt<AccountUseCase>(),
+            passwordUseCase: getIt<PasswordUseCase>(),
+            fbMessaging: getIt<FirebaseMessaging>(),
+          ));
   getIt.registerFactory<ChangeMasterPasswordController>(
       () => ChangeMasterPasswordController(
             accountUsecase: getIt<AccountUseCase>(),

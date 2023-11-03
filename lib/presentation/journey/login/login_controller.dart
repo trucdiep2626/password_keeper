@@ -93,11 +93,15 @@ class LoginController extends GetxController with MixinController {
           Get.toNamed(AppRoutes.verifyEmail);
         }
         //  }
-      } on FirebaseAuthException catch (e) {
-        handleFirebaseException(
-          code: e.code,
-          isSignIn: true,
-        );
+      } on FirebaseException catch (e) {
+        if (e.code == 'permission-denied') {
+          Get.offAndToNamed(AppRoutes.createMasterPassword);
+        } else {
+          handleFirebaseException(
+            code: e.code,
+            isSignIn: true,
+          );
+        }
       } finally {
         rxLoadedButton.value = LoadedType.finish;
       }
@@ -138,11 +142,15 @@ class LoginController extends GetxController with MixinController {
               Get.context!, TranslationConstants.unknownError.tr);
         }
       }
-    } on FirebaseAuthException catch (e) {
-      handleFirebaseException(
-        code: e.code,
-        isSignIn: true,
-      );
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        Get.offAndToNamed(AppRoutes.createMasterPassword);
+      } else {
+        handleFirebaseException(
+          code: e.code,
+          isSignIn: true,
+        );
+      }
     } finally {
       rxLoadedGoogleButton.value = LoadedType.finish;
     }

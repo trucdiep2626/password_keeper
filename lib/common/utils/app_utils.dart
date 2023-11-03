@@ -101,6 +101,7 @@ void handleFirebaseException({
     case 'weak-password':
       message = TranslationConstants.weakPasswordError.tr;
       break;
+
     default:
       if (isSignIn) {
         message = TranslationConstants.loginError.tr;
