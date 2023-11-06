@@ -18,7 +18,7 @@ class AccountRepository {
 
   Stream<User?> get authState => FirebaseAuth.instance.authStateChanges();
 
-  Future<void> signUpWithEmail({
+  Future<UserCredential> signUpWithEmail({
     required String fullname,
     required String email,
     required String password,
@@ -28,22 +28,29 @@ class AccountRepository {
       password: password,
     );
     await user?.updateDisplayName(fullname);
+
+    return newUser;
   }
 
-  Future<void> loginWithEmail({
+  Future<UserCredential> loginWithEmail({
     required String email,
     required String password,
   }) async {
-    await auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      return await auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   // Future<AuthCredential?> loginWithAuthCredential(
 
-  Future<void> sendEmailVerification() async {
-    await auth.currentUser!.sendEmailVerification();
+  Future<void> sendEmailVerification(
+      [ActionCodeSettings? actionCodeSettings]) async {
+    await auth.currentUser?.sendEmailVerification(actionCodeSettings);
   }
 
   Future<AuthCredential?> signInWithGoogle() async {
@@ -77,12 +84,12 @@ class AccountRepository {
   }
 
   Future<void> signOut() async {
-    await GoogleSignIn().signOut();
+    // await GoogleSignIn().signOut();
     await auth.signOut();
   }
 
-  Future<void> deleteAccount(String userId) async {
-    await auth.currentUser!.delete();
+  Future<void> deleteAccount() async {
+    await auth.currentUser?.delete();
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
@@ -90,7 +97,7 @@ class AccountRepository {
   }
 
   Future createUser(Account account) async {
-    await db
+    return await db
         .collection(AppConfig.userCollection)
         .doc(account.userId)
         .collection(AppConfig.profileCollection)
@@ -113,7 +120,10 @@ class AccountRepository {
     final account = await getProfile(userId: userId);
 
     if (account != null) {
-      await editProfile(account.copyWith(allowScreenCapture: value));
+      await editProfile(account.copyWith(
+        allowScreenCapture: value,
+        userId: userId, // for testing
+      ));
     }
   }
 
@@ -130,7 +140,10 @@ class AccountRepository {
     final account = await getProfile(userId: userId);
 
     if (account != null) {
-      await editProfile(account.copyWith(timeoutSetting: timeout));
+      await editProfile(account.copyWith(
+        timeoutSetting: timeout,
+        userId: userId, // for testing
+      ));
     }
   }
 
@@ -164,12 +177,12 @@ class AccountRepository {
     return profile?.masterPasswordHint;
   }
 
-  Future<void> sendPasswordHint(
+  Future<DocumentReference<Map<String, dynamic>>> sendPasswordHint(
       {required String email, required String userId}) async {
     final masterPasswordHint = await getPasswordHint(userId: userId);
 
     if (masterPasswordHint == null) {
-      await db.collection(AppConfig.mailCollection).add({
+      return await db.collection(AppConfig.mailCollection).add({
         "to": email,
         "message": {
           "subject": Constants.notSetHintMailTitle,
@@ -177,7 +190,7 @@ class AccountRepository {
         },
       });
     } else {
-      await db.collection(AppConfig.mailCollection).add({
+      return await db.collection(AppConfig.mailCollection).add({
         "to": email,
         "message": {
           "subject": Constants.masterPasswordHintMailTitle,
@@ -188,13 +201,14 @@ class AccountRepository {
     }
   }
 
-  Future<void> sendChangedMasterPasswordNotice({
+  Future<DocumentReference<Map<String, dynamic>>>
+      sendChangedMasterPasswordNotice({
     required String account,
     required String name,
     required String updatedAt,
     required String device,
   }) async {
-    await db.collection(AppConfig.mailCollection).add({
+    return await db.collection(AppConfig.mailCollection).add({
       "to": account,
       "message": {
         "subject": Constants.changedMasterPasswordMailTitle,

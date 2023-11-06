@@ -8,6 +8,17 @@ class GeneratedPasswordItem {
     this.createdAt,
   });
 
+  GeneratedPasswordItem copyWith({
+    String? password,
+    String? id,
+    int? createdAt,
+  }) =>
+      GeneratedPasswordItem(
+        password: password ?? this.password,
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+      );
+
   GeneratedPasswordItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     password = json['password'];

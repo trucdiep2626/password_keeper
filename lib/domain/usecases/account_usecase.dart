@@ -50,7 +50,7 @@ class AccountUseCase {
     required String email,
     required String password,
   }) async {
-    return await accountRepo.signUpWithEmail(
+    await accountRepo.signUpWithEmail(
       email: email,
       password: password,
       fullname: fullname,
@@ -103,7 +103,7 @@ class AccountUseCase {
   }
 
   Future<void> deleteAccount(String userId) async {
-    await accountRepo.deleteAccount(userId);
+    await accountRepo.deleteAccount();
     await localRepo.deleteAllSecureData();
     await localRepo.clearBiometricStorage();
   }

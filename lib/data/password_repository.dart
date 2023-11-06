@@ -42,11 +42,11 @@ class PasswordRepository {
     }
   }
 
-  Future<void> addGeneratedPassword({
+  Future<DocumentReference<Map<String, dynamic>>> addGeneratedPassword({
     required String userId,
     required GeneratedPasswordItem passwordItem,
   }) async {
-    await db
+    return await db
         .collection(AppConfig.userCollection)
         .doc(userId)
         .collection(AppConfig.generatedPasswordsCollection)
@@ -182,18 +182,20 @@ class PasswordRepository {
             .collection(AppConfig.generatedPasswordsCollection)
             .doc(doc.id);
         batch.update(docRef, passwords[j].toJson());
-        j++;
+        if (j < totalPwdDocs) {
+          j++;
+        }
       }
 
       await batch.commit(); // Committing after each 500 operations.
     }
   }
 
-  Future<void> addPasswordItem({
+  Future<DocumentReference<Map<String, dynamic>>> addPasswordItem({
     required String userId,
     required PasswordItem passwordItem,
   }) async {
-    await db
+    return await db
         .collection(AppConfig.userCollection)
         .doc(userId)
         .collection(AppConfig.passwordsCollection)
@@ -348,7 +350,9 @@ class PasswordRepository {
             .collection(AppConfig.passwordsCollection)
             .doc(doc.id);
         batch.update(docRef, passwords[j].toJson());
-        j++;
+        if (j < totalPwdDocs) {
+          j++;
+        }
       }
 
       await batch.commit(); // Committing after each 500 operations.
@@ -467,7 +471,9 @@ class PasswordRepository {
             .collection(AppConfig.devicesCollection)
             .doc(doc.id);
         batch.update(docRef, {'show_changed_master_password': true});
-        j++;
+        if (j < totalDocs) {
+          j++;
+        }
       }
 
       await batch.commit(); // Committing after each 500 operations.

@@ -76,7 +76,7 @@ class PasswordUseCase {
     required String userId,
     required PasswordItem passwordItem,
   }) async {
-    return await passwordRepository.addPasswordItem(
+    await passwordRepository.addPasswordItem(
       userId: userId,
       passwordItem: passwordItem,
     );
