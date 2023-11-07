@@ -214,4 +214,8 @@ const enString = {
 
   //delete account
   "delete_account_confirm": "Are you sure you want to delete this account?",
+
+  "device_security_alert": "Device Security Alert",
+  "detect_root":
+      "You're running this application on a rooted device. This may pose serious security risks. Please consider using a non-rooted device for a safer user experience"
 };

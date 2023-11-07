@@ -231,4 +231,7 @@ class TranslationConstants {
 
   //delete account
   static const String deleteAccountConfirm = "delete_account_confirm";
+
+  static const String deviceSecurityAlert = "device_security_alert";
+  static const String detectRoot = "detect_root";
 }
