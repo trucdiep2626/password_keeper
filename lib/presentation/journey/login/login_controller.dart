@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
+import 'package:password_keeper/domain/models/logged_in_device.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';
 
@@ -29,10 +32,16 @@ class LoginController extends GetxController with MixinController {
   Rx<LoadedType> rxLoadedGoogleButton = LoadedType.finish.obs;
 
   AccountUseCase accountUsecase;
+  PasswordUseCase passwordUseCase;
+  FirebaseMessaging fbMessaging;
 
   RxBool showPassword = false.obs;
 
-  LoginController({required this.accountUsecase});
+  LoginController({
+    required this.fbMessaging,
+    required this.accountUsecase,
+    required this.passwordUseCase,
+  });
 
   User? get user => accountUsecase.user;
 
@@ -75,6 +84,7 @@ class LoginController extends GetxController with MixinController {
               await accountUsecase.getProfile(userId: user?.uid ?? '');
 
           if (profile != null) {
+            await addLoggedInDevice();
             Get.toNamed(AppRoutes.verifyMasterPassword);
           } else {
             Get.toNamed(AppRoutes.createMasterPassword);
@@ -83,11 +93,15 @@ class LoginController extends GetxController with MixinController {
           Get.toNamed(AppRoutes.verifyEmail);
         }
         //  }
-      } on FirebaseAuthException catch (e) {
-        handleFirebaseException(
-          code: e.code,
-          isSignIn: true,
-        );
+      } on FirebaseException catch (e) {
+        if (e.code == 'permission-denied') {
+          Get.offAndToNamed(AppRoutes.createMasterPassword);
+        } else {
+          handleFirebaseException(
+            code: e.code,
+            isSignIn: true,
+          );
+        }
       } finally {
         rxLoadedButton.value = LoadedType.finish;
       }
@@ -117,6 +131,7 @@ class LoginController extends GetxController with MixinController {
             await accountUsecase.getProfile(userId: user?.uid ?? '');
 
         if (profile != null) {
+          await addLoggedInDevice();
           Get.toNamed(AppRoutes.verifyMasterPassword);
         } else {
           Get.toNamed(AppRoutes.createMasterPassword);
@@ -127,14 +142,26 @@ class LoginController extends GetxController with MixinController {
               Get.context!, TranslationConstants.unknownError.tr);
         }
       }
-    } on FirebaseAuthException catch (e) {
-      handleFirebaseException(
-        code: e.code,
-        isSignIn: true,
-      );
+    } on FirebaseException catch (e) {
+      if (e.code == 'permission-denied') {
+        Get.offAndToNamed(AppRoutes.createMasterPassword);
+      } else {
+        handleFirebaseException(
+          code: e.code,
+          isSignIn: true,
+        );
+      }
     } finally {
       rxLoadedGoogleButton.value = LoadedType.finish;
     }
+  }
+
+  Future<void> addLoggedInDevice() async {
+    final deviceId = await fbMessaging.getToken();
+    await passwordUseCase.addLoggedInDevice(
+      userId: user?.uid ?? '',
+      loggedInDevice: LoggedInDevice(deviceId: deviceId),
+    );
   }
 
   void onChangedEmail() {

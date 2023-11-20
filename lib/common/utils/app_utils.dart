@@ -101,6 +101,7 @@ void handleFirebaseException({
     case 'weak-password':
       message = TranslationConstants.weakPasswordError.tr;
       break;
+
     default:
       if (isSignIn) {
         message = TranslationConstants.loginError.tr;
@@ -156,4 +157,11 @@ Future<bool> checkConnectivity() async {
     return false;
   }
   return true;
+}
+
+String dateTimeNowToString() {
+  const offset = 7;
+  DateTime now = DateTime.now().toUtc().add(const Duration(hours: offset));
+  String formattedDate = DateFormat('hh:mm:ss dd-MM-yyyy').format(now);
+  return '$formattedDate (UTC+$offset)';
 }

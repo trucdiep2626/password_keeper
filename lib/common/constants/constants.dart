@@ -31,7 +31,7 @@ class Constants {
   static const int maxGeneratedPasswordInHistory = 100;
 
   //default timeout is 20 minutes
-  static const int timeout = 60*20;
+  static const int timeout = 60 * 20;
 
   static const String notSetHintMailTitle =
       "Hint for Master Password is not set";
@@ -51,4 +51,21 @@ class Constants {
       "<p>Stay secured! <br>Password Keeper team.</p>";
 
   static const String storageFileName = "password_keeper";
+
+  static const String changedMasterPasswordMailTitle =
+      "Your master password has been changed";
+
+  static changedMasterPasswordMailTemplate({
+    required String account,
+    required String updatedAt,
+    required String name,
+    required String device,
+  }) =>
+      "<p>Dear ${name},</p>"
+      "<p>We are writing to let you know that your master password has been changed.</p>"
+      "<p><strong>Account:</strong> ${account}</p>"
+      "<p><strong>Time:</strong> ${updatedAt} (UTC+00)</p>"
+      "<p><strong>Device:</strong> ${device}</p>"
+      "<p>If you made this change, please ignore this message.</p>"
+      "<p>Stay secured! <br>Password Keeper team.</p>";
 }

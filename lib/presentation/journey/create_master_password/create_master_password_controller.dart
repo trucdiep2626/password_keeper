@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -8,7 +9,9 @@ import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/password_helper.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/models/account.dart';
+import 'package:password_keeper/domain/models/logged_in_device.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 
@@ -45,8 +48,15 @@ class CreateMasterPasswordController extends GetxController
       PasswordStrengthLevel.veryWeak.obs;
 
   AccountUseCase accountUsecase;
+  PasswordUseCase passwordUseCase;
+  FirebaseMessaging fbMessaging;
+
   final _cryptoController = Get.find<CryptoController>();
-  CreateMasterPasswordController({required this.accountUsecase});
+  CreateMasterPasswordController({
+    required this.accountUsecase,
+    required this.passwordUseCase,
+    required this.fbMessaging,
+  });
 
   void checkButtonEnable() {
     if (masterPwdController.text.isNotEmpty &&
@@ -122,6 +132,7 @@ class CreateMasterPasswordController extends GetxController
         await accountUsecase.createUser(account);
 
         debugPrint('đăng ký thành công');
+        await addLoggedInDevice();
         Get.offAllNamed(AppRoutes.verifyMasterPassword);
       } catch (e) {
         debugPrint(e.toString());
@@ -130,6 +141,14 @@ class CreateMasterPasswordController extends GetxController
         rxLoadedButton.value = LoadedType.finish;
       }
     }
+  }
+
+  Future<void> addLoggedInDevice() async {
+    final deviceId = await fbMessaging.getToken();
+    await passwordUseCase.addLoggedInDevice(
+      userId: accountUsecase.user?.uid ?? '',
+      loggedInDevice: LoggedInDevice(deviceId: deviceId),
+    );
   }
 
   void onEditingCompletePwd() {

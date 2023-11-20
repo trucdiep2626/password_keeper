@@ -48,7 +48,8 @@ class PasswordGenerationController extends GetxController with MixinController {
   //   return wordList.join(option.wordSeparator);
   // }
 
-  Future<String> generatePassword(PasswordGenerationOptions option) async {
+  Future<String> generatePassword(
+      PasswordGenerationOptions passwordGenerationOption) async {
     // Overload defaults with given option
     // option.Merge(_defaultoption);
     // if (option.Type == PasswordGenerationOptions.TYPE_PASSPHRASE)
@@ -57,8 +58,8 @@ class PasswordGenerationController extends GetxController with MixinController {
     // }
 
     // Sanitize
-    sanitizePasswordLength(
-      option: option,
+    final option = sanitizePasswordLength(
+      option: passwordGenerationOption,
       forGeneration: true,
     );
 
@@ -161,10 +162,11 @@ class PasswordGenerationController extends GetxController with MixinController {
     }
   }
 
-  void sanitizePasswordLength({
+  PasswordGenerationOptions sanitizePasswordLength({
     required PasswordGenerationOptions option,
     required bool forGeneration,
   }) {
+    final updatedOption = option;
     var minUppercaseCalc = 0;
     var minLowercaseCalc = 0;
     var minNumberCalc = option.minNumbers ?? 0;
@@ -196,23 +198,25 @@ class PasswordGenerationController extends GetxController with MixinController {
 
     // This should never happen but is a final safety net
     if ((option.pwdLength ?? 0) < 1) {
-      option.pwdLength = 10;
+      updatedOption.pwdLength = 10;
     }
 
     var minLength =
         minUppercaseCalc + minLowercaseCalc + minNumberCalc + minSpecialCalc;
     // Normalize and Generation both require this modification
     if ((option.pwdLength ?? 0) < minLength) {
-      option.pwdLength = minLength;
+      updatedOption.pwdLength = minLength;
     }
 
     // Apply other changes if the option object passed in is for generation
     if (forGeneration) {
-      option.minUppercase = minUppercaseCalc;
-      option.minLowercase = minLowercaseCalc;
-      option.minNumbers = minNumberCalc;
-      option.minSpecial = minSpecialCalc;
+      updatedOption.minUppercase = minUppercaseCalc;
+      updatedOption.minLowercase = minLowercaseCalc;
+      updatedOption.minNumbers = minNumberCalc;
+      updatedOption.minSpecial = minSpecialCalc;
     }
+
+    return updatedOption;
   }
 
   Future<bool> matchesPrevious(

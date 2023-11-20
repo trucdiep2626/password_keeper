@@ -84,6 +84,14 @@ class GeneratedPasswordHistoryScreen
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppDimens.radius_12),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.05),
+              offset: const Offset(0, 0),
+              blurRadius: 4,
+              spreadRadius: 1,
+            ),
+          ],
         ),
         child: Row(
           children: [

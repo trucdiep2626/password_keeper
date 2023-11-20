@@ -1,15 +1,21 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:password_keeper/common/config/app_config.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/domain/models/logged_in_device.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
+import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:receive_intent/receive_intent.dart';
 
@@ -23,14 +29,26 @@ class AppController extends SuperController with MixinController {
 
   StreamSubscription? _receiveIntentSubscription;
 
-//  late final Rx<User?> firebaseUser;
+  StreamSubscription? _changedMasterPwdSubscription;
+
+  late final Rx<User?> firebaseUser;
   late final GoogleSignInAccount googleUser;
+
+  User? get user => accountUseCase.user;
 
   RxBool isOpenApp = true.obs;
 
   AccountUseCase accountUseCase;
+  PasswordUseCase passwordUseCase;
+  FirebaseFirestore db;
+  FirebaseMessaging fbMessaging;
 
-  AppController({required this.accountUseCase});
+  AppController({
+    required this.accountUseCase,
+    required this.passwordUseCase,
+    required this.fbMessaging,
+    required this.db,
+  });
 
   final _autofillController = Get.find<AutofillController>();
 
@@ -49,26 +67,14 @@ class AppController extends SuperController with MixinController {
   void onReady() {
     super.onReady();
 
-    //   firebaseUser = Rx<User?>(accountUseCase.user);
-    // firebaseUser.bindStream(accountUseCase.authState);
-    // _navigateScreen(firebaseUser.value);
-    //ever(firebaseUser, _navigateScreen);
+    firebaseUser = Rx<User?>(accountUseCase.user);
+    firebaseUser.bindStream(accountUseCase.authState);
+    _handleChangeMasterPwd(firebaseUser.value);
+    ever(firebaseUser, _handleChangeMasterPwd);
   }
 
   void _initReceiveIntentSubscription() async {
     logger('initReceiveIntentSubscription');
-    // final intent = await ReceiveIntent.getInitialIntent();
-    // logger('Received intent: $intent');
-    // if (Get.context == null) {
-    //   logger(
-    //       'Nav context unexpectedly missing. Autofill navigation is likely to fail in strange ways.');
-    //   return;
-    // }
-    // final mode = intent?.extra?['autofill_mode'];
-    // if (mode?.startsWith('/autofill') ?? false) {
-    //   _autofillController.refreshAutofilll();
-    // }
-
     _receiveIntentSubscription =
         ReceiveIntent.receivedIntentStream.listen((Intent? intent) {
       logger('Received intent: $intent');
@@ -89,24 +95,45 @@ class AppController extends SuperController with MixinController {
   }
 
   Future<void> navigateWhenVerified() async {
-    final _autofillController = Get.find<AutofillController>();
+    final autofillController = Get.find<AutofillController>();
     logger(
-        '--------------${_autofillController.autofillState.value} ------${_autofillController.enableAutofillService.value}----${(_autofillController.forceInteractive ?? false)}');
+        '--------------${autofillController.autofillState.value} ------${autofillController.enableAutofillService.value}----${(autofillController.forceInteractive ?? false)}');
 
-    if (_autofillController.isAutofillSaving()) {
+    if (autofillController.isAutofillSaving()) {
       Get.toNamed(AppRoutes.addEditPassword);
     } else {
       Get.offAllNamed(AppRoutes.main);
     }
   }
 
-  _navigateScreen(User? user) {
-    // if (user == null) {
-    //   Get.offAllNamed(AppRoutes.login);
-    // }
-    // else if (!user.emailVerified) {
-    //   Get.offAllNamed(AppRoutes.verifyEmail);
-    // }
+  _handleChangeMasterPwd(User? user) async {
+    if (user != null && user.emailVerified) {
+      log('init changed master pwd subscription');
+      final deviceId = await fbMessaging.getToken();
+      _changedMasterPwdSubscription = db
+          .collection(AppConfig.userCollection)
+          .doc(user.uid)
+          .collection(AppConfig.devicesCollection)
+          .doc(deviceId)
+          .snapshots()
+          .listen((event) async {
+        final data = event.data();
+        if (!isNullEmpty(data) && data!['show_changed_master_password']) {
+          log('  changed master pwd  ');
+          await accountUseCase.forceLock();
+          await passwordUseCase.updateLoggedInDevice(
+            userId: user.uid,
+            loggedInDevice: LoggedInDevice(
+                deviceId: deviceId ?? '', showChangedMasterPassword: false),
+          );
+          if (Get.currentRoute != AppRoutes.verifyMasterPassword) {
+            Get.offAllNamed(AppRoutes.verifyMasterPassword);
+          }
+        }
+      });
+    } else if (user == null) {
+      _changedMasterPwdSubscription?.cancel();
+    }
   }
 
   // a method to get which connection result, if you we connected to internet or no if yes then which network
@@ -145,6 +172,7 @@ class AppController extends SuperController with MixinController {
     if (GetPlatform.isAndroid) unawaited(_receiveIntentSubscription?.cancel());
     //stop listening to network state when app is closed
     _streamSubscription.cancel();
+    _changedMasterPwdSubscription?.cancel();
   }
 
   @override
@@ -168,6 +196,7 @@ class AppController extends SuperController with MixinController {
 
   @override
   void onResumed() async {
+    Get.find<BiometricController>().checkUpdateBiometric();
     // if (stopAt != null) {
     //   final diff = DateTime.now().difference(stopAt!);
     //   if (diff.inSeconds > 10) {

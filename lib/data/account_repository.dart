@@ -187,4 +187,24 @@ class AccountRepository {
       });
     }
   }
+
+  Future<void> sendChangedMasterPasswordNotice({
+    required String account,
+    required String name,
+    required String updatedAt,
+    required String device,
+  }) async {
+    await db.collection(AppConfig.mailCollection).add({
+      "to": account,
+      "message": {
+        "subject": Constants.changedMasterPasswordMailTitle,
+        "html": Constants.changedMasterPasswordMailTemplate(
+          account: account,
+          updatedAt: updatedAt,
+          name: name,
+          device: device,
+        ),
+      },
+    });
+  }
 }

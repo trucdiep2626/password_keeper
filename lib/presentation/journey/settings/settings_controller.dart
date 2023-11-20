@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -11,6 +12,7 @@ import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
+import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/controllers/screen_capture_controller.dart';
 import 'package:password_keeper/presentation/widgets/app_dialog.dart';
@@ -24,6 +26,7 @@ class SettingsController extends GetxController with MixinController {
 
   AccountUseCase accountUseCase;
   LocalUseCase localUseCase;
+  PasswordUseCase passwordUseCase;
 
   // RxBool reset = false.obs;
 
@@ -32,6 +35,7 @@ class SettingsController extends GetxController with MixinController {
   SettingsController({
     required this.accountUseCase,
     required this.localUseCase,
+    required this.passwordUseCase,
   });
 
   void onSelectedTimeOut({required String type, required int timeout}) async {
@@ -103,7 +107,13 @@ class SettingsController extends GetxController with MixinController {
         rxLoadedSettings.value = LoadedType.start;
         _timer?.cancel();
         _timer = null;
+
         await Get.find<ScreenCaptureController>().resetWhenLogOut();
+        final deviceId = await FirebaseMessaging.instance.getToken();
+        await passwordUseCase.deleteLoggedInDevice(
+          userId: user?.uid ?? '',
+          deviceId: deviceId ?? '',
+        );
         await accountUseCase.signOut();
 
         Get.offAllNamed(AppRoutes.login);

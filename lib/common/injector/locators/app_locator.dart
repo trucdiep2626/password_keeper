@@ -1,6 +1,7 @@
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:password_keeper/common/constants/shared_preferences_constants.dart';
@@ -39,11 +40,18 @@ GetIt getIt = GetIt.instance;
 
 void configLocator() {
   /// Controllers
-  getIt.registerLazySingleton<AppController>(
-      () => AppController(accountUseCase: getIt<AccountUseCase>()));
+  getIt.registerLazySingleton<AppController>(() => AppController(
+        accountUseCase: getIt<AccountUseCase>(),
+        passwordUseCase: getIt<PasswordUseCase>(),
+        fbMessaging: getIt<FirebaseMessaging>(),
+        db: getIt<FirebaseFirestore>(),
+      ));
   getIt.registerFactory<SplashController>(
       () => SplashController(accountUseCase: getIt<AccountUseCase>()));
-  getIt.registerFactory<MainController>(() => MainController());
+  getIt.registerFactory<MainController>(() => MainController(
+        accountUseCase: getIt<AccountUseCase>(),
+        fbMessaging: getIt<FirebaseMessaging>(),
+      ));
   getIt.registerFactory<HomeController>(() => HomeController(
         accountUsecase: getIt<AccountUseCase>(),
         passwordUseCase: getIt<PasswordUseCase>(),
@@ -55,10 +63,17 @@ void configLocator() {
           ));
   getIt.registerFactory<RegisterController>(
       () => RegisterController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<LoginController>(
-      () => LoginController(accountUsecase: getIt<AccountUseCase>()));
-  getIt.registerFactory<CreateMasterPasswordController>(() =>
-      CreateMasterPasswordController(accountUsecase: getIt<AccountUseCase>()));
+  getIt.registerFactory<LoginController>(() => LoginController(
+        fbMessaging: getIt<FirebaseMessaging>(),
+        accountUsecase: getIt<AccountUseCase>(),
+        passwordUseCase: getIt<PasswordUseCase>(),
+      ));
+  getIt.registerFactory<CreateMasterPasswordController>(
+      () => CreateMasterPasswordController(
+            accountUsecase: getIt<AccountUseCase>(),
+            passwordUseCase: getIt<PasswordUseCase>(),
+            fbMessaging: getIt<FirebaseMessaging>(),
+          ));
   getIt.registerFactory<ChangeMasterPasswordController>(
       () => ChangeMasterPasswordController(
             accountUsecase: getIt<AccountUseCase>(),
@@ -67,6 +82,7 @@ void configLocator() {
           ));
   getIt.registerFactory<VerifyMasterPasswordController>(
       () => VerifyMasterPasswordController(
+            fbMessaging: getIt<FirebaseMessaging>(),
             accountUseCase: getIt<AccountUseCase>(),
             localUseCase: getIt<LocalUseCase>(),
             passwordUseCase: getIt<PasswordUseCase>(),
@@ -97,6 +113,7 @@ void configLocator() {
   getIt.registerFactory<SettingsController>(() => SettingsController(
         accountUseCase: getIt<AccountUseCase>(),
         localUseCase: getIt<LocalUseCase>(),
+        passwordUseCase: getIt<PasswordUseCase>(),
       ));
   getIt.registerFactory<ResetPasswordController>(() => ResetPasswordController(
         accountUseCase: getIt<AccountUseCase>(),
@@ -149,6 +166,8 @@ void configLocator() {
   getIt.registerLazySingleton<FirebaseFirestore>(
       () => FirebaseFirestore.instance);
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+  getIt.registerLazySingleton<FirebaseMessaging>(
+      () => FirebaseMessaging.instance);
   getIt.registerLazySingleton<FlutterSecureStorage>(
       () => const FlutterSecureStorage());
   getIt.registerLazySingleton<BiometricStorage>(() => BiometricStorage());

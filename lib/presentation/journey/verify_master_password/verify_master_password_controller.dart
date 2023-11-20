@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
@@ -39,6 +40,7 @@ class VerifyMasterPasswordController extends GetxController
   AccountUseCase accountUseCase;
   LocalUseCase localUseCase;
   PasswordUseCase passwordUseCase;
+  FirebaseMessaging fbMessaging;
 
   final CryptoController _cryptoController = Get.find<CryptoController>();
 
@@ -49,6 +51,7 @@ class VerifyMasterPasswordController extends GetxController
     required this.accountUseCase,
     required this.localUseCase,
     required this.passwordUseCase,
+    required this.fbMessaging,
   });
 
   void checkButtonEnable() {
@@ -220,6 +223,12 @@ class VerifyMasterPasswordController extends GetxController
         return;
       }
 
+      final deviceId = await FirebaseMessaging.instance.getToken();
+      await passwordUseCase.deleteLoggedInDevice(
+        userId: user?.uid ?? '',
+        deviceId: deviceId ?? '',
+      );
+
       await accountUseCase.signOut();
       Get.offAllNamed(AppRoutes.login);
     } catch (e) {
@@ -255,30 +264,61 @@ class VerifyMasterPasswordController extends GetxController
   }
 
   Future<void> navigateWhenVerified() async {
-    final _autofillController = Get.find<AutofillController>();
+    final autofillController = Get.find<AutofillController>();
     logger(
-        '-------------- ------${_autofillController.enableAutofillService.value}----${(_autofillController.forceInteractive ?? false)}');
+        '-------------- ------${autofillController.enableAutofillService.value}----${(autofillController.forceInteractive ?? false)}');
 
-    if (_autofillController.isAutofilling()) {
+    if (autofillController.isAutofilling()) {
       final result = await passwordUseCase.getPasswordList(
         userId: user?.uid ?? '',
       );
       final decryptedList = await _cryptoController.decryptPasswordList(result);
 
-      if (_autofillController.enableAutofillService.value) {
-        if (!(_autofillController.forceInteractive ?? false)) {
+      if (autofillController.enableAutofillService.value) {
+        if (!(autofillController.forceInteractive ?? false)) {
           final matchFound =
-              await _autofillController.autofillWithList(decryptedList);
+              await autofillController.autofillWithList(decryptedList);
           if (matchFound) {
             return;
           }
         }
       }
       Get.offAllNamed(AppRoutes.passwordList);
-    } else if (_autofillController.isAutofillSaving()) {
+    } else if (autofillController.isAutofillSaving()) {
       Get.offAllNamed(AppRoutes.addEditPassword);
     } else {
       Get.offAllNamed(AppRoutes.main);
+    }
+  }
+
+  Future<void> getLoggedDeviceInfo() async {
+    //check internet connection
+    final isConnected = await checkConnectivity();
+    if (!isConnected) {
+      return;
+    }
+
+    try {
+      final deviceId = await fbMessaging.getToken();
+      final result = await passwordUseCase.getLoggedInDevice(
+        userId: user?.uid ?? '',
+        deviceId: deviceId ?? '',
+      );
+
+      if (result != null) {
+        if (result.showChangedMasterPassword ?? false) {
+          await Get.find<BiometricController>()
+              .onChangedBiometricStorageStatus();
+          await localUseCase.deleteAllSecureData();
+          await passwordUseCase.updateLoggedInDevice(
+            userId: user?.uid ?? '',
+            loggedInDevice: result.copyWith(showChangedMasterPassword: false),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
     }
   }
 
@@ -290,6 +330,9 @@ class VerifyMasterPasswordController extends GetxController
     masterPwdFocusNode.addListener(() {
       masterPwdHasFocus.value = masterPwdFocusNode.hasFocus;
     });
+    if (Get.find<BiometricController>().enableBiometricUnlock.value) {
+      await getLoggedDeviceInfo();
+    }
     if (Get.find<BiometricController>().enableBiometricUnlock.value) {
       await handleBiometricUnlock();
     }
