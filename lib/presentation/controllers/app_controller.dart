@@ -15,6 +15,7 @@ import 'package:password_keeper/domain/models/logged_in_device.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
+import 'package:password_keeper/presentation/controllers/biometric_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:receive_intent/receive_intent.dart';
 
@@ -195,6 +196,7 @@ class AppController extends SuperController with MixinController {
 
   @override
   void onResumed() async {
+    Get.find<BiometricController>().checkUpdateBiometric();
     // if (stopAt != null) {
     //   final diff = DateTime.now().difference(stopAt!);
     //   if (diff.inSeconds > 10) {

@@ -109,21 +109,23 @@ class BiometricController extends GetxController with MixinController {
   }
 
   void checkUpdateBiometric() async {
-    await DidChangeAuthLocal.instance.onCheckBiometric().then((value) {
+    await DidChangeAuthLocal.instance.onCheckBiometric().then((value) async {
       if (value == AuthLocalStatus.changed) {
-        showAppDialog(
-          context,
-          TranslationConstants.biometricDataUpdated.tr,
-          TranslationConstants.biometricUpdatedMessage.tr,
-          confirmButtonText: TranslationConstants.ok.tr,
-          checkTimeout: false,
-          confirmButtonCallback: () async {
-            enableBiometricUnlock.value = false;
-            await localUseCase.saveSecureData(
-                key: LocalStorageKey.biometricLocked, value: 'false');
-            Get.back();
-          },
-        );
+        await Future.delayed(Duration(seconds: 3)).then((value) {
+          showAppDialog(
+            Get.context!,
+            TranslationConstants.biometricDataUpdated.tr,
+            TranslationConstants.biometricUpdatedMessage.tr,
+            confirmButtonText: TranslationConstants.ok.tr,
+            checkTimeout: false,
+            confirmButtonCallback: () async {
+              enableBiometricUnlock.value = false;
+              await localUseCase.saveSecureData(
+                  key: LocalStorageKey.biometricLocked, value: 'false');
+              Get.back();
+            },
+          );
+        });
       }
     });
   }
