@@ -188,6 +188,8 @@ class ChangeMasterPasswordController extends GetxController
           key: newEncKey?.encKey?.encryptedString,
           hashedMasterPassword: hashedNewPassword,
           masterPasswordHint: masterPwdHintController.text,
+          updatedAt: DateTime.now().millisecondsSinceEpoch,
+          updatedMasterPasswordAt: DateTime.now().millisecondsSinceEpoch,
         ));
 
         //save new key in local

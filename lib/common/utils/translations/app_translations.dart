@@ -50,6 +50,7 @@ class TranslationConstants {
   static const String hours = "hours";
   static const String minutes = "minutes";
   static const String seconds = "seconds";
+  static const String days = "days";
 
   //account
   static const String contactInformation = "contact_information";
@@ -192,6 +193,8 @@ class TranslationConstants {
   static const String disableScreenCapture = "disable_screen_capture";
   static const String timeout = "timeout";
   static const String deleteAccount = "delete_account";
+  static const String masterPasswordUpdateAlert =
+      "master_password_update_alert";
 
   //password detail
   static const String passwordDetail = "password_detail";
@@ -232,6 +235,21 @@ class TranslationConstants {
   //delete account
   static const String deleteAccountConfirm = "delete_account_confirm";
 
+  //detect root device
   static const String deviceSecurityAlert = "device_security_alert";
   static const String detectRoot = "detect_root";
+
+  //schedule alert timing
+  static const String scheduleAlertTimingTitle = "schedule_alert_timing_title";
+  static const String scheduleAlertTimingDescription =
+      "schedule_alert_timing_description";
+  static const String scheduleAlertTimingError=  "schedule_alert_timing_error";
+
+//master password update alert
+  static const String masterPasswordUpdateAlertTitle =
+      "master_password_update_alert_title";
+  static const String masterPasswordUpdateAlertDescription =
+      "master_password_update_alert_description";
+  static const String notNow = "not_now";
+  static const String update = "update";
 }

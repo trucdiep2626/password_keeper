@@ -21,6 +21,7 @@ class SettingsController extends GetxController with MixinController {
   Rx<LoadedType> rxLoadedSettings = LoadedType.finish.obs;
 
   RxInt selectedTimeout = Constants.timeout.obs;
+  RxInt selectedTimingAlert = Constants.timingAlert.obs;
 
   Timer? _timer;
 
@@ -76,6 +77,23 @@ class SettingsController extends GetxController with MixinController {
 
       log('get timeout setting: $timeout');
       handleUserInteraction();
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    } finally {
+      rxLoadedSettings.value = LoadedType.finish;
+    }
+  }
+
+  Future<void> getAlertSetting() async {
+    try {
+      rxLoadedSettings.value = LoadedType.start;
+
+      final timingAlert =
+          await accountUseCase.getAlertSetting(usedId: user?.uid ?? '');
+      selectedTimingAlert.value = timingAlert;
+
+      log('get timingAlert setting: $timingAlert');
     } catch (e) {
       debugPrint(e.toString());
       showErrorMessage();
@@ -155,10 +173,32 @@ class SettingsController extends GetxController with MixinController {
     });
   }
 
+  Future<void> updateScheduleTimingAlert(int time) async {
+    try {
+      //check internet connection
+      final isConnected = await checkConnectivity();
+      if (!isConnected) {
+        return;
+      }
+
+      rxLoadedSettings.value = LoadedType.start;
+selectedTimingAlert.value = time;
+      accountUseCase.updateAlertSetting(
+          userId: user?.uid ?? '', time: selectedTimingAlert.value);
+      Get.back();
+    } catch (e) {
+      debugPrint(e.toString());
+      showErrorMessage();
+    } finally {
+      rxLoadedSettings.value = LoadedType.finish;
+    }
+  }
+
   @override
   void onInit() async {
     super.onInit();
     await getTimeoutSetting();
+    await getAlertSetting();
   }
 
   @override
@@ -306,6 +346,10 @@ class SettingsController extends GetxController with MixinController {
     } else {
       return '${timeout} ${TranslationConstants.seconds.tr}';
     }
+  }
+
+  String getTimingAlertString(int time) {
+    return '${daysToMilliseconds(time)} ${TranslationConstants.days.tr}';
   }
 
   int getTimeoutIndex() {

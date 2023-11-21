@@ -140,6 +140,23 @@ class AccountRepository {
     return account?.timeoutSetting ?? Constants.timeout;
   }
 
+  Future<void> updateAlertSetting({
+    required String userId,
+    required int time,
+  }) async {
+    final account = await getProfile(userId: userId);
+
+    if (account != null) {
+      await editProfile(account.copyWith(timingAlert: time));
+    }
+  }
+
+  Future<int> getAlertSetting({required String usedId}) async {
+    final account = await getProfile(userId: usedId);
+
+    return account?.timingAlert ?? Constants.timingAlert;
+  }
+
   Future<Account?> getProfile({required String userId}) async {
     final response = await db
         .collection(AppConfig.userCollection)

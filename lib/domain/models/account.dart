@@ -1,3 +1,6 @@
+import 'package:password_keeper/common/constants/constants.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
+
 class Account {
   String? id;
   String? userId;
@@ -12,6 +15,10 @@ class Account {
   int? timeoutSetting;
   String? name;
   bool? allowScreenCapture;
+  int? timingAlert;
+  int? updatedMasterPasswordAt;
+  int? updatedAt;
+  int? createdAt;
 //  String? stamp;
 //  String? orgIdentifier;
 //  String? avatarColor;
@@ -37,6 +44,10 @@ class Account {
     this.kdfParallelism,
     this.allowScreenCapture,
     this.timeoutSetting,
+    this.timingAlert,
+    this.updatedMasterPasswordAt,
+    this.updatedAt,
+    this.createdAt,
     // this.biometricUnlockEnabled = false,
     // this.emailVerified,
     // this.hasPremiumPersonally,
@@ -56,6 +67,10 @@ class Account {
     String? name,
     bool? allowScreenCapture,
     int? timeoutSetting,
+    int? timingAlert,
+    int? updatedMasterPasswordAt,
+    int? updatedAt,
+    int? createdAt,
   }) =>
       Account(
         name: name ?? this.name,
@@ -70,6 +85,11 @@ class Account {
         kdfMemory: kdfMemory ?? this.kdfMemory,
         kdfParallelism: kdfParallelism ?? this.kdfParallelism,
         timeoutSetting: timeoutSetting ?? this.timeoutSetting,
+        timingAlert: timingAlert ?? this.timingAlert,
+        updatedMasterPasswordAt:
+            updatedMasterPasswordAt ?? this.updatedMasterPasswordAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdAt: createdAt ?? this.createdAt,
       );
 
   Account.fromJson(Map<String, dynamic> json) {
@@ -85,10 +105,18 @@ class Account {
     userId = json['user_id'];
     allowScreenCapture = json['allow_screen_capture'] ?? false;
     timeoutSetting = json['timeout_setting'];
+    timingAlert = json['timing_alert'] ?? Constants.timingAlert;
+    updatedMasterPasswordAt = json['updated_master_password_at'];
+    updatedAt = json['updated_at'];
+    createdAt = json['create_at'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['updated_at'] = updatedAt;
+    data['created_at'] = createdAt;
+    data['timing_alert'] = timingAlert;
+    data['updated_master_password_at'] = updatedMasterPasswordAt;
     data['allow_screen_capture'] = allowScreenCapture ?? false;
     data['email'] = email;
     data['hashed_master_password'] = hashedMasterPassword;

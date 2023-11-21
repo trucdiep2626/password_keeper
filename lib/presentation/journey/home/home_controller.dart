@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
+import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/models/password_model.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/password_usecase.dart';
 import 'package:password_keeper/presentation/controllers/crypto_controller.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:password_keeper/presentation/journey/main/main_controller.dart';
+import 'package:password_keeper/presentation/widgets/app_dialog.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeController extends GetxController with MixinController {
@@ -43,6 +45,34 @@ class HomeController extends GetxController with MixinController {
   Future<void> onReady() async {
     super.onReady();
     await initData();
+    await showMasterPasswordUpdateAlert();
+  }
+
+  Future<void> showMasterPasswordUpdateAlert() async {
+    final profile = await accountUsecase.getProfile(userId: user?.uid ?? '');
+
+    if (profile == null) {
+      return;
+    }
+
+    final showAlert =
+        (profile.updatedMasterPasswordAt ?? 0) + (profile.timingAlert ?? 0) >=
+            DateTime.now().millisecondsSinceEpoch;
+
+    if (showAlert && Get.context != null) {
+      showAppDialog(
+        Get.context!,
+        TranslationConstants.masterPasswordUpdateAlertTitle.tr,
+        TranslationConstants.masterPasswordUpdateAlertDescription.tr,
+        confirmButtonText: TranslationConstants.update.tr,
+        checkTimeout: false,
+        cancelButtonText: TranslationConstants.notNow.tr,
+        confirmButtonCallback: () async {
+          Get.back();
+          Get.toNamed(AppRoutes.changeMasterPassword);
+        },
+      );
+    }
   }
 
   Future<void> initData() async {

@@ -15,6 +15,7 @@ import 'package:password_keeper/presentation/widgets/app_image_widget.dart';
 import 'package:password_keeper/presentation/widgets/app_loading_widget.dart';
 import 'package:password_keeper/presentation/widgets/app_touchable.dart';
 import 'package:password_keeper/presentation/widgets/timeout_picker.dart';
+import 'package:password_keeper/presentation/widgets/timing_alert_dialog.dart';
 
 class SettingsScreen extends GetView<SettingsController> {
   const SettingsScreen({super.key});
@@ -93,6 +94,16 @@ class SettingsScreen extends GetView<SettingsController> {
                         trailing: Text(
                           controller.getTimeoutString(
                               controller.selectedTimeout.value),
+                          style: ThemeText.bodyMedium.grey600Color,
+                        ),
+                      )),
+                  Obx(() => _buildItem(
+                        onPressed: () => _showTimingAlertDialog(context),
+                        icon: Assets.images.svg.icTimer,
+                        title: TranslationConstants.scheduleAlertTimingTitle.tr,
+                        trailing: Text(
+                          controller.getTimingAlertString(
+                              controller.selectedTimingAlert.value),
                           style: ThemeText.bodyMedium.grey600Color,
                         ),
                       )),
@@ -196,6 +207,21 @@ class SettingsScreen extends GetView<SettingsController> {
               typeIndex: controller.getTypeIndex(),
               confirmButtonCallback: (type, timeout) {
                 controller.onSelectedTimeOut(type: type, timeout: timeout);
+                Get.back();
+              },
+            ));
+  }
+
+  void _showTimingAlertDialog(
+    BuildContext context,
+  ) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => TimingAlertDialog(
+              timingAlert: controller.selectedTimingAlert.value,
+              confirmButtonCallback: (time) {
+                controller.updateScheduleTimingAlert(time);
                 Get.back();
               },
             ));

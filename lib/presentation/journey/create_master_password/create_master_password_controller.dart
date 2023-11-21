@@ -126,6 +126,10 @@ class CreateMasterPasswordController extends GetxController
         kdfMemory: Constants.argon2MemoryInMB,
         kdfParallelism: Constants.argon2Parallelism,
         key: encKey?.encKey?.encryptedString,
+        timingAlert: Constants.timingAlert,
+        updatedMasterPasswordAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        updatedAt: DateTime.now().millisecondsSinceEpoch,
       );
 
       try {
