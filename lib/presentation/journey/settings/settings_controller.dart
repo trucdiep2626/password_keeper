@@ -182,7 +182,7 @@ class SettingsController extends GetxController with MixinController {
       }
 
       rxLoadedSettings.value = LoadedType.start;
-selectedTimingAlert.value = time;
+      selectedTimingAlert.value = time;
       accountUseCase.updateAlertSetting(
           userId: user?.uid ?? '', time: selectedTimingAlert.value);
       Get.back();
@@ -349,7 +349,7 @@ selectedTimingAlert.value = time;
   }
 
   String getTimingAlertString(int time) {
-    return '${daysToMilliseconds(time)} ${TranslationConstants.days.tr}';
+    return '${millisecondsToDays(time)} ${TranslationConstants.days.tr}';
   }
 
   int getTimeoutIndex() {

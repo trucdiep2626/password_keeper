@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
+import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/controllers/auto_fill_controller.dart';
@@ -219,7 +220,8 @@ class SettingsScreen extends GetView<SettingsController> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => TimingAlertDialog(
-              timingAlert: controller.selectedTimingAlert.value,
+              timingAlert:
+                  millisecondsToDays(controller.selectedTimingAlert.value),
               confirmButtonCallback: (time) {
                 controller.updateScheduleTimingAlert(time);
                 Get.back();

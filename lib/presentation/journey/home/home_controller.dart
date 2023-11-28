@@ -56,7 +56,7 @@ class HomeController extends GetxController with MixinController {
     }
 
     final showAlert =
-        (profile.updatedMasterPasswordAt ?? 0) + (profile.timingAlert ?? 0) >=
+        (profile.updatedMasterPasswordAt ?? 0) + (profile.timingAlert ?? 0) <=
             DateTime.now().millisecondsSinceEpoch;
 
     if (showAlert && Get.context != null) {
