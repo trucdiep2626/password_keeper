@@ -161,10 +161,11 @@ class CryptoController extends GetxController with MixinController {
   //   return stretchByteArray([...emailHash, ...passHash], STRETCH_SALT);
   // }
 
-  Future<SymmetricCryptoKey> makeMasterKey(
-      {required String password,
-      required String salt,
-      Argon2Params? argon2Param}) async {
+  Future<SymmetricCryptoKey> makeMasterKey({
+    required String password,
+    required String salt,
+    Argon2Params? argon2Param,
+  }) async {
     Uint8List? key;
     // if (kdfConfig.Type == null || kdfConfig.Type == KdfType.PBKDF2_SHA256)
     // {
@@ -902,10 +903,11 @@ class CryptoController extends GetxController with MixinController {
   //   return _privateKey;
   // }
 
-  Uint8List hmac(
-      {required Uint8List value,
-      required Uint8List key,
-      CryptoHashAlgorithm? algorithm,}) {
+  Uint8List hmac({
+    required Uint8List value,
+    required Uint8List key,
+    CryptoHashAlgorithm? algorithm,
+  }) {
     // var provider = MacAlgorithmProvider.OpenAlgorithm(ToMacAlgorithm(algorithm));
     // var hasher = provider.CreateHash(key);
     // hasher.Append(value);

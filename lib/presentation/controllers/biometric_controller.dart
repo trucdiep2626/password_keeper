@@ -111,7 +111,7 @@ class BiometricController extends GetxController with MixinController {
   void checkUpdateBiometric() async {
     await DidChangeAuthLocal.instance.onCheckBiometric().then((value) async {
       if (value == AuthLocalStatus.changed) {
-        await Future.delayed(Duration(seconds: 3)).then((value) {
+        await Future.delayed(Duration(seconds: 1)).then((value) {
           showAppDialog(
             Get.context!,
             TranslationConstants.biometricDataUpdated.tr,

@@ -220,6 +220,13 @@ class AddEditPasswordController extends GetxController with MixinController {
     }
   }
 
+  Future<void> handleCancel() async {
+    Get.back();
+    if (_autofillController.isAutofillSaving()) {
+      await _autofillController.finishSaving();
+    }
+  }
+
   void onChangedUserId() {
     checkButtonEnable();
     userIdValidate.value = '';
