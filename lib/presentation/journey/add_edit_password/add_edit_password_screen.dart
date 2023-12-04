@@ -39,7 +39,7 @@ class AddEditPasswordScreen extends GetView<AddEditPasswordController> {
               () => ConfirmWidget(
                 firstOnTap: () async => await controller.handleSave(),
                 firstText: TranslationConstants.save.tr,
-                secondOnTap: () => Get.back(),
+                secondOnTap: () async => await controller.handleCancel(),
                 secondText: TranslationConstants.cancel.tr,
                 activeFirst: controller.buttonEnable.value,
               ),

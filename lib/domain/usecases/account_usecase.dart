@@ -144,6 +144,20 @@ class AccountUseCase {
     return accountRepo.getTimeoutSetting(usedId: usedId);
   }
 
+  Future<void> updateAlertSetting({
+    required String userId,
+    required int time,
+  }) async {
+    return accountRepo.updateAlertSetting(
+      userId: userId,
+      time: time,
+    );
+  }
+
+  Future<int> getAlertSetting({required String usedId}) async {
+    return accountRepo.getAlertSetting(usedId: usedId);
+  }
+
   Future<Account?> getProfile({required String userId}) async {
     return await accountRepo.getProfile(userId: userId);
   }

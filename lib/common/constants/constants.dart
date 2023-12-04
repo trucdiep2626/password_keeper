@@ -1,3 +1,5 @@
+import 'package:password_keeper/common/utils/app_utils.dart';
+
 class Constants {
   static const String verificationId = 'verificationId';
   static const String forceResendingToken = 'forceResendingToken';
@@ -32,6 +34,9 @@ class Constants {
 
   //default timeout is 20 minutes
   static const int timeout = 60 * 20;
+
+  //defaul timing alert is 60 days
+  static const int timingAlert = 60 * 24 * 60 * 60 * 1000;
 
   static const String notSetHintMailTitle =
       "Hint for Master Password is not set";

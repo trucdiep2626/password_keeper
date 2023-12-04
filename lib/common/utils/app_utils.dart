@@ -165,3 +165,7 @@ String dateTimeNowToString() {
   String formattedDate = DateFormat('hh:mm:ss dd-MM-yyyy').format(now);
   return '$formattedDate (UTC+$offset)';
 }
+
+int daysToMilliseconds(int days) => days * 24 * 60 * 60 * 1000;
+
+int millisecondsToDays (int milliseconds) => (milliseconds/(24 * 60 * 60 * 1000)).ceil();

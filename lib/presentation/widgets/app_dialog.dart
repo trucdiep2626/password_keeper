@@ -104,9 +104,8 @@ class _AppDialogState extends State<AppDialog> {
   @override
   Widget build(BuildContext context) {
     return Listener(
-      onPointerDown: !widget.checkTimeout
-          ? null
-          : Get.find<SettingsController>().handleUserInteraction,
+      onPointerDown: widget.checkTimeout
+          ? Get.find<SettingsController>().handleUserInteraction : null,
       child: WillPopScope(
         onWillPop: () async => widget.dismissAble,
         child: Dialog(
@@ -157,6 +156,7 @@ class _AppDialogState extends State<AppDialog> {
                     textAlign: widget.messageTextAlign,
                     style: ThemeText.bodyRegular,
                   ),
+                  widget.messageWidget ?? const SizedBox.shrink(),
                   SizedBox(height: AppDimens.space_16),
                   Visibility(
                     visible: enableConfirm,

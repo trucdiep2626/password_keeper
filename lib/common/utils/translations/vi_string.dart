@@ -18,6 +18,7 @@ const viString = {
   "hours": "hours",
   "minutes": "minutes",
   "seconds": "seconds",
+  "days":"days",
 
   //account
   "contact_information": "Contact Information",
@@ -171,8 +172,9 @@ const viString = {
       "Are you sure to want to allow screen capture?",
   "enable_screen_capture": "Screen capture is now enabled.",
   "disable_screen_capture": "Screen capture is now disabled.",
-  "timeout": "Timeout",
+  "timeout": "Session Timeout",
   "delete_account": "Delete account",
+  "master_password_update_alert":"Master password update alert",
 
   //password detail
   "password_detail": "Password detail",
@@ -215,7 +217,20 @@ const viString = {
   //delete account
   "delete_account_confirm": "Are you sure you want to delete this account?",
 
+  //detect root device
   "device_security_alert": "Device Security Alert",
   "detect_root":
-      "You're running this application on a rooted device. This may pose serious security risks. Please consider using a non-rooted device for a safer user experience"
+  "You're running this application on a rooted device. This may pose serious security risks. Please consider using a non-rooted device for a safer user experience",
+
+  //schedule alert timing
+  "schedule_alert_timing_title": "Schedule alert timing",
+  "schedule_alert_timing_description":
+  "You can set the time to receive a notification to change your master password.",
+  "schedule_alert_timing_error": "The number of days should be greater than zero",
+
+  //master password update alert
+  "master_password_update_alert_title": "Master password update alert",
+  "master_password_update_alert_description":"For optimal security, it's time to update your Master Password. Regular safety measures ensure your account remains secure.",
+  "not_now":"Not now",
+  "update":"Update",
 };

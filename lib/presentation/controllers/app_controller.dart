@@ -196,7 +196,10 @@ class AppController extends SuperController with MixinController {
 
   @override
   void onResumed() async {
-    Get.find<BiometricController>().checkUpdateBiometric();
+    if (Get.find<BiometricController>().enableBiometricUnlock.value) {
+      Get.find<BiometricController>().checkUpdateBiometric();
+    }
+
     // if (stopAt != null) {
     //   final diff = DateTime.now().difference(stopAt!);
     //   if (diff.inSeconds > 10) {

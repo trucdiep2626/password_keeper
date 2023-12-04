@@ -343,7 +343,7 @@ class AutofillController extends GetxController with MixinController {
       }
       enableAutofillService.value = true;
       autofillState.value == AutofillState.available;
-      await setSavingPreference(true);
+      //  await setSavingPreference(true);
     } else {
       if (Get.context != null && enableAutofillService.value) {
         showTopSnackBar(Get.context!,
