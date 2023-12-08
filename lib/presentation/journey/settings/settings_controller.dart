@@ -29,8 +29,6 @@ class SettingsController extends GetxController with MixinController {
   LocalUseCase localUseCase;
   PasswordUseCase passwordUseCase;
 
-  // RxBool reset = false.obs;
-
   User? get user => accountUseCase.user;
 
   SettingsController({
@@ -201,99 +199,6 @@ class SettingsController extends GetxController with MixinController {
     await getAlertSetting();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  // void startTimer() {
-  //   _timer =
-  //       RestartableTimer(Duration(seconds: selectedTimeout.value), () async {
-  //     log('tick ${_timer?.tick}');
-  //     //  if (_timer?.tick == selectedTimeout.value) {
-  //     if (!(Get.currentRoute == AppRoutes.register ||
-  //         Get.currentRoute == AppRoutes.login ||
-  //         Get.currentRoute == AppRoutes.verifyEmail ||
-  //         Get.currentRoute == AppRoutes.createMasterPassword ||
-  //         Get.currentRoute == AppRoutes.verifyMasterPassword)) {
-  //       log(' lock app');
-  //       log(DateTime.now().toIso8601String());
-  //       _timer?.cancel();
-  //       //  _timer = null;
-  //       await onTapLock();
-  //     }
-  //     //     }
-  //   });
-  //   log('start timer');
-  // }
-  //
-  // void reset() {
-  //   if ((Get.currentRoute == AppRoutes.register ||
-  //       Get.currentRoute == AppRoutes.login ||
-  //       Get.currentRoute == AppRoutes.verifyEmail ||
-  //       Get.currentRoute == AppRoutes.createMasterPassword ||
-  //       Get.currentRoute == AppRoutes.verifyMasterPassword)) {
-  //     return;
-  //   }
-  //   //  if (_timer != null) {
-  //
-  //   _timer?.reset();
-  //   log('reset');
-  //   // }
-  // }
-  //
-  // bool isActive() => _timer?.isActive ?? false;
-
-  // void setupUserInteractionListener() {
-  //   //  WidgetsBinding.instance.addPostFrameCallback((_) {
-  //   if ((Get.currentRoute == AppRoutes.register ||
-  //       Get.currentRoute == AppRoutes.login ||
-  //       Get.currentRoute == AppRoutes.verifyEmail ||
-  //       Get.currentRoute == AppRoutes.verifyMasterPassword ||
-  //       Get.currentRoute == AppRoutes.verifyMasterPassword)) {
-  //     return;
-  //   }
-  //
-  //   log('reset');
-  //   log(DateTime.now().toIso8601String());
-  //
-  //   if (_timer != null) {
-  //     log('not null');
-  //     _timer?.cancel();
-  //     _timer = null;
-  //     // reset.value = true;
-  //   }
-  //   log('active ${_timer?.isActive} ');
-  //
-  //   _timer = Timer(Duration(seconds: selectedTimeout.value), () async {
-  //     // reset.listen((value) {
-  //     //   log('--------------$value ');
-  //     //   if (value) {
-  //     //     _timer.cancel();
-  //     //     reset.value = false;
-  //     //   }
-  //     // });
-  //     log('tick ${this._timer?.tick}');
-  //
-  //     // if (!(Get.currentRoute == AppRoutes.register ||
-  //     //     Get.currentRoute == AppRoutes.login ||
-  //     //     Get.currentRoute == AppRoutes.verifyEmail ||
-  //     //     Get.currentRoute == AppRoutes.verifyMasterPassword ||
-  //     //     Get.currentRoute == AppRoutes.verifyMasterPassword)) {
-  //     log(' lock app');
-  //     log(DateTime.now().toIso8601String());
-  //     _timer?.cancel();
-  //     _timer = null;
-  //     await onTapLock();
-  //     // }
-  //   });
-  //
-  //   log('active ${_timer?.isActive} ');
-  //   //  });
-  //
-  //   // });
-  // }
-
   void _initializeTimer() {
     log('reset');
     log(DateTime.now().toIso8601String());
@@ -307,10 +212,6 @@ class SettingsController extends GetxController with MixinController {
 
   void _logOutUser() async {
     _timer?.cancel();
-
-    // // Popping all routes and pushing welcome screen
-    // log('-----------${DateTime.now().toIso8601String()}');
-    // await onTapLock();
 
     if (!(Get.currentRoute == AppRoutes.register ||
         Get.currentRoute == AppRoutes.login ||
@@ -344,7 +245,7 @@ class SettingsController extends GetxController with MixinController {
     } else if (timeout >= 60) {
       return '${timeout ~/ 60} ${TranslationConstants.minutes.tr}';
     } else {
-      return '${timeout} ${TranslationConstants.seconds.tr}';
+      return '$timeout ${TranslationConstants.seconds.tr}';
     }
   }
 

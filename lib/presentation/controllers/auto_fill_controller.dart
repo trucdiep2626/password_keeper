@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_autofill_service/flutter_autofill_service.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/enums.dart';
@@ -9,8 +8,6 @@ import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.
 import 'package:password_keeper/presentation/widgets/export.dart';
 
 class AutofillController extends GetxController with MixinController {
-  static const _autofillMethodChannel =
-      MethodChannel('kma.dieptt.password_keeper/autofill');
   final _autofillService = AutofillService();
   bool? forceInteractive;
   AutofillMetadata? androidMetadata;
@@ -49,11 +46,7 @@ class AutofillController extends GetxController with MixinController {
       autofillState.value = AutofillState.available;
       return;
     }
-    //TODO:f: should below be here? or after potential emit of autofill request for filling?
-    // if (state is AutofillSaved) {
-    //   emit(AutofillAvailable(enabled));
-    //   return;
-    // }
+
     if (saveRequested) {
       autofillState.value = AutofillState.saving;
       this.androidMetadata = androidMetadata;
@@ -65,8 +58,6 @@ class AutofillController extends GetxController with MixinController {
           'Android failed to provide the necessary autofill information.');
     }
 
-    // we only call this cubit's function if we have some sort of intent relating to the
-    // autofill service so we can now assume the user is asking for us to autofill another app/site
     autofillState.value = AutofillState.requested;
     enableAutofillService.value = true;
     this.androidMetadata = androidMetadata;
@@ -209,112 +200,18 @@ class AutofillController extends GetxController with MixinController {
     final requestedUrl =
         "${androidMetadata.webDomains.firstOrNull?.scheme ?? 'https'}://${androidMetadata.webDomains.firstOrNull?.domain ?? ''}"
             .trim();
-    //
-    // // Apparently Android never supplies us with a port so this is the best we can do
-    // final hostname = requestedUrl?.publicSuffixUrl.sourceUrl.host;
-    //
-    // final registrableDomain = requestedUrl?.publicSuffixUrl.domain;
-    // final scheme = requestedUrl?.publicSuffixUrl.sourceUrl.scheme;
 
     final matches = <PasswordItem>[];
 
-    current.forEach((element) {
+    for (var element in current) {
       if (requestedUrl
           .toUpperCase()
           .contains((element.signInLocation ?? '').toUpperCase())) {
         matches.add(element);
       }
-    });
-    //
-    // if (hostname == null || registrableDomain == null || scheme == null) {
-    //   l.e("Android supplied a WebDomain we can't understand. Please report the exact web page you encounter this error on so we can see if it is possible to add support for autofilling this in future.");
-    //   return matches;
-    // }
-    // final matchAccuracyDomainOverride = MatchAccuracy.values.singleWhereOrNull(
-    //     (val) =>
-    //         val.name ==
-    //         current.body.meta.browserSettings
-    //             .matchedURLAccuracyOverrides[registrableDomain]);
-    //
-    // matches.addAll(current.body.rootGroup
-    //     .getAllEntries(enterRecycleBin: false)
-    //     .values
-    //     .where((entry) {
-    //   if (entry.browserSettings.hide) {
-    //     return false;
-    //   }
-    //   bool isAMatch = false;
-    //   var minimumMatchAccuracy = matchAccuracyDomainOverride ??
-    //       entry.browserSettings.minimumMatchAccuracy;
-    //
-    //   final matchPatterns = entry.browserSettings.includeUrls.toList();
-    //   final primaryUrlString = entry.getString(KdbxKeyCommon.URL)?.getText();
-    //
-    //   if (primaryUrlString != null) {
-    //     matchPatterns.add(primaryUrlString);
-    //   }
-    //   for (var pattern in matchPatterns) {
-    //     if (urlsMatch(pattern, minimumMatchAccuracy, scheme, hostname,
-    //         registrableDomain)) {
-    //       isAMatch = true;
-    //       break;
-    //     }
-    //   }
-    //
-    //   if (isAMatch) {
-    //     for (var pattern in entry.browserSettings.excludeUrls) {
-    //       if (urlsMatch(pattern, minimumMatchAccuracy, scheme, hostname,
-    //           registrableDomain)) {
-    //         isAMatch = false;
-    //         break;
-    //       }
-    //     }
-    //   }
-    //
-    //   return isAMatch;
-    // }));
+    }
     return matches;
   }
-
-  // @visibleForTesting
-  // bool urlsMatch(Pattern pattern, MatchAccuracy minimumMatchAccuracy,
-  //     String scheme, String hostname, String registrableDomain) {
-  //   Pattern testValue;
-  //   if (pattern is String) {
-  //     final testUrl = urls.parse(pattern.trim());
-  //     if (testUrl == null) {
-  //       // If the user has not supplied a valid URL, we cannot safely permit it to match anything
-  //       return false;
-  //     }
-  //     if (scheme == 'http' &&
-  //         testUrl.publicSuffixUrl.sourceUrl.scheme == 'https') {
-  //       // Prevent matching secure URLs in entries with an insecure version of the website but not vice-versa
-  //       return false;
-  //     }
-  //
-  //     // If user has requested Exact, we use Hostname matching instead since it is stricter than Domain, but unfortunately
-  //     // we don't have the required information from Android to be able to perform the exact match the user requested.
-  //     if (minimumMatchAccuracy == MatchAccuracy.Domain) {
-  //       testValue = testUrl.publicSuffixUrl.domain ??
-  //           testUrl.publicSuffixUrl.sourceUrl.host;
-  //     } else {
-  //       testValue = testUrl.publicSuffixUrl.sourceUrl.host;
-  //     }
-  //   } else {
-  //     testValue = pattern;
-  //   }
-  //
-  //   if (minimumMatchAccuracy == MatchAccuracy.Domain) {
-  //     if (testValue.allMatches(registrableDomain).firstOrNull != null) {
-  //       return true;
-  //     }
-  //   } else {
-  //     if (testValue.allMatches(hostname).firstOrNull != null) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
 
   bool isAutofilling() => autofillState.value == AutofillState.requested;
   bool isAutofillSaving() => autofillState.value == AutofillState.saving;

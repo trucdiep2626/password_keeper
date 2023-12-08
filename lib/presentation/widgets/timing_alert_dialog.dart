@@ -83,7 +83,7 @@ class _TimingAlertDialogState extends State<TimingAlertDialog> {
                     inputFormatters: [PhoneNumberInputFormatter()],
                     numSuffixIcon: 2,
                     controller: _timingAlertController,
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: const TextInputType.numberWithOptions(),
                     errorText: errorText,
                     textInputAction: TextInputAction.done,
                     suffixIcon: Text(

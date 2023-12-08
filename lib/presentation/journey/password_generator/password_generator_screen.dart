@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_dimens.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
-import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
@@ -33,18 +32,12 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
                       onPressed: () =>
                           Get.back(result: controller.generatedPassword.value),
                       child: Center(
-                          child: Icon(
-                        Icons.check,
-                        size: AppDimens.space_30,
-                        color: AppColors.white,
-                      )
-                          // AppImageWidget(
-                          //   margin: EdgeInsets.all(AppDimens.space_8),
-                          //   color: AppColors.white,
-                          //   size: AppDimens.space_24,
-                          //   asset: Assets.images.svg.icTick,
-                          // ),
-                          ),
+                        child: Icon(
+                          Icons.check,
+                          size: AppDimens.space_30,
+                          color: AppColors.white,
+                        ),
+                      ),
                     )
                   : AppTouchable(
                       onPressed: () => Get.toNamed(AppRoutes.history),
@@ -98,118 +91,6 @@ class PasswordGeneratorScreen extends GetView<PasswordGeneratorController> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildPasswordType() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-            top: AppDimens.space_16,
-            left: AppDimens.space_16,
-            right: AppDimens.space_16,
-          ),
-          child: Text(
-            TranslationConstants.passwordType.tr,
-            style: ThemeText.bodyMedium.grey700Color,
-          ),
-        ),
-        RadioListTile(
-          activeColor: AppColors.blue400,
-          title: Text(
-            PasswordType.password.name.capitalize ?? '',
-            style: ThemeText.bodyRegular.grey600Color,
-          ),
-          value: PasswordType.password,
-          groupValue: controller.selectedType.value,
-          onChanged: (value) =>
-              controller.onChangedPasswordType(PasswordType.password),
-        ),
-        RadioListTile(
-          activeColor: AppColors.blue400,
-          title: Text(
-            PasswordType.passphrase.name.capitalize ?? '',
-            style: ThemeText.bodyRegular.grey600Color,
-          ),
-          value: PasswordType.passphrase,
-          groupValue: controller.selectedType.value,
-          onChanged: (value) =>
-              controller.onChangedPasswordType(PasswordType.passphrase),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildOptionalsForPassphrase() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        //num of words
-        ListTile(
-          title: Text(
-            TranslationConstants.numWords.tr,
-            style: ThemeText.bodyRegular.grey600Color,
-          ),
-          trailing: Obx(
-            () => _buildChangeQuantity(
-              onPressedIncrease: () async =>
-                  await controller.increaseNumWords(),
-              onPressedDecrease: () async =>
-                  await controller.decreaseNumWords(),
-              value: controller.numWords.value,
-            ),
-          ),
-        ),
-
-        Padding(
-          padding: EdgeInsets.only(left: AppDimens.space_16),
-          child: Text(
-            TranslationConstants.wordSeparator.tr,
-            style: ThemeText.bodyRegular.grey600Color,
-          ),
-        ),
-        //word separator
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppDimens.space_16),
-          child: AppTextField(
-            contentPadding: EdgeInsets.zero,
-            isUnderline: true,
-            borderColor: AppColors.grey400,
-            //  labelText: TranslationConstants.wordSeparator.tr,
-            controller: controller.wordSeparatorColtroller,
-            //      onTap: () => controller.onTapMasterPwdHintTextField(),
-            //    textInputAction: TextInputAction.done,
-            // onEditingComplete: () =>
-            //     controller.onEditingCompleteMasterPwdHint(),
-            //   focusNode: controller.masterPwdHintFocusNode,
-            maxLines: 7,
-          ),
-        ),
-
-        //capitalize
-        SwitchListTile(
-          activeColor: AppColors.blue400,
-          value: controller.capitalize.value,
-          onChanged: (value) async => await controller.onChangedCapitalize(),
-          title: Text(
-            TranslationConstants.capitalize.tr,
-            style: ThemeText.bodyRegular.grey600Color,
-          ),
-        ),
-
-        //include number
-        SwitchListTile(
-          activeColor: AppColors.blue400,
-          value: controller.includeNumber.value,
-          onChanged: (value) async => await controller.onChangedIncludeNumber(),
-          title: Text(
-            TranslationConstants.includeNumber.tr,
-            style: ThemeText.bodyRegular.grey600Color,
-          ),
-        ),
-      ],
     );
   }
 

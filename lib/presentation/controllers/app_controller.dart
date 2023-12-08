@@ -147,24 +147,7 @@ class AppController extends SuperController with MixinController {
     _updateState(connectivityResult!);
   }
 
-  _updateState(ConnectivityResult result) {
-    //    if (result == ConnectivityResult.none) {
-    //      showTopSnackBarError(Get.context!, TranslationConstants.offline.tr);
-    //    } else {
-    //      if (isOpenApp.value) {
-    //        isOpenApp.value = false;
-    //        return;
-    //      }
-    //
-    // if(Get.context != null)
-    //   {
-    //     showTopSnackBar(
-    //         type: SnackBarType.done,
-    //         Get.context!,
-    //         message: TranslationConstants.internetRestore.tr);
-    //   }
-    //   }
-  }
+  _updateState(ConnectivityResult result) {}
 
   @override
   void onClose() {
@@ -183,15 +166,11 @@ class AppController extends SuperController with MixinController {
   @override
   void onInactive() {
     logger('---------App State onInactive');
-    // Get.offAllNamed(AppRoutes.splash);
-    stopAt = DateTime.now();
   }
 
   @override
   void onPaused() {
     logger('---------App State onPaused');
-    //  Get.offAllNamed(AppRoutes.splash);
-    stopAt = DateTime.now();
   }
 
   @override
@@ -200,30 +179,6 @@ class AppController extends SuperController with MixinController {
       Get.find<BiometricController>().checkUpdateBiometric();
     }
 
-    // if (stopAt != null) {
-    //   final diff = DateTime.now().difference(stopAt!);
-    //   if (diff.inSeconds > 10) {
-    //     log('lockkkk');
-    //     Get.offAllNamed(AppRoutes.splash);
-    //   }
-    // }
-    // //check internet connection
-    // final isConnected = await checkConnectivity();
-    // if (!isConnected) {
-    //   return;
-    // }
-    //
-    // accountUseCase.authState.listen((User? user) {
-    //   if (user != null) {
-    //     if (!user.emailVerified && Get.currentRoute != AppRoutes.verifyEmail) {
-    //       Get.offAndToNamed(AppRoutes.verifyEmail);
-    //     } else if (Get.currentRoute == AppRoutes.splash) {
-    //       Get.offAndToNamed(AppRoutes.verifyMasterPassword);
-    //     }
-    //   } else if (Get.currentRoute != AppRoutes.login) {
-    //     Get.offAndToNamed(AppRoutes.login);
-    //   }
-    // });
     logger('---------App State onResumed');
   }
 }

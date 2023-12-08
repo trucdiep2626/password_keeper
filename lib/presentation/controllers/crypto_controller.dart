@@ -21,7 +21,6 @@ import 'package:password_keeper/domain/usecases/account_usecase.dart';
 import 'package:password_keeper/domain/usecases/local_usecase.dart';
 import 'package:password_keeper/presentation/controllers/mixin/mixin_controller.dart';
 import 'package:pointycastle/export.dart';
-import 'package:pointycastle/pointycastle.dart';
 
 class CryptoController extends GetxController with MixinController {
   final sha256Digester = SHA256Digest();
@@ -34,41 +33,10 @@ class CryptoController extends GetxController with MixinController {
   CryptoController({
     required this.localUseCase,
     required this.accountUseCase,
-  }); // private SymmetricCryptoKey _encKey;
-  // private SymmetricCryptoKey _legacyEtmKey;
-  // private string _keyHash;
-  // private byte[] _publicKey;
-  // private byte[] _privateKey;
-  // private Dictionary<string, SymmetricCryptoKey> _orgKeys;
-  // private Task<SymmetricCryptoKey> _getEncKeysTask;
-  // private Task<Dictionary<string, SymmetricCryptoKey>> _getOrgKeysTask;
+  });
 
-//  SymmetricCryptoKey? _encKey;
   SymmetricCryptoKey? _legacyEtmKey;
-  // String? _keyHash;
-  // Uint8List? _publicKey;
-  // Uint8List? _privateKey;
-  // Map<String, SymmetricCryptoKey>? _orgKeys;
-  // Future<SymmetricCryptoKey?>? _getEncKeysFunction;
-  // Future<Map<String, SymmetricCryptoKey>?>? _getOrgKeysFunction;
 
-  // Future<String> hashString(String text, [String salt = '']) async {
-  //   final msgBuffer = utf8.encode(salt + text);
-  //   final hash = sha256Digester.process(Uint8List.fromList(msgBuffer));
-  //   return base64.encode(hash);
-  // }
-  //
-  // Future<String> hashBytes(Uint8List bytes) async {
-  //   final hash = sha256Digester.process(bytes);
-  //   return base64.encode(hash);
-  // }
-  //
-  // Future<String> hashStringToHex(String text, [String salt = '']) async {
-  //   final msgBuffer = utf8.encode(salt + text);
-  //   final hash = sha256Digester.process(Uint8List.fromList(msgBuffer));
-  //   return hex.encode(hash);
-  // }
-  //
   Future<String> stretchByteArray(List<int> byteArray, String salt) async {
     final saltArray = base64.decode(base64.normalize(salt));
     Uint8List derivedKey = Uint8List(32);
@@ -120,13 +88,6 @@ class CryptoController extends GetxController with MixinController {
     final n = (outputByteSize / hashLen).ceil();
     final okm = Uint8List(n * hashLen);
     for (var i = 0; i < n; i++) {
-      // var t = byte[previousT.Length + info.Length + 1];
-      // previousT.CopyTo(t, 0);
-      // info.CopyTo(t, previousT.Length);
-      // t[t.Length - 1] = (byte)(i + 1);
-      // previousT = await HmacAsync(t, prk, cryptoHashAlgorithm);
-      // previousT.CopyTo(okm, runningOkmLength);
-      // runningOkmLength = previousT.Length;
       final t = Uint8List.fromList([...previousT, ...info, i + 1]);
       t.setAll(0, [...previousT, ...info]);
       t[t.length - 1] = (i + 1);
@@ -152,70 +113,41 @@ class CryptoController extends GetxController with MixinController {
     }
   }
 
-  //
-  // Future<String> derivePassKey(String email, List<int> hashedMasterKey) async {
-  //   final emailHash = sha256Digester
-  //       .process(Uint8List.fromList(utf8.encode(EMAIL_AUTH_SALT + email)));
-  //   final passHash = sha256Digester.process(Uint8List.fromList(
-  //       [...hex.decode(PASS_AUTH_SALT), ...hashedMasterKey]));
-  //   return stretchByteArray([...emailHash, ...passHash], STRETCH_SALT);
-  // }
-
   Future<SymmetricCryptoKey> makeMasterKey({
     required String password,
     required String salt,
     Argon2Params? argon2Param,
   }) async {
     Uint8List? key;
-    // if (kdfConfig.Type == null || kdfConfig.Type == KdfType.PBKDF2_SHA256)
-    // {
-    //   var iterations = kdfConfig.Iterations.GetValueOrDefault(5000);
-    //   if (iterations < 5000)
-    //   {
-    //     throw new Exception("PBKDF2 iteration minimum is 5000.");
-    //   }
-    //   key = await _cryptoFunctionService.Pbkdf2Async(password, salt,
-    //       CryptoHashAlgorithm.Sha256, iterations);
-    // }
-    // else
-    //   if (kdfConfig.Type == KdfType.Argon2id)
-    {
-      var iterations = argon2Param?.iterations ?? Constants.argon2Iterations;
-      var memory = (argon2Param?.memory ?? Constants.argon2MemoryInMB) * 1024;
-      var parallelism = argon2Param?.parallelism ?? Constants.argon2Parallelism;
 
-      if (iterations < 2) {
-        throw Exception("Argon2 iterations minimum is 2");
-      }
+    var iterations = argon2Param?.iterations ?? Constants.argon2Iterations;
+    var memory = (argon2Param?.memory ?? Constants.argon2MemoryInMB) * 1024;
+    var parallelism = argon2Param?.parallelism ?? Constants.argon2Parallelism;
 
-      if (memory < 16 * 1024) {
-        throw Exception("Argon2 memory minimum is 16 MB");
-      } else if (memory > 1024 * 1024) {
-        throw Exception("Argon2 memory maximum is 1024 MB");
-      }
-
-      if (parallelism < 1) {
-        throw Exception("Argon2 parallelism minimum is 1");
-      }
-
-      var saltHash = ProtectedValue.fromString(salt).hash;
-
-      //  log('Salt: ${saltHash.toHexString()}');
-
-      key = await argon2FromStringPwd(
-        password: password,
-        salt: saltHash,
-        iterations: iterations,
-        parallelism: parallelism,
-        memory: memory,
-      );
-      // }
-      // else
-      // {
-      //   throw new Exception("Unknown kdf.");
-      // }
-      return SymmetricCryptoKey(key: key);
+    if (iterations < 2) {
+      throw Exception("Argon2 iterations minimum is 2");
     }
+
+    if (memory < 16 * 1024) {
+      throw Exception("Argon2 memory minimum is 16 MB");
+    } else if (memory > 1024 * 1024) {
+      throw Exception("Argon2 memory maximum is 1024 MB");
+    }
+
+    if (parallelism < 1) {
+      throw Exception("Argon2 parallelism minimum is 1");
+    }
+
+    var saltHash = ProtectedValue.fromString(salt).hash;
+
+    key = await argon2FromStringPwd(
+      password: password,
+      salt: saltHash,
+      iterations: iterations,
+      parallelism: parallelism,
+      memory: memory,
+    );
+    return SymmetricCryptoKey(key: key);
   }
 
   Future<EncKeyResult?> makeEncKey(SymmetricCryptoKey key) async {
@@ -273,120 +205,28 @@ class CryptoController extends GetxController with MixinController {
         encryptionType: encObj.key?.encType, data: data, iv: iv, mac: mac);
   }
 
-  //  Task<byte[]> HashAsync(byte[] value, CryptoHashAlgorithm algorithm)
-  // {
-  // var provider = HashAlgorithmProvider.OpenAlgorithm(ToHashAlgorithm(algorithm));
-  // return Task.FromResult(provider.HashData(value));
-  // }
-  //
-  //  Task<byte[]> HmacAsync(byte[] value, byte[] key, CryptoHashAlgorithm algorithm)
-  // {
-  // var provider = MacAlgorithmProvider.OpenAlgorithm(ToMacAlgorithm(algorithm));
-  // var hasher = provider.CreateHash(key);
-  // hasher.Append(value);
-  // return Task.FromResult(hasher.GetValueAndReset());
-  // }
-
-  Future<String> hashPassword(
-      {required String password,
-      SymmetricCryptoKey? key,
-      HashPurpose hashPurpose = HashPurpose.serverAuthorization}) async {
+  Future<String> hashPassword({
+    required String password,
+    SymmetricCryptoKey? key,
+  }) async {
     key ??= await getMasterKey();
     if (key == null) {
       throw Exception("Invalid parameters.");
     }
-    var iterations = hashPurpose == HashPurpose.localAuthorization ? 2 : 1;
-    //  var hash = argon2FromStringSalt(password: key.key!, salt: password, iterations: iterations, memory: memory, parallelism: parallelism)
 
-    var hash = pbkdf2FromStringSalt(
+    var iterations = Constants.argon2Iterations;
+    var memory = (Constants.argon2MemoryInMB) * 1024;
+    var parallelism = Constants.argon2Parallelism;
+
+    var hash = await argon2FromStringSalt(
       password: key.key!,
       salt: password,
-      algorithm: CryptoHashAlgorithm.sha256,
       iterations: iterations,
+      parallelism: parallelism,
+      memory: memory,
     );
-    //pbkdf2(key.key, password, CryptoHashAlgorithm.Sha256, iterations);
+
     return base64Encode(hash);
-  }
-
-  Uint8List pbkdf2FromString({
-    required String password,
-    required String salt,
-    required CryptoHashAlgorithm algorithm,
-    required int iterations,
-  }) {
-    password = normalizePassword(password);
-    return pbkdf2(
-      password: Uint8List.fromList(password.codeUnits),
-      salt: Uint8List.fromList(salt.codeUnits),
-      algorithm: algorithm,
-      iterations: iterations,
-    );
-  }
-
-  Uint8List pbkdf2FromStringSalt({
-    required Uint8List password,
-    required String salt,
-    required CryptoHashAlgorithm algorithm,
-    required int iterations,
-  }) {
-    return pbkdf2(
-      password: password,
-      salt: Uint8List.fromList(salt.codeUnits),
-      algorithm: algorithm,
-      iterations: iterations,
-    );
-  }
-
-  Uint8List pbkdf2FromStringPassword({
-    required String password,
-    required Uint8List salt,
-    required CryptoHashAlgorithm algorithm,
-    required int iterations,
-  }) {
-    password = normalizePassword(password);
-    return pbkdf2(
-        password: Uint8List.fromList(password.codeUnits),
-        salt: salt,
-        algorithm: algorithm,
-        iterations: iterations);
-  }
-
-  Uint8List pbkdf2({
-    required Uint8List password,
-    required Uint8List salt,
-    required CryptoHashAlgorithm algorithm,
-    required int iterations,
-  }) {
-    if (algorithm != CryptoHashAlgorithm.sha256 &&
-        algorithm != CryptoHashAlgorithm.sha512) {
-      throw ArgumentError("Unsupported PBKDF2 algorithm.");
-    }
-    // return Task.FromResult(
-    //     _cryptoPrimitiveService.Pbkdf2(password, salt, algorithm, iterations));
-
-    //  final saltArray = base64.decode(base64.normalize(salt));
-    int keySize = 256;
-    var digest;
-    if (algorithm == CryptoHashAlgorithm.sha256) {
-      keySize = 256;
-      digest = SHA256Digest();
-    } else if (algorithm == CryptoHashAlgorithm.sha512) {
-      keySize = 512;
-      digest = SHA512Digest();
-    }
-
-    var parameters = Pbkdf2Parameters(salt, iterations, keySize);
-
-    Uint8List result = Uint8List(keySize);
-    final pbkdf2 = PBKDF2KeyDerivator(HMac(digest, keySize));
-    pbkdf2.init(parameters);
-    pbkdf2.deriveKey(password, 0, result, 0);
-
-    var resultHex = uint8ListToHexString(result);
-
-    logger('Result: $resultHex');
-
-    return result;
   }
 
   Future<Uint8List> argon2FromString({
@@ -447,94 +287,27 @@ class CryptoController extends GetxController with MixinController {
     required int parallelism,
   }) async {
     int keySize = 32;
-    //   var password = 'password';
-    //use Salt(List<int> bytes) for a salt from an Integer list
-    // var s = Salt.newSalt();
-    //Hash with pre-set params (iterations: 32, memory: 256, parallelism: 2,
-    //length: 32, type: Argon2Type.i, version: Argon2Version.V13)
+
     var result = await dargon2.argon2.hashPasswordBytes(password,
         salt: dargon2.Salt(salt),
         iterations: iterations,
         memory: memory,
         parallelism: parallelism,
         length: keySize,
+        type: dargon2.Argon2Type.id,
         version: dargon2.Argon2Version.V13);
 
-    //Raw hash values available as int list, base 64 string, and hex string
-    //  var bytesRaw = result.rawBytes;
-    // var base64Hash = result.base64String;
-    //  var hexHash = result.encodedBytes;
-    //Encoded hash values available as int list and encoded string
     var bytesEncoded = result.encodedBytes; // type: List<int>
     logger('Raw Encoded Bytes Array: $bytesEncoded');
     var stringEncoded = result.encodedString; // type: String
     logger('Encoded UTF-8 String: $stringEncoded');
-    //size = 32
-    // var parameters = argon2.Argon2Parameters(Argon2Parameters.ARGON2_i, salt,
-    //     //    version: Argon2Parameters.ARGON2_i,
-    //     iterations: 3,
-    //     lanes: 4,
-    //     memory: 64);
-    // //922bf05a64fc0c3d3be8589a126551768628568c4f61038e59f8d13daf547ef2
-    // logger('Parameters: $parameters');
-    // //
-    // var argon2BG = argon2.Argon2BytesGenerator();
-    //
-    // argon2BG.init(parameters);
-    //
-    // var passwordBytes = parameters.converter.convert('Abc@12345');
-    //
-    // logger('Generating key from password...');
-    //
-    // var result = Uint8List(32);
-    // argon2BG.generateBytes(password, result, 0, result.length);
-    //
-    // var resultHex = result.toHexString();
-    //
-    // logger('Result: $resultHex');
 
-    // var parameters = Argon2Parameters(
-    //   Argon2Parameters.ARGON2_i,
-    //   salt,
-    //   desiredKeyLength: keySize,
-    //   version: Argon2Parameters.ARGON2_i,
-    //   iterations: 3,
-    //   lanes: 4,
-    //   memory: 64,
-    //   // iterations: iterations,
-    //   // // lanes: parallelism,
-    //   // memory: memory,
-    // );
-    //
-    // log('Parameters: $parameters');
-    //
-    // var argon2 = Argon2BytesGenerator();
-    //
-    // argon2.init(parameters);
-    //
-    // //  var passwordBytes = parameters.converter.convert(password);
-    //
-    // log('Generating key from password...');
-    //
-    // var result = Uint8List(keySize);
-    // argon2.deriveKey(password, 0, result, result.length);
-    //
-    // var resultHex = uint8ListToHexString(Uint8List.fromList(result.rawBytes));
-    //
     logger('Result: ${result.hexString}');
 
     return Uint8List.fromList(result.rawBytes);
   }
 
   Future<SymmetricCryptoKey?> getEncKey({SymmetricCryptoKey? key}) async {
-    // if (_encKey != null) {
-    //   return _encKey;
-    // }
-    // if (_getEncKeysFunction != null) {
-    //   return _getEncKeysFunction;
-    // }
-    // Future<SymmetricCryptoKey?> doTask() async {
-    //   try {
     var encKey = await getEncKeyEncrypted();
     if (encKey == null) {
       return null;
@@ -561,15 +334,6 @@ class CryptoController extends GetxController with MixinController {
       return null;
     }
     return SymmetricCryptoKey(key: decEncKey);
-    //  return _encKey;
-    //   }
-    //finally {
-    //      _getEncKeysFunction = null;
-    //  }
-    // }
-    //
-    // _getEncKeysFunction = doTask();
-    // return _getEncKeysFunction;
   }
 
   Future<SymmetricCryptoKey?> getMasterKey() async {
@@ -627,11 +391,9 @@ class CryptoController extends GetxController with MixinController {
     var theKey = resolveLegacyKey(encType: encType, key: keyForEnc);
 
     if (theKey?.macKey != null && mac == null) {
-      // Mac required.
       return null;
     }
     if (theKey?.encType != encType) {
-      // encType unavailable.
       return null;
     }
 
@@ -641,20 +403,6 @@ class CryptoController extends GetxController with MixinController {
     var ivBytes = base64.decode(iv ?? '');
     var macBytes = mac != null ? base64.decode(mac) : null;
 
-    // var macDataBytes = new byte[ivBytes.Length + dataBytes.Length];
-    // Buffer.BlockCopy(ivBytes, 0, macDataBytes, 0, ivBytes.Length);
-    // Buffer.BlockCopy(dataBytes, 0, macDataBytes, ivBytes.Length, dataBytes.Length);
-
-    // if (theKey.macKey != null)
-    // {
-    //   macKey = theKey.MacKey;
-    // }
-    // byte[] macBytes = null;
-    // if (mac != null)
-    // {
-    //   macBytes = Convert.FromBase64String(mac);
-    // }
-
     // Compute MAC if needed
     if (theKey?.macKey != null && macBytes != null) {
       var macDataBytes = Uint8List.fromList([...ivBytes, ...dataBytes]);
@@ -663,7 +411,6 @@ class CryptoController extends GetxController with MixinController {
           key: theKey!.macKey!,
           algorithm: CryptoHashAlgorithm.sha256);
       if (!compare(macBytes, computedMac)) {
-        // Mac failed
         return null;
       }
     }
@@ -692,9 +439,6 @@ class CryptoController extends GetxController with MixinController {
 
     // Compute mac
     if (theKey?.macKey != null && mac != null) {
-      // var macData = new byte[iv.Length + data.Length];
-      // Buffer.BlockCopy(iv, 0, macData, 0, iv.Length);
-      // Buffer.BlockCopy(data, 0, macData, iv.Length, data.Length);
       var macData = Uint8List(iv!.length + data!.length);
       macData.setAll(0, iv);
       macData.setAll(iv.length, data);
@@ -703,9 +447,7 @@ class CryptoController extends GetxController with MixinController {
           value: macData,
           key: theKey!.macKey!,
           algorithm: CryptoHashAlgorithm.sha256);
-      // if (computedMac == null) {
-      //   return null;
-      // }
+
       var macsMatch = compare(mac, computedMac);
       if (!macsMatch) {
         // Mac failed
@@ -742,182 +484,13 @@ class CryptoController extends GetxController with MixinController {
     return key;
   }
 
-  // Future<SymmetricCryptoKey?> getOrgKeyFromString({String? orgId}) async {
-  //   if (isNullOrWhiteSpace(orgId)) {
-  //     return null;
-  //   }
-  //   var orgKeys = await getOrgKeys();
-  //   if (orgKeys == null || !orgKeys.containsKey(orgId)) {
-  //     return null;
-  //   }
-  //   return orgKeys[orgId];
-  // }
-
-  // Future<Map<String, SymmetricCryptoKey>?>? getOrgKeys() {
-  //   if (_orgKeys != null && (_orgKeys?.isNotEmpty ?? false)) {
-  //     return Future.value(UnmodifiableMapView(_orgKeys!));
-  //   }
-  //   if (_getOrgKeysFunction != null
-  //       //  && !_getOrgKeysFunction.isCompleted && !_getOrgKeysFunction.IsFaulted
-  //       ) {
-  //     return _getOrgKeysFunction;
-  //   }
-  //   Future<Map<String, SymmetricCryptoKey>?>? doTask() async {
-  //     try {
-  //      // var encOrgKeys = await _stateController.getOrgKeysEncrypted();
-  //       // if (encOrgKeys == null) {
-  //       //   return null;
-  //       // }  //check
-  //       var orgKeys = new Map<String, SymmetricCryptoKey>();
-  //       var setKey = false;
-  //       for (var org in encOrgKeys.entries) {
-  //         var decValue = await rsaDecryptFromString(encValue: org.value);
-  //         orgKeys.addAll({org.key: SymmetricCryptoKey(key: decValue)});
-  //         setKey = true;
-  //       }
-  //
-  //       if (setKey) {
-  //         _orgKeys = orgKeys;
-  //       }
-  //       return _orgKeys;
-  //     } finally {
-  //       _getOrgKeysFunction = null;
-  //     }
-  //   }
-  //
-  //   _getOrgKeysFunction = doTask();
-  //   return _getOrgKeysFunction;
-  // }
-
-  Future<Uint8List> rsaDecrypt({
-    required Uint8List data,
-    required Uint8List privateKey,
-    CryptoHashAlgorithm? algorithm,
-  }) async {
-    AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> keyPair =
-        parsePrivateKey(privateKey);
-    RSAPrivateKey rsaPrivateKey = keyPair.privateKey;
-
-    final rsaEngine = RSAEngine();
-    rsaEngine.init(false, PrivateKeyParameter<RSAPrivateKey>(rsaPrivateKey));
-
-    return rsaEngine.process(Uint8List.fromList(data));
-  }
-
-  AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey> parsePrivateKey(
-      Uint8List privateKeyData) {
-    final reader = ASN1Parser(privateKeyData);
-    final topLevelSeq = reader.nextObject() as ASN1Sequence;
-    final rsaSeq = topLevelSeq.elements![2] as ASN1Sequence;
-
-    final modulus = rsaSeq.elements![1] as ASN1Integer;
-    final publicExponent = rsaSeq.elements![2] as ASN1Integer;
-    final privateExponent = rsaSeq.elements![3] as ASN1Integer;
-    final prime1 = rsaSeq.elements![4] as ASN1Integer;
-    final prime2 = rsaSeq.elements![5] as ASN1Integer;
-    // final exponent1 = rsaSeq.elements![6] as ASN1Integer;
-    // final exponent2 = rsaSeq.elements![7] as ASN1Integer;
-    // final coefficient = rsaSeq.elements![8] as ASN1Integer;
-
-    final RSAPrivateKey rsaPrivateKey = RSAPrivateKey(
-      modulus.integer!,
-      privateExponent.integer!,
-      prime1.integer!,
-      prime2.integer!,
-    );
-
-    final RSAPublicKey rsaPublicKey = RSAPublicKey(
-      modulus.integer!,
-      publicExponent.integer!,
-    );
-
-    return AsymmetricKeyPair<RSAPublicKey, RSAPrivateKey>(
-        rsaPublicKey, rsaPrivateKey);
-  }
-
-  // Future<Uint8List> rsaDecryptFromString(
-  //     {required String encValue, Uint8List? privateKey}) async {
-  //   var headerPieces = encValue.split('.');
-  //   EncryptionType? encType;
-  //   List<String>? encPieces;
-  //
-  //   if (headerPieces.length == 1) {
-  //     encType = EncryptionType.rsa2048OaepSha256B64;
-  //     encPieces = [headerPieces[0]];
-  //   } else if (headerPieces.length == 2 &&
-  //       EncryptionType.values[int.tryParse(headerPieces[0]) ?? 0] !=
-  //           null) //check
-  //   {
-  //     encType = EncryptionType.values[int.tryParse(headerPieces[0]) ?? 0];
-  //     encPieces = headerPieces[1].split('|');
-  //   }
-  //
-  //   if (encType == null) {
-  //     throw Exception("encType unavailable.");
-  //   }
-  //   if (encPieces == null || encPieces.length == 0) {
-  //     throw new Exception("encPieces unavailable.");
-  //   }
-  //
-  //   var data = base64.decode(encPieces[0]);
-  //
-  //   if (privateKey == null) {
-  //     privateKey = await getPrivateKey();
-  //   }
-  //
-  //   if (privateKey == null) {
-  //     throw new Exception("No private key.");
-  //   }
-  //
-  //   var alg = CryptoHashAlgorithm.sha1;
-  //   switch (encType) {
-  //     case EncryptionType.rsa2048OaepSha256B64:
-  //     case EncryptionType.rsa2048OaepSha256HmacSha256B64:
-  //       alg = CryptoHashAlgorithm.sha256;
-  //       break;
-  //     case EncryptionType.rsa2048OaepSha1B64:
-  //     case EncryptionType.rsa2048OaepSha1HmacSha256B64:
-  //       break;
-  //     default:
-  //       throw new Exception("encType unavailable.");
-  //   }
-  //
-  //   return rsaDecrypt(
-  //     data: data,
-  //     privateKey: privateKey,
-  //     algorithm: alg,
-  //   );
-  // }
-  //
-  // Future<Uint8List?> getPrivateKey() async {
-  //   if (_privateKey != null) {
-  //     return _privateKey;
-  //   }
-  //   var encPrivateKey = await _stateController.getPrivateKeyEncrypted();
-  //   if (encPrivateKey == null) {
-  //     return null;
-  //   }
-  //   _privateKey = await decryptToBytes(
-  //     encString: EncryptedString(data: encPrivateKey),
-  //   );
-  //   return _privateKey;
-  // }
-
   Uint8List hmac({
     required Uint8List value,
     required Uint8List key,
     CryptoHashAlgorithm? algorithm,
   }) {
-    // var provider = MacAlgorithmProvider.OpenAlgorithm(ToMacAlgorithm(algorithm));
-    // var hasher = provider.CreateHash(key);
-    // hasher.Append(value);
-    // return Task.FromResult(hasher.GetValueAndReset());
-
     var hmac = HMac(SHA256Digest(), 64)..init(KeyParameter(key));
 
-    // hmac.update(value, 0, value.length);
-    // var output = Uint8List(hmac.macSize);
-    // hmac.doFinal(output, output.length);
     return hmac.process(value);
   }
 
@@ -941,16 +514,6 @@ class CryptoController extends GetxController with MixinController {
     required Uint8List iv,
     required Uint8List key,
   }) {
-    // var provider = SymmetricKeyAlgorithmProvider.OpenAlgorithm(SymmetricAlgorithm.AesCbcPkcs7);
-    // var cryptoKey = provider.CreateSymmetricKey(key);
-    // return Task.FromResult(CryptographicEngine.Encrypt(cryptoKey, data, iv));
-
-    // var paddedCipher = PaddedBlockCipherImpl(PKCS7Padding(),CBCBlockCipher(AESFastEngine()));
-    // paddedCipher.init(true, ParametersWithIV(KeyParameter(key), iv));
-    // return paddedCipher.process(data);
-
-    // final padding = PKCS7Padding();
-    // final cbcBlockCipher = CBCBlockCipher(AESEngine());
     final parameters = ParametersWithIV<KeyParameter>(KeyParameter(key), iv);
     final cbcParameters = PaddedBlockCipherParameters(parameters, null);
 
@@ -960,18 +523,10 @@ class CryptoController extends GetxController with MixinController {
     return cipher.process(data);
   }
 
-  // public Task<Uint8List> AesDecryptAsync(Uint8List data, Uint8List iv, Uint8List key)
-  // {
-  // var provider = SymmetricKeyAlgorithmProvider.OpenAlgorithm(SymmetricAlgorithm.AesCbcPkcs7);
-  // var cryptoKey = provider.CreateSymmetricKey(key);
-  // return Task.FromResult(CryptographicEngine.Decrypt(cryptoKey, data, iv));
-  // }
   Uint8List aesDecrypt(
       {required Uint8List data,
       required Uint8List iv,
       required Uint8List key}) {
-    //  final padding = PKCS7Padding();
-    // final cbcBlockCipher = CBCBlockCipher(AESEngine());
     final parameters = ParametersWithIV<KeyParameter>(KeyParameter(key), iv);
     final cbcParameters = PaddedBlockCipherParameters(parameters, null);
 
@@ -1007,7 +562,7 @@ class CryptoController extends GetxController with MixinController {
     return Uint8List.fromList(values);
   }
 
-// Helper function for constant-time byte comparison
+  // Helper function for constant-time byte comparison
   bool constantTimeBytesEqual(Uint8List a, Uint8List b) {
     if (a.length != b.length) {
       return false;

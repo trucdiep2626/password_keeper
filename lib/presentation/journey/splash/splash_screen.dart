@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:password_keeper/common/constants/app_dimens.dart';
-import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/gen/assets.gen.dart';
 import 'package:password_keeper/presentation/theme/export.dart';
 import 'package:password_keeper/presentation/widgets/export.dart';

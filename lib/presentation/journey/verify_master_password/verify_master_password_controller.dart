@@ -96,6 +96,7 @@ class VerifyMasterPasswordController extends GetxController
       );
 
       var storedHashedPassword = await _cryptoController.getHashedMasterKey();
+
       final profile = await accountUseCase.getProfile(userId: user?.uid ?? '');
 
       if (!isNullEmpty(storedHashedPassword)) {
@@ -124,58 +125,16 @@ class VerifyMasterPasswordController extends GetxController
         if (profile?.key != null) {
           await _cryptoController.setEncKeyEncrypted(profile!.key!);
         }
-
-        //    _cryptoController.setBiometricLocked();
-
-        debugPrint('đăng ký thành công');
-        // showTopSnackBar(context,
-        //     message: TranslationConstants..tr,
-        //     type: SnackBarType.done);
-        // Read all values
-
         navigateWhenVerified();
       } else {
-        // if (Get.context != null) {
-        //   showTopSnackBarError(
-        //       Get.context!, TranslationConstants.loginError.tr);
-        // }
-        //
-        // } else {
-        //   debugPrint('đăng nhập thất bại');
         errorText.value = TranslationConstants.wrongMasterPassword.tr;
       }
-
-      //    }
     } else {
-      // if (Get.context != null) {
-      //   showTopSnackBarError(Get.context!, TranslationConstants.loginError.tr);
-      // }
-      //
-      // } else {
-      //   debugPrint('đăng nhập thất bại');
       errorText.value = TranslationConstants.wrongMasterPassword.tr;
     }
 
     rxLoadedButton.value = LoadedType.finish;
   }
-
-  // Future<SymmetricCryptoKey?> makePreLoginKey() async {
-  //   final masterPassword = masterPwdController.text;
-  //   final email = (user.email ?? '').trim().toLowerCase();
-  //
-  //   if (email.isEmpty || masterPwdController.text.isEmpty) {
-  //     return null;
-  //   }
-  //
-  //   return await _cryptoController.makeKey(
-  //     password: masterPassword,
-  //     salt: email,
-  //   );
-  // }
-
-  // String? getUserId() {
-  //   return accountUseCase.getAccount?.profile?.userId;
-  // }
 
   void onChangedPwd() {
     checkButtonEnable();

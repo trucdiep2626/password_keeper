@@ -22,7 +22,7 @@ class RegisterScreen extends GetView<RegisterController> {
           _buildBody(),
           Obx(() => controller.rxLoadedGoogleButton.value == LoadedType.start
               ? const AppLoadingPage()
-              : SizedBox.shrink()),
+              : const SizedBox.shrink()),
         ],
       ),
     );

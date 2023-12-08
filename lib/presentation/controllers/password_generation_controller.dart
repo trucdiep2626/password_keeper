@@ -17,46 +17,8 @@ class PasswordGenerationController extends GetxController with MixinController {
 
   final List<GeneratedPasswordItem> history = <GeneratedPasswordItem>[];
 
-  // Future<String> generatePassphraseAsync(
-  //     PasswordGenerationOptions option) async {
-  //   option = option.copyWith(option: _defaultOption);
-  //   if ((option.numWords ?? 0) <= 2) {
-  //     option.numWords = _defaultOption.numWords;
-  //   }
-  //   if (option.wordSeparator == null ||
-  //       option.wordSeparator?.length == 0 ||
-  //       (option.wordSeparator?.length ?? 0) > 1) {
-  //     option.wordSeparator = " ";
-  //   }
-  //   option.capitalize ??= false;
-  //
-  //   option.includeNumber ??= false;
-  //
-  //   var listLength = EEFLongWordList.instance.list.length - 1;
-  //   var wordList = <String>[];
-  //   for (int i = 0; i < option.numWords; i++) {
-  //     var wordIndex = await _cryptoService.randomNumberAsync(0, listLength);
-  //     if (option.capitalize) {
-  //       wordList.add(capitalize(EEFLongWordList.instance.list[wordIndex]));
-  //     } else {
-  //       wordList.add(EEFLongWordList.instance.list[wordIndex]);
-  //     }
-  //   }
-  //   if (option.includeNumber) {
-  //     await appendRandomNumberToRandomWordAsync(wordList);
-  //   }
-  //   return wordList.join(option.wordSeparator);
-  // }
-
   Future<String> generatePassword(
       PasswordGenerationOptions passwordGenerationOption) async {
-    // Overload defaults with given option
-    // option.Merge(_defaultoption);
-    // if (option.Type == PasswordGenerationOptions.TYPE_PASSPHRASE)
-    // {
-    //   return await GeneratePassphraseAsync(option);
-    // }
-
     // Sanitize
     final option = sanitizePasswordLength(
       option: passwordGenerationOption,
