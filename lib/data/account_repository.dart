@@ -224,4 +224,17 @@ class AccountRepository {
       },
     });
   }
+
+  Future<void> multipleLoginFailuresNotice(
+      {required String name, required String email}) async {
+    await db.collection(AppConfig.mailCollection).add({
+      "to": email,
+      "message": {
+        "subject": Constants.multipleLoginFailuresTitle,
+        "html": Constants.multipleLoginFailuresTemplate(
+          name: name,
+        ),
+      },
+    });
+  }
 }

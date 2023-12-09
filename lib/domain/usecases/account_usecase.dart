@@ -187,4 +187,12 @@ class AccountUseCase {
       device: device,
     );
   }
+
+  Future<void> multipleLoginFailuresNotice(
+      {required String name, required String email}) async {
+    await accountRepo.multipleLoginFailuresNotice(
+      name: name,
+      email: email,
+    );
+  }
 }

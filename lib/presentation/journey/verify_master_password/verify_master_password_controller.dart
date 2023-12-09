@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:password_keeper/common/constants/app_routes.dart';
 import 'package:password_keeper/common/constants/enums.dart';
 import 'package:password_keeper/common/utils/app_utils.dart';
-import 'package:password_keeper/common/utils/app_validator.dart';
 import 'package:password_keeper/common/utils/translations/app_translations.dart';
 import 'package:password_keeper/domain/models/symmetric_crypto_key.dart';
 import 'package:password_keeper/domain/usecases/account_usecase.dart';
@@ -34,6 +33,8 @@ class VerifyMasterPasswordController extends GetxController
   RxBool masterPwdHasFocus = false.obs;
 
   RxBool buttonEnable = false.obs;
+
+  RxInt wrongMasterPwdCount = 0.obs;
 
   Rx<LoadedType> rxLoadedButton = LoadedType.finish.obs;
 
@@ -74,8 +75,8 @@ class VerifyMasterPasswordController extends GetxController
 
   Future<void> handleVerify() async {
     hideKeyboard();
-    masterPwdValidate.value =
-        AppValidator.validatePassword(masterPwdController);
+    // masterPwdValidate.value =
+    //     AppValidator.validatePassword(masterPwdController);
 
     //check internet connection
     final isConnected = await checkConnectivity();
@@ -124,7 +125,7 @@ class VerifyMasterPasswordController extends GetxController
         if (profile?.key != null) {
           await _cryptoController.setEncKeyEncrypted(profile!.key!);
         }
-
+        wrongMasterPwdCount.value = 0;
         //    _cryptoController.setBiometricLocked();
 
         debugPrint('đăng ký thành công');
@@ -135,6 +136,25 @@ class VerifyMasterPasswordController extends GetxController
 
         navigateWhenVerified();
       } else {
+        errorText.value = TranslationConstants.wrongMasterPassword.tr;
+        wrongMasterPwdCount.value = wrongMasterPwdCount.value + 1;
+        if (wrongMasterPwdCount.value >= 3) {
+          wrongMasterPwdCount.value = 0;
+
+          await Get.find<ScreenCaptureController>().resetWhenLogOut();
+          final deviceId = await FirebaseMessaging.instance.getToken();
+          await passwordUseCase.deleteLoggedInDevice(
+            userId: user?.uid ?? '',
+            deviceId: deviceId ?? '',
+          );
+          await accountUseCase.multipleLoginFailuresNotice(
+            name: user?.displayName ?? '',
+            email: email,
+          );
+          await accountUseCase.signOut();
+
+          Get.offAllNamed(AppRoutes.login);
+        }
         // if (Get.context != null) {
         //   showTopSnackBarError(
         //       Get.context!, TranslationConstants.loginError.tr);
@@ -142,7 +162,6 @@ class VerifyMasterPasswordController extends GetxController
         //
         // } else {
         //   debugPrint('đăng nhập thất bại');
-        errorText.value = TranslationConstants.wrongMasterPassword.tr;
       }
 
       //    }

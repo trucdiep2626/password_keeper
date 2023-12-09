@@ -1,5 +1,3 @@
-import 'package:password_keeper/common/utils/app_utils.dart';
-
 class Constants {
   static const String verificationId = 'verificationId';
   static const String forceResendingToken = 'forceResendingToken';
@@ -17,6 +15,7 @@ class Constants {
   static const int totpDefaultTimer = 30;
   static const int passwordlessNotificationTimeoutInMinutes = 15;
   static const int pbkdf2Iterations = 600000;
+
   static const int argon2Iterations = 3;
   static const int argon2MemoryInMB = 64;
   static const int argon2Parallelism = 4;
@@ -72,5 +71,15 @@ class Constants {
       "<p><strong>Time:</strong> ${updatedAt} (UTC+00)</p>"
       "<p><strong>Device:</strong> ${device}</p>"
       "<p>If you made this change, please ignore this message.</p>"
+      "<p>Stay secured! <br>Password Keeper team.</p>";
+
+  static const String multipleLoginFailuresTitle =
+      "Security Alert - Multiple Login Failures";
+
+  static multipleLoginFailuresTemplate({
+    required String name,
+  }) =>
+      "<p>Dear ${name},</p>"
+      "<p>We've detected multiple unsuccessful login attempts on your account. To ensure your security, you should change your password immediately.</p>"
       "<p>Stay secured! <br>Password Keeper team.</p>";
 }
